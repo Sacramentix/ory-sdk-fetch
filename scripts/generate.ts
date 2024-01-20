@@ -10,11 +10,12 @@ async function exec(cmd:string) {
 console.log("Generating typescript-fetch...");
 
 const PROJECT = "client";
-const GENERATOR_TYPE = "typescript";
-const GENERATOR_PLATFORM = "deno";
+const GENERATOR_TYPE = "typescript-axios";
+// const GENERATOR_PLATFORM = "deno";
 const GENERATOR_VERSION = "6.6.0";
 
-const outDir = `./clients/${PROJECT}/${GENERATOR_TYPE}-${GENERATOR_PLATFORM}`;
+const outDir = `./clients/${PROJECT}/${GENERATOR_TYPE}`;
+// const outDir = `./clients/${PROJECT}/${GENERATOR_TYPE}-${GENERATOR_PLATFORM}`;
 
 console.log(`Cleaning ${outDir}...`);
 
@@ -37,7 +38,9 @@ const generatorConfig = Object.entries({
     npmVersion: latestTag,
     modelPropertyNaming: "original",
     disallowAdditionalPropertiesIfNotPresent: false,
-    platform: GENERATOR_PLATFORM
+    // platform: GENERATOR_PLATFORM,
+    ensureUniqueParams: true,
+    supportsES6: true,
 }).map(([k,v])=>`${k}=${v}`).join(",");
 
 // new Deno.Command("openapi-generator-cli").outputSync();
