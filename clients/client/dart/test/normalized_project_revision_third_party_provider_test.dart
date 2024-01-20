@@ -7,6 +7,11 @@ void main() {
   // TODO add properties to the builder and call build()
 
   group(NormalizedProjectRevisionThirdPartyProvider, () {
+    // BuiltList<String> additionalIdTokenAudiences
+    test('to test the property `additionalIdTokenAudiences`', () async {
+      // TODO
+    });
+
     // String applePrivateKey
     test('to test the property `applePrivateKey`', () async {
       // TODO
@@ -70,9 +75,14 @@ void main() {
       // TODO
     });
 
-    // Mapper specifies the JSONNet code snippet which uses the OpenID Connect Provider's data (e.g. GitHub or Google profile information) to hydrate the identity's data.  It can be either a URL (file://, http(s)://, base64://) or an inline JSONNet code snippet.
+    // Mapper specifies the JSONNet code snippet which uses the OpenID Connect Provider's data (e.g. GitHub or Google profile information) to hydrate the identity's data.
     // String mapperUrl
     test('to test the property `mapperUrl`', () async {
+      // TODO
+    });
+
+    // String organizationId
+    test('to test the property `organizationId`', () async {
       // TODO
     });
 

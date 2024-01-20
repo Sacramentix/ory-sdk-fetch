@@ -18,6 +18,12 @@ void main() {
       // TODO
     });
 
+    // The environment of the project. prod Production dev Development
+    // String environment
+    test('to test the property `environment`', () async {
+      // TODO
+    });
+
     // BuiltList<String> hosts
     test('to test the property `hosts`', () async {
       // TODO
@@ -46,9 +52,19 @@ void main() {
       // TODO
     });
 
+    // String subscriptionPlan
+    test('to test the property `subscriptionPlan`', () async {
+      // TODO
+    });
+
     // Last Time Project was Updated
     // DateTime updatedAt
     test('to test the property `updatedAt`', () async {
+      // TODO
+    });
+
+    // String workspaceId
+    test('to test the property `workspaceId`', () async {
       // TODO
     });
 

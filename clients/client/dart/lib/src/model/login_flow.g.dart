@@ -22,6 +22,8 @@ class _$LoginFlow extends LoginFlow {
   @override
   final OAuth2LoginRequest? oauth2LoginRequest;
   @override
+  final String? organizationId;
+  @override
   final bool? refresh;
   @override
   final String requestUrl;
@@ -31,6 +33,8 @@ class _$LoginFlow extends LoginFlow {
   final String? returnTo;
   @override
   final String? sessionTokenExchangeCode;
+  @override
+  final JsonObject? state;
   @override
   final String type;
   @override
@@ -49,11 +53,13 @@ class _$LoginFlow extends LoginFlow {
       required this.issuedAt,
       this.oauth2LoginChallenge,
       this.oauth2LoginRequest,
+      this.organizationId,
       this.refresh,
       required this.requestUrl,
       this.requestedAal,
       this.returnTo,
       this.sessionTokenExchangeCode,
+      this.state,
       required this.type,
       required this.ui,
       this.updatedAt})
@@ -85,11 +91,13 @@ class _$LoginFlow extends LoginFlow {
         issuedAt == other.issuedAt &&
         oauth2LoginChallenge == other.oauth2LoginChallenge &&
         oauth2LoginRequest == other.oauth2LoginRequest &&
+        organizationId == other.organizationId &&
         refresh == other.refresh &&
         requestUrl == other.requestUrl &&
         requestedAal == other.requestedAal &&
         returnTo == other.returnTo &&
         sessionTokenExchangeCode == other.sessionTokenExchangeCode &&
+        state == other.state &&
         type == other.type &&
         ui == other.ui &&
         updatedAt == other.updatedAt;
@@ -105,11 +113,13 @@ class _$LoginFlow extends LoginFlow {
     _$hash = $jc(_$hash, issuedAt.hashCode);
     _$hash = $jc(_$hash, oauth2LoginChallenge.hashCode);
     _$hash = $jc(_$hash, oauth2LoginRequest.hashCode);
+    _$hash = $jc(_$hash, organizationId.hashCode);
     _$hash = $jc(_$hash, refresh.hashCode);
     _$hash = $jc(_$hash, requestUrl.hashCode);
     _$hash = $jc(_$hash, requestedAal.hashCode);
     _$hash = $jc(_$hash, returnTo.hashCode);
     _$hash = $jc(_$hash, sessionTokenExchangeCode.hashCode);
+    _$hash = $jc(_$hash, state.hashCode);
     _$hash = $jc(_$hash, type.hashCode);
     _$hash = $jc(_$hash, ui.hashCode);
     _$hash = $jc(_$hash, updatedAt.hashCode);
@@ -127,11 +137,13 @@ class _$LoginFlow extends LoginFlow {
           ..add('issuedAt', issuedAt)
           ..add('oauth2LoginChallenge', oauth2LoginChallenge)
           ..add('oauth2LoginRequest', oauth2LoginRequest)
+          ..add('organizationId', organizationId)
           ..add('refresh', refresh)
           ..add('requestUrl', requestUrl)
           ..add('requestedAal', requestedAal)
           ..add('returnTo', returnTo)
           ..add('sessionTokenExchangeCode', sessionTokenExchangeCode)
+          ..add('state', state)
           ..add('type', type)
           ..add('ui', ui)
           ..add('updatedAt', updatedAt))
@@ -173,6 +185,11 @@ class LoginFlowBuilder implements Builder<LoginFlow, LoginFlowBuilder> {
   set oauth2LoginRequest(OAuth2LoginRequestBuilder? oauth2LoginRequest) =>
       _$this._oauth2LoginRequest = oauth2LoginRequest;
 
+  String? _organizationId;
+  String? get organizationId => _$this._organizationId;
+  set organizationId(String? organizationId) =>
+      _$this._organizationId = organizationId;
+
   bool? _refresh;
   bool? get refresh => _$this._refresh;
   set refresh(bool? refresh) => _$this._refresh = refresh;
@@ -194,6 +211,10 @@ class LoginFlowBuilder implements Builder<LoginFlow, LoginFlowBuilder> {
   String? get sessionTokenExchangeCode => _$this._sessionTokenExchangeCode;
   set sessionTokenExchangeCode(String? sessionTokenExchangeCode) =>
       _$this._sessionTokenExchangeCode = sessionTokenExchangeCode;
+
+  JsonObject? _state;
+  JsonObject? get state => _$this._state;
+  set state(JsonObject? state) => _$this._state = state;
 
   String? _type;
   String? get type => _$this._type;
@@ -221,11 +242,13 @@ class LoginFlowBuilder implements Builder<LoginFlow, LoginFlowBuilder> {
       _issuedAt = $v.issuedAt;
       _oauth2LoginChallenge = $v.oauth2LoginChallenge;
       _oauth2LoginRequest = $v.oauth2LoginRequest?.toBuilder();
+      _organizationId = $v.organizationId;
       _refresh = $v.refresh;
       _requestUrl = $v.requestUrl;
       _requestedAal = $v.requestedAal;
       _returnTo = $v.returnTo;
       _sessionTokenExchangeCode = $v.sessionTokenExchangeCode;
+      _state = $v.state;
       _type = $v.type;
       _ui = $v.ui.toBuilder();
       _updatedAt = $v.updatedAt;
@@ -262,12 +285,14 @@ class LoginFlowBuilder implements Builder<LoginFlow, LoginFlowBuilder> {
                   issuedAt, r'LoginFlow', 'issuedAt'),
               oauth2LoginChallenge: oauth2LoginChallenge,
               oauth2LoginRequest: _oauth2LoginRequest?.build(),
+              organizationId: organizationId,
               refresh: refresh,
               requestUrl: BuiltValueNullFieldError.checkNotNull(
                   requestUrl, r'LoginFlow', 'requestUrl'),
               requestedAal: requestedAal,
               returnTo: returnTo,
               sessionTokenExchangeCode: sessionTokenExchangeCode,
+              state: state,
               type: BuiltValueNullFieldError.checkNotNull(
                   type, r'LoginFlow', 'type'),
               ui: ui.build(),

@@ -4,6 +4,7 @@
 
 | Name | Type | Description | Notes |
 | ---- | ---- | ----------- | ----- |
+| **additional_id_token_audiences** | **Array&lt;String&gt;** |  | [optional] |
 | **apple_private_key** | **String** |  | [optional] |
 | **apple_private_key_id** | **String** | Apple Private Key Identifier  Sign In with Apple Private Key Identifier needed for generating a JWT token for client secret | [optional] |
 | **apple_team_id** | **String** | Apple Developer Team ID  Apple Developer Team ID needed for generating a JWT token for client secret | [optional] |
@@ -15,7 +16,8 @@
 | **id** | **String** |  | [optional] |
 | **issuer_url** | **String** | IssuerURL is the OpenID Connect Server URL. You can leave this empty if &#x60;provider&#x60; is not set to &#x60;generic&#x60;. If set, neither &#x60;auth_url&#x60; nor &#x60;token_url&#x60; are required. | [optional] |
 | **label** | **String** | Label represents an optional label which can be used in the UI generation. | [optional] |
-| **mapper_url** | **String** | Mapper specifies the JSONNet code snippet which uses the OpenID Connect Provider&#39;s data (e.g. GitHub or Google profile information) to hydrate the identity&#39;s data.  It can be either a URL (file://, http(s)://, base64://) or an inline JSONNet code snippet. | [optional] |
+| **mapper_url** | **String** | Mapper specifies the JSONNet code snippet which uses the OpenID Connect Provider&#39;s data (e.g. GitHub or Google profile information) to hydrate the identity&#39;s data. | [optional] |
+| **organization_id** | **String** |  | [optional] |
 | **project_revision_id** | **String** | The Revision&#39;s ID this schema belongs to | [optional] |
 | **provider** | **String** | Provider is either \&quot;generic\&quot; for a generic OAuth 2.0 / OpenID Connect Provider or one of: generic google github gitlab microsoft discord slack facebook vk yandex apple | [optional] |
 | **provider_id** | **String** | ID is the provider&#39;s ID | [optional] |
@@ -32,6 +34,7 @@
 require 'ory-client'
 
 instance = OryClient::NormalizedProjectRevisionThirdPartyProvider.new(
+  additional_id_token_audiences: null,
   apple_private_key: null,
   apple_private_key_id: UX56C66723,
   apple_team_id: KP76DQS54M,
@@ -44,6 +47,7 @@ instance = OryClient::NormalizedProjectRevisionThirdPartyProvider.new(
   issuer_url: https://accounts.google.com,
   label: null,
   mapper_url: null,
+  organization_id: null,
   project_revision_id: null,
   provider: google,
   provider_id: null,

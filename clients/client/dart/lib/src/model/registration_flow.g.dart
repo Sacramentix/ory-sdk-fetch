@@ -20,11 +20,15 @@ class _$RegistrationFlow extends RegistrationFlow {
   @override
   final OAuth2LoginRequest? oauth2LoginRequest;
   @override
+  final String? organizationId;
+  @override
   final String requestUrl;
   @override
   final String? returnTo;
   @override
   final String? sessionTokenExchangeCode;
+  @override
+  final JsonObject? state;
   @override
   final JsonObject? transientPayload;
   @override
@@ -43,9 +47,11 @@ class _$RegistrationFlow extends RegistrationFlow {
       required this.issuedAt,
       this.oauth2LoginChallenge,
       this.oauth2LoginRequest,
+      this.organizationId,
       required this.requestUrl,
       this.returnTo,
       this.sessionTokenExchangeCode,
+      this.state,
       this.transientPayload,
       required this.type,
       required this.ui})
@@ -79,9 +85,11 @@ class _$RegistrationFlow extends RegistrationFlow {
         issuedAt == other.issuedAt &&
         oauth2LoginChallenge == other.oauth2LoginChallenge &&
         oauth2LoginRequest == other.oauth2LoginRequest &&
+        organizationId == other.organizationId &&
         requestUrl == other.requestUrl &&
         returnTo == other.returnTo &&
         sessionTokenExchangeCode == other.sessionTokenExchangeCode &&
+        state == other.state &&
         transientPayload == other.transientPayload &&
         type == other.type &&
         ui == other.ui;
@@ -96,9 +104,11 @@ class _$RegistrationFlow extends RegistrationFlow {
     _$hash = $jc(_$hash, issuedAt.hashCode);
     _$hash = $jc(_$hash, oauth2LoginChallenge.hashCode);
     _$hash = $jc(_$hash, oauth2LoginRequest.hashCode);
+    _$hash = $jc(_$hash, organizationId.hashCode);
     _$hash = $jc(_$hash, requestUrl.hashCode);
     _$hash = $jc(_$hash, returnTo.hashCode);
     _$hash = $jc(_$hash, sessionTokenExchangeCode.hashCode);
+    _$hash = $jc(_$hash, state.hashCode);
     _$hash = $jc(_$hash, transientPayload.hashCode);
     _$hash = $jc(_$hash, type.hashCode);
     _$hash = $jc(_$hash, ui.hashCode);
@@ -115,9 +125,11 @@ class _$RegistrationFlow extends RegistrationFlow {
           ..add('issuedAt', issuedAt)
           ..add('oauth2LoginChallenge', oauth2LoginChallenge)
           ..add('oauth2LoginRequest', oauth2LoginRequest)
+          ..add('organizationId', organizationId)
           ..add('requestUrl', requestUrl)
           ..add('returnTo', returnTo)
           ..add('sessionTokenExchangeCode', sessionTokenExchangeCode)
+          ..add('state', state)
           ..add('transientPayload', transientPayload)
           ..add('type', type)
           ..add('ui', ui))
@@ -156,6 +168,11 @@ class RegistrationFlowBuilder
   set oauth2LoginRequest(OAuth2LoginRequestBuilder? oauth2LoginRequest) =>
       _$this._oauth2LoginRequest = oauth2LoginRequest;
 
+  String? _organizationId;
+  String? get organizationId => _$this._organizationId;
+  set organizationId(String? organizationId) =>
+      _$this._organizationId = organizationId;
+
   String? _requestUrl;
   String? get requestUrl => _$this._requestUrl;
   set requestUrl(String? requestUrl) => _$this._requestUrl = requestUrl;
@@ -168,6 +185,10 @@ class RegistrationFlowBuilder
   String? get sessionTokenExchangeCode => _$this._sessionTokenExchangeCode;
   set sessionTokenExchangeCode(String? sessionTokenExchangeCode) =>
       _$this._sessionTokenExchangeCode = sessionTokenExchangeCode;
+
+  JsonObject? _state;
+  JsonObject? get state => _$this._state;
+  set state(JsonObject? state) => _$this._state = state;
 
   JsonObject? _transientPayload;
   JsonObject? get transientPayload => _$this._transientPayload;
@@ -195,9 +216,11 @@ class RegistrationFlowBuilder
       _issuedAt = $v.issuedAt;
       _oauth2LoginChallenge = $v.oauth2LoginChallenge;
       _oauth2LoginRequest = $v.oauth2LoginRequest?.toBuilder();
+      _organizationId = $v.organizationId;
       _requestUrl = $v.requestUrl;
       _returnTo = $v.returnTo;
       _sessionTokenExchangeCode = $v.sessionTokenExchangeCode;
+      _state = $v.state;
       _transientPayload = $v.transientPayload;
       _type = $v.type;
       _ui = $v.ui.toBuilder();
@@ -234,10 +257,12 @@ class RegistrationFlowBuilder
                   issuedAt, r'RegistrationFlow', 'issuedAt'),
               oauth2LoginChallenge: oauth2LoginChallenge,
               oauth2LoginRequest: _oauth2LoginRequest?.build(),
+              organizationId: organizationId,
               requestUrl: BuiltValueNullFieldError.checkNotNull(
                   requestUrl, r'RegistrationFlow', 'requestUrl'),
               returnTo: returnTo,
               sessionTokenExchangeCode: sessionTokenExchangeCode,
+              state: state,
               transientPayload: transientPayload,
               type: BuiltValueNullFieldError.checkNotNull(
                   type, r'RegistrationFlow', 'type'),

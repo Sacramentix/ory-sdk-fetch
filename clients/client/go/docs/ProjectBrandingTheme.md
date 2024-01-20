@@ -13,11 +13,13 @@ Name | Type | Description | Notes
 **BackgroundSubtleColor** | Pointer to **string** | BackgroundSubtleColor is a hex color code used by the Ory Account Experience theme. | [optional] 
 **BackgroundSurfaceColor** | Pointer to **string** | BackgroundSurfaceColor is a hex color code used by the Ory Account Experience theme. | [optional] 
 **BorderDefaultColor** | Pointer to **string** | BorderDefaultColor is a hex color code used by the Ory Account Experience theme. | [optional] 
-**CreatedAt** | **time.Time** | The Customiation Creation Date | [readonly] 
+**CreatedAt** | **time.Time** | The Customization Creation Date. | [readonly] 
 **ErrorDefaultColor** | Pointer to **string** | ErrorDefaultColor is a hex color code used by the Ory Account Experience theme. | [optional] 
 **ErrorEmphasisColor** | Pointer to **string** | ErrorEmphasisColor is a hex color code used by the Ory Account Experience theme. | [optional] 
 **ErrorMutedColor** | Pointer to **string** | ErrorMutedColor is a hex color code used by the Ory Account Experience theme. | [optional] 
 **ErrorSubtleColor** | Pointer to **string** | ErrorSubtleColor is a hex color code used by the Ory Account Experience theme. | [optional] 
+**FaviconType** | Pointer to **string** | Favicon Type The Favicon mime type. | [optional] 
+**FaviconUrl** | Pointer to **string** | Favicon URL Favicon can be an https:// or base64:// URL. If the URL is not allowed, the favicon will be stored inside the Ory Network storage bucket. | [optional] 
 **ForegroundDefaultColor** | Pointer to **string** | ForegroundDefaultColor is a hex color code used by the Ory Account Experience theme. | [optional] 
 **ForegroundDisabledColor** | Pointer to **string** | ForegroundDisabledColor is a hex color code used by the Ory Account Experience theme. | [optional] 
 **ForegroundMutedColor** | Pointer to **string** | ForegroundMutedColor is a hex color code used by the Ory Account Experience theme. | [optional] 
@@ -34,12 +36,12 @@ Name | Type | Description | Notes
 **LogoUrl** | Pointer to **string** | Logo URL Logo can be an https:// or base64:// URL. If the URL is not allowed, the logo will be stored inside the Ory Network storage bucket. | [optional] 
 **Name** | **string** | The customization theme name. | 
 **PrimaryColor** | Pointer to **string** | Primary color is an hsla color value used to derive the other colors from for the Ory Account Experience theme. | [optional] 
-**ProjectBrandingId** | **string** | The ProjectBranding ID this customization is associated with | 
+**ProjectBrandingId** | **string** | The ProjectBranding ID this customization is associated with. | 
 **SecondaryColor** | Pointer to **string** | Secondary color is a hsla color code used to derive the other colors from for the Ory Account Experience theme. | [optional] 
 **SuccessEmphasisColor** | Pointer to **string** | SuccessEmphasisColor is a hex color code used by the Ory Account Experience theme. | [optional] 
 **TextDefaultColor** | Pointer to **string** | TextDefaultColor is a hex color code used by the Ory Account Experience theme. | [optional] 
 **TextDisabledColor** | Pointer to **string** | TextDisabledColor is a hex color code used by the Ory Account Experience theme. | [optional] 
-**UpdatedAt** | **time.Time** | Last Time Branding was Updated | [readonly] 
+**UpdatedAt** | **time.Time** | Last Time Branding was Updated. | [readonly] 
 
 ## Methods
 
@@ -404,6 +406,56 @@ SetErrorSubtleColor sets ErrorSubtleColor field to given value.
 `func (o *ProjectBrandingTheme) HasErrorSubtleColor() bool`
 
 HasErrorSubtleColor returns a boolean if a field has been set.
+
+### GetFaviconType
+
+`func (o *ProjectBrandingTheme) GetFaviconType() string`
+
+GetFaviconType returns the FaviconType field if non-nil, zero value otherwise.
+
+### GetFaviconTypeOk
+
+`func (o *ProjectBrandingTheme) GetFaviconTypeOk() (*string, bool)`
+
+GetFaviconTypeOk returns a tuple with the FaviconType field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetFaviconType
+
+`func (o *ProjectBrandingTheme) SetFaviconType(v string)`
+
+SetFaviconType sets FaviconType field to given value.
+
+### HasFaviconType
+
+`func (o *ProjectBrandingTheme) HasFaviconType() bool`
+
+HasFaviconType returns a boolean if a field has been set.
+
+### GetFaviconUrl
+
+`func (o *ProjectBrandingTheme) GetFaviconUrl() string`
+
+GetFaviconUrl returns the FaviconUrl field if non-nil, zero value otherwise.
+
+### GetFaviconUrlOk
+
+`func (o *ProjectBrandingTheme) GetFaviconUrlOk() (*string, bool)`
+
+GetFaviconUrlOk returns a tuple with the FaviconUrl field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetFaviconUrl
+
+`func (o *ProjectBrandingTheme) SetFaviconUrl(v string)`
+
+SetFaviconUrl sets FaviconUrl field to given value.
+
+### HasFaviconUrl
+
+`func (o *ProjectBrandingTheme) HasFaviconUrl() bool`
+
+HasFaviconUrl returns a boolean if a field has been set.
 
 ### GetForegroundDefaultColor
 

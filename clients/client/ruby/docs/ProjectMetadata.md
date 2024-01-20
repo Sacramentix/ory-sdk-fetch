@@ -11,7 +11,9 @@
 | **slug** | **String** | The project&#39;s slug | [optional][readonly] |
 | **state** | **String** | The state of the project. running Running halted Halted deleted Deleted |  |
 | **subscription_id** | **String** |  | [optional] |
+| **subscription_plan** | **String** |  | [optional] |
 | **updated_at** | **Time** | Last Time Project was Updated |  |
+| **workspace_id** | **String** |  | [optional] |
 
 ## Example
 
@@ -26,7 +28,9 @@ instance = OryClient::ProjectMetadata.new(
   slug: null,
   state: null,
   subscription_id: null,
-  updated_at: null
+  subscription_plan: null,
+  updated_at: null,
+  workspace_id: null
 )
 ```
 

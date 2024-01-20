@@ -4,6 +4,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
+**additionalIdTokenAudiences** | **string[]** |  | [optional]
 **applePrivateKey** | **string** |  | [optional]
 **applePrivateKeyId** | **string** | Apple Private Key Identifier  Sign In with Apple Private Key Identifier needed for generating a JWT token for client secret | [optional]
 **appleTeamId** | **string** | Apple Developer Team ID  Apple Developer Team ID needed for generating a JWT token for client secret | [optional]
@@ -15,7 +16,8 @@ Name | Type | Description | Notes
 **id** | **string** |  | [optional]
 **issuerUrl** | **string** | IssuerURL is the OpenID Connect Server URL. You can leave this empty if &#x60;provider&#x60; is not set to &#x60;generic&#x60;. If set, neither &#x60;auth_url&#x60; nor &#x60;token_url&#x60; are required. | [optional]
 **label** | **string** | Label represents an optional label which can be used in the UI generation. | [optional]
-**mapperUrl** | **string** | Mapper specifies the JSONNet code snippet which uses the OpenID Connect Provider&#39;s data (e.g. GitHub or Google profile information) to hydrate the identity&#39;s data.  It can be either a URL (file://, http(s)://, base64://) or an inline JSONNet code snippet. | [optional]
+**mapperUrl** | **string** | Mapper specifies the JSONNet code snippet which uses the OpenID Connect Provider&#39;s data (e.g. GitHub or Google profile information) to hydrate the identity&#39;s data. | [optional]
+**organizationId** | **string** |  | [optional]
 **projectRevisionId** | **string** | The Revision&#39;s ID this schema belongs to | [optional]
 **provider** | **string** | Provider is either \&quot;generic\&quot; for a generic OAuth 2.0 / OpenID Connect Provider or one of: generic google github gitlab microsoft discord slack facebook vk yandex apple | [optional]
 **providerId** | **string** | ID is the provider&#39;s ID | [optional]

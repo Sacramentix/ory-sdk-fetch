@@ -7,6 +7,16 @@ void main() {
   // TODO add properties to the builder and call build()
 
   group(Project, () {
+    // ProjectCors corsAdmin
+    test('to test the property `corsAdmin`', () async {
+      // TODO
+    });
+
+    // ProjectCors corsPublic
+    test('to test the property `corsPublic`', () async {
+      // TODO
+    });
+
     // The project's ID.
     // String id
     test('to test the property `id`', () async {
@@ -39,6 +49,11 @@ void main() {
     // The state of the project. running Running halted Halted deleted Deleted
     // String state
     test('to test the property `state`', () async {
+      // TODO
+    });
+
+    // String workspaceId
+    test('to test the property `workspaceId`', () async {
       // TODO
     });
 

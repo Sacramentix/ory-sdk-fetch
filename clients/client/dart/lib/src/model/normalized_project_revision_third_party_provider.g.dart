@@ -74,6 +74,8 @@ class _$NormalizedProjectRevisionThirdPartyProviderStateEnumSerializer
 class _$NormalizedProjectRevisionThirdPartyProvider
     extends NormalizedProjectRevisionThirdPartyProvider {
   @override
+  final BuiltList<String>? additionalIdTokenAudiences;
+  @override
   final String? applePrivateKey;
   @override
   final String? applePrivateKeyId;
@@ -97,6 +99,8 @@ class _$NormalizedProjectRevisionThirdPartyProvider
   final String? label;
   @override
   final String? mapperUrl;
+  @override
+  final String? organizationId;
   @override
   final String? projectRevisionId;
   @override
@@ -124,7 +128,8 @@ class _$NormalizedProjectRevisionThirdPartyProvider
           ._build();
 
   _$NormalizedProjectRevisionThirdPartyProvider._(
-      {this.applePrivateKey,
+      {this.additionalIdTokenAudiences,
+      this.applePrivateKey,
       this.applePrivateKeyId,
       this.appleTeamId,
       this.authUrl,
@@ -136,6 +141,7 @@ class _$NormalizedProjectRevisionThirdPartyProvider
       this.issuerUrl,
       this.label,
       this.mapperUrl,
+      this.organizationId,
       this.projectRevisionId,
       this.provider,
       this.providerId,
@@ -161,6 +167,7 @@ class _$NormalizedProjectRevisionThirdPartyProvider
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
     return other is NormalizedProjectRevisionThirdPartyProvider &&
+        additionalIdTokenAudiences == other.additionalIdTokenAudiences &&
         applePrivateKey == other.applePrivateKey &&
         applePrivateKeyId == other.applePrivateKeyId &&
         appleTeamId == other.appleTeamId &&
@@ -173,6 +180,7 @@ class _$NormalizedProjectRevisionThirdPartyProvider
         issuerUrl == other.issuerUrl &&
         label == other.label &&
         mapperUrl == other.mapperUrl &&
+        organizationId == other.organizationId &&
         projectRevisionId == other.projectRevisionId &&
         provider == other.provider &&
         providerId == other.providerId &&
@@ -187,6 +195,7 @@ class _$NormalizedProjectRevisionThirdPartyProvider
   @override
   int get hashCode {
     var _$hash = 0;
+    _$hash = $jc(_$hash, additionalIdTokenAudiences.hashCode);
     _$hash = $jc(_$hash, applePrivateKey.hashCode);
     _$hash = $jc(_$hash, applePrivateKeyId.hashCode);
     _$hash = $jc(_$hash, appleTeamId.hashCode);
@@ -199,6 +208,7 @@ class _$NormalizedProjectRevisionThirdPartyProvider
     _$hash = $jc(_$hash, issuerUrl.hashCode);
     _$hash = $jc(_$hash, label.hashCode);
     _$hash = $jc(_$hash, mapperUrl.hashCode);
+    _$hash = $jc(_$hash, organizationId.hashCode);
     _$hash = $jc(_$hash, projectRevisionId.hashCode);
     _$hash = $jc(_$hash, provider.hashCode);
     _$hash = $jc(_$hash, providerId.hashCode);
@@ -216,6 +226,7 @@ class _$NormalizedProjectRevisionThirdPartyProvider
   String toString() {
     return (newBuiltValueToStringHelper(
             r'NormalizedProjectRevisionThirdPartyProvider')
+          ..add('additionalIdTokenAudiences', additionalIdTokenAudiences)
           ..add('applePrivateKey', applePrivateKey)
           ..add('applePrivateKeyId', applePrivateKeyId)
           ..add('appleTeamId', appleTeamId)
@@ -228,6 +239,7 @@ class _$NormalizedProjectRevisionThirdPartyProvider
           ..add('issuerUrl', issuerUrl)
           ..add('label', label)
           ..add('mapperUrl', mapperUrl)
+          ..add('organizationId', organizationId)
           ..add('projectRevisionId', projectRevisionId)
           ..add('provider', provider)
           ..add('providerId', providerId)
@@ -246,6 +258,13 @@ class NormalizedProjectRevisionThirdPartyProviderBuilder
         Builder<NormalizedProjectRevisionThirdPartyProvider,
             NormalizedProjectRevisionThirdPartyProviderBuilder> {
   _$NormalizedProjectRevisionThirdPartyProvider? _$v;
+
+  ListBuilder<String>? _additionalIdTokenAudiences;
+  ListBuilder<String> get additionalIdTokenAudiences =>
+      _$this._additionalIdTokenAudiences ??= new ListBuilder<String>();
+  set additionalIdTokenAudiences(
+          ListBuilder<String>? additionalIdTokenAudiences) =>
+      _$this._additionalIdTokenAudiences = additionalIdTokenAudiences;
 
   String? _applePrivateKey;
   String? get applePrivateKey => _$this._applePrivateKey;
@@ -297,6 +316,11 @@ class NormalizedProjectRevisionThirdPartyProviderBuilder
   String? get mapperUrl => _$this._mapperUrl;
   set mapperUrl(String? mapperUrl) => _$this._mapperUrl = mapperUrl;
 
+  String? _organizationId;
+  String? get organizationId => _$this._organizationId;
+  set organizationId(String? organizationId) =>
+      _$this._organizationId = organizationId;
+
   String? _projectRevisionId;
   String? get projectRevisionId => _$this._projectRevisionId;
   set projectRevisionId(String? projectRevisionId) =>
@@ -345,6 +369,7 @@ class NormalizedProjectRevisionThirdPartyProviderBuilder
   NormalizedProjectRevisionThirdPartyProviderBuilder get _$this {
     final $v = _$v;
     if ($v != null) {
+      _additionalIdTokenAudiences = $v.additionalIdTokenAudiences?.toBuilder();
       _applePrivateKey = $v.applePrivateKey;
       _applePrivateKeyId = $v.applePrivateKeyId;
       _appleTeamId = $v.appleTeamId;
@@ -357,6 +382,7 @@ class NormalizedProjectRevisionThirdPartyProviderBuilder
       _issuerUrl = $v.issuerUrl;
       _label = $v.label;
       _mapperUrl = $v.mapperUrl;
+      _organizationId = $v.organizationId;
       _projectRevisionId = $v.projectRevisionId;
       _provider = $v.provider;
       _providerId = $v.providerId;
@@ -392,6 +418,7 @@ class NormalizedProjectRevisionThirdPartyProviderBuilder
     try {
       _$result = _$v ??
           new _$NormalizedProjectRevisionThirdPartyProvider._(
+              additionalIdTokenAudiences: _additionalIdTokenAudiences?.build(),
               applePrivateKey: applePrivateKey,
               applePrivateKeyId: applePrivateKeyId,
               appleTeamId: appleTeamId,
@@ -404,6 +431,7 @@ class NormalizedProjectRevisionThirdPartyProviderBuilder
               issuerUrl: issuerUrl,
               label: label,
               mapperUrl: mapperUrl,
+              organizationId: organizationId,
               projectRevisionId: projectRevisionId,
               provider: provider,
               providerId: providerId,
@@ -416,6 +444,9 @@ class NormalizedProjectRevisionThirdPartyProviderBuilder
     } catch (_) {
       late String _$failedField;
       try {
+        _$failedField = 'additionalIdTokenAudiences';
+        _additionalIdTokenAudiences?.build();
+
         _$failedField = 'scope';
         _scope?.build();
       } catch (e) {

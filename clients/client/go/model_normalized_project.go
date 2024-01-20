@@ -3,7 +3,7 @@ Ory APIs
 
 Documentation for all public and administrative Ory APIs. Administrative APIs can only be accessed with a valid Personal Access Token. Public APIs are mostly used in browsers. 
 
-API version: v1.1.39
+API version: v1.5.1
 Contact: support@ory.sh
 */
 
@@ -14,13 +14,19 @@ package client
 import (
 	"encoding/json"
 	"time"
+	"fmt"
 )
+
+// checks if the NormalizedProject type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &NormalizedProject{}
 
 // NormalizedProject struct for NormalizedProject
 type NormalizedProject struct {
 	// The Project's Creation Date
 	CreatedAt time.Time `json:"created_at"`
 	CurrentRevision NormalizedProjectRevision `json:"current_revision"`
+	// The environment of the project. prod Production dev Development
+	Environment string `json:"environment"`
 	Hosts []string `json:"hosts"`
 	// The project's ID.
 	Id string `json:"id"`
@@ -29,8 +35,10 @@ type NormalizedProject struct {
 	// The state of the project. running Running halted Halted deleted Deleted
 	State string `json:"state"`
 	SubscriptionId NullableString `json:"subscription_id,omitempty"`
+	SubscriptionPlan NullableString `json:"subscription_plan,omitempty"`
 	// Last Time Project was Updated
 	UpdatedAt time.Time `json:"updated_at"`
+	WorkspaceId NullableString `json:"workspace_id"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -40,15 +48,17 @@ type _NormalizedProject NormalizedProject
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewNormalizedProject(createdAt time.Time, currentRevision NormalizedProjectRevision, hosts []string, id string, slug string, state string, updatedAt time.Time) *NormalizedProject {
+func NewNormalizedProject(createdAt time.Time, currentRevision NormalizedProjectRevision, environment string, hosts []string, id string, slug string, state string, updatedAt time.Time, workspaceId NullableString) *NormalizedProject {
 	this := NormalizedProject{}
 	this.CreatedAt = createdAt
 	this.CurrentRevision = currentRevision
+	this.Environment = environment
 	this.Hosts = hosts
 	this.Id = id
 	this.Slug = slug
 	this.State = state
 	this.UpdatedAt = updatedAt
+	this.WorkspaceId = workspaceId
 	return &this
 }
 
@@ -106,6 +116,30 @@ func (o *NormalizedProject) GetCurrentRevisionOk() (*NormalizedProjectRevision, 
 // SetCurrentRevision sets field value
 func (o *NormalizedProject) SetCurrentRevision(v NormalizedProjectRevision) {
 	o.CurrentRevision = v
+}
+
+// GetEnvironment returns the Environment field value
+func (o *NormalizedProject) GetEnvironment() string {
+	if o == nil {
+		var ret string
+		return ret
+	}
+
+	return o.Environment
+}
+
+// GetEnvironmentOk returns a tuple with the Environment field value
+// and a boolean to check if the value has been set.
+func (o *NormalizedProject) GetEnvironmentOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return &o.Environment, true
+}
+
+// SetEnvironment sets field value
+func (o *NormalizedProject) SetEnvironment(v string) {
+	o.Environment = v
 }
 
 // GetHosts returns the Hosts field value
@@ -206,7 +240,7 @@ func (o *NormalizedProject) SetState(v string) {
 
 // GetSubscriptionId returns the SubscriptionId field value if set, zero value otherwise (both if not set or set to explicit null).
 func (o *NormalizedProject) GetSubscriptionId() string {
-	if o == nil || o.SubscriptionId.Get() == nil {
+	if o == nil || IsNil(o.SubscriptionId.Get()) {
 		var ret string
 		return ret
 	}
@@ -246,6 +280,48 @@ func (o *NormalizedProject) UnsetSubscriptionId() {
 	o.SubscriptionId.Unset()
 }
 
+// GetSubscriptionPlan returns the SubscriptionPlan field value if set, zero value otherwise (both if not set or set to explicit null).
+func (o *NormalizedProject) GetSubscriptionPlan() string {
+	if o == nil || IsNil(o.SubscriptionPlan.Get()) {
+		var ret string
+		return ret
+	}
+	return *o.SubscriptionPlan.Get()
+}
+
+// GetSubscriptionPlanOk returns a tuple with the SubscriptionPlan field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *NormalizedProject) GetSubscriptionPlanOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.SubscriptionPlan.Get(), o.SubscriptionPlan.IsSet()
+}
+
+// HasSubscriptionPlan returns a boolean if a field has been set.
+func (o *NormalizedProject) HasSubscriptionPlan() bool {
+	if o != nil && o.SubscriptionPlan.IsSet() {
+		return true
+	}
+
+	return false
+}
+
+// SetSubscriptionPlan gets a reference to the given NullableString and assigns it to the SubscriptionPlan field.
+func (o *NormalizedProject) SetSubscriptionPlan(v string) {
+	o.SubscriptionPlan.Set(&v)
+}
+// SetSubscriptionPlanNil sets the value for SubscriptionPlan to be an explicit nil
+func (o *NormalizedProject) SetSubscriptionPlanNil() {
+	o.SubscriptionPlan.Set(nil)
+}
+
+// UnsetSubscriptionPlan ensures that no value is present for SubscriptionPlan, not even an explicit nil
+func (o *NormalizedProject) UnsetSubscriptionPlan() {
+	o.SubscriptionPlan.Unset()
+}
+
 // GetUpdatedAt returns the UpdatedAt field value
 func (o *NormalizedProject) GetUpdatedAt() time.Time {
 	if o == nil {
@@ -270,58 +346,119 @@ func (o *NormalizedProject) SetUpdatedAt(v time.Time) {
 	o.UpdatedAt = v
 }
 
+// GetWorkspaceId returns the WorkspaceId field value
+// If the value is explicit nil, the zero value for string will be returned
+func (o *NormalizedProject) GetWorkspaceId() string {
+	if o == nil || o.WorkspaceId.Get() == nil {
+		var ret string
+		return ret
+	}
+
+	return *o.WorkspaceId.Get()
+}
+
+// GetWorkspaceIdOk returns a tuple with the WorkspaceId field value
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *NormalizedProject) GetWorkspaceIdOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.WorkspaceId.Get(), o.WorkspaceId.IsSet()
+}
+
+// SetWorkspaceId sets field value
+func (o *NormalizedProject) SetWorkspaceId(v string) {
+	o.WorkspaceId.Set(&v)
+}
+
 func (o NormalizedProject) MarshalJSON() ([]byte, error) {
+	toSerialize,err := o.ToMap()
+	if err != nil {
+		return []byte{}, err
+	}
+	return json.Marshal(toSerialize)
+}
+
+func (o NormalizedProject) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
-	if true {
-		toSerialize["created_at"] = o.CreatedAt
-	}
-	if true {
-		toSerialize["current_revision"] = o.CurrentRevision
-	}
-	if true {
-		toSerialize["hosts"] = o.Hosts
-	}
-	if true {
-		toSerialize["id"] = o.Id
-	}
-	if true {
-		toSerialize["slug"] = o.Slug
-	}
-	if true {
-		toSerialize["state"] = o.State
-	}
+	toSerialize["created_at"] = o.CreatedAt
+	toSerialize["current_revision"] = o.CurrentRevision
+	toSerialize["environment"] = o.Environment
+	toSerialize["hosts"] = o.Hosts
+	toSerialize["id"] = o.Id
+	toSerialize["slug"] = o.Slug
+	toSerialize["state"] = o.State
 	if o.SubscriptionId.IsSet() {
 		toSerialize["subscription_id"] = o.SubscriptionId.Get()
 	}
-	if true {
-		toSerialize["updated_at"] = o.UpdatedAt
+	if o.SubscriptionPlan.IsSet() {
+		toSerialize["subscription_plan"] = o.SubscriptionPlan.Get()
 	}
+	toSerialize["updated_at"] = o.UpdatedAt
+	toSerialize["workspace_id"] = o.WorkspaceId.Get()
 
 	for key, value := range o.AdditionalProperties {
 		toSerialize[key] = value
 	}
 
-	return json.Marshal(toSerialize)
+	return toSerialize, nil
 }
 
 func (o *NormalizedProject) UnmarshalJSON(bytes []byte) (err error) {
+    // This validates that all required properties are included in the JSON object
+	// by unmarshalling the object into a generic map with string keys and checking
+	// that every required field exists as a key in the generic map.
+	requiredProperties := []string{
+		"created_at",
+		"current_revision",
+		"environment",
+		"hosts",
+		"id",
+		"slug",
+		"state",
+		"updated_at",
+		"workspace_id",
+	}
+
+	allProperties := make(map[string]interface{})
+
+	err = json.Unmarshal(bytes, &allProperties)
+
+	if err != nil {
+		return err;
+	}
+
+	for _, requiredProperty := range(requiredProperties) {
+		if _, exists := allProperties[requiredProperty]; !exists {
+			return fmt.Errorf("no value given for required property %v", requiredProperty)
+		}
+	}
+
 	varNormalizedProject := _NormalizedProject{}
 
-	if err = json.Unmarshal(bytes, &varNormalizedProject); err == nil {
-		*o = NormalizedProject(varNormalizedProject)
+	err = json.Unmarshal(bytes, &varNormalizedProject)
+
+	if err != nil {
+		return err
 	}
+
+	*o = NormalizedProject(varNormalizedProject)
 
 	additionalProperties := make(map[string]interface{})
 
 	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
 		delete(additionalProperties, "created_at")
 		delete(additionalProperties, "current_revision")
+		delete(additionalProperties, "environment")
 		delete(additionalProperties, "hosts")
 		delete(additionalProperties, "id")
 		delete(additionalProperties, "slug")
 		delete(additionalProperties, "state")
 		delete(additionalProperties, "subscription_id")
+		delete(additionalProperties, "subscription_plan")
 		delete(additionalProperties, "updated_at")
+		delete(additionalProperties, "workspace_id")
 		o.AdditionalProperties = additionalProperties
 	}
 

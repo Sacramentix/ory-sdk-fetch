@@ -3,7 +3,7 @@ Ory APIs
 
 Documentation for all public and administrative Ory APIs. Administrative APIs can only be accessed with a valid Personal Access Token. Public APIs are mostly used in browsers. 
 
-API version: v1.1.39
+API version: v1.5.1
 Contact: support@ory.sh
 */
 
@@ -15,16 +15,15 @@ import (
 	"encoding/json"
 )
 
+// checks if the Pagination type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &Pagination{}
+
 // Pagination struct for Pagination
 type Pagination struct {
-	// Pagination Page  This value is currently an integer, but it is not sequential. The value is not the page number, but a reference. The next page can be any number and some numbers might return an empty list.  For example, page 2 might not follow after page 1. And even if page 3 and 5 exist, but page 4 might not exist.
-	Page *int64 `json:"page,omitempty"`
 	// Items per page  This is the number of items per page to return. For details on pagination please head over to the [pagination documentation](https://www.ory.sh/docs/ecosystem/api-design#pagination).
 	PageSize *int64 `json:"page_size,omitempty"`
 	// Next Page Token  The next page token. For details on pagination please head over to the [pagination documentation](https://www.ory.sh/docs/ecosystem/api-design#pagination).
 	PageToken *string `json:"page_token,omitempty"`
-	// Items per Page  This is the number of items per page.
-	PerPage *int64 `json:"per_page,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -36,14 +35,10 @@ type _Pagination Pagination
 // will change when the set of required properties is changed
 func NewPagination() *Pagination {
 	this := Pagination{}
-	var page int64 = 1
-	this.Page = &page
 	var pageSize int64 = 250
 	this.PageSize = &pageSize
 	var pageToken string = "1"
 	this.PageToken = &pageToken
-	var perPage int64 = 250
-	this.PerPage = &perPage
 	return &this
 }
 
@@ -52,52 +47,16 @@ func NewPagination() *Pagination {
 // but it doesn't guarantee that properties required by API are set
 func NewPaginationWithDefaults() *Pagination {
 	this := Pagination{}
-	var page int64 = 1
-	this.Page = &page
 	var pageSize int64 = 250
 	this.PageSize = &pageSize
 	var pageToken string = "1"
 	this.PageToken = &pageToken
-	var perPage int64 = 250
-	this.PerPage = &perPage
 	return &this
-}
-
-// GetPage returns the Page field value if set, zero value otherwise.
-func (o *Pagination) GetPage() int64 {
-	if o == nil || o.Page == nil {
-		var ret int64
-		return ret
-	}
-	return *o.Page
-}
-
-// GetPageOk returns a tuple with the Page field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *Pagination) GetPageOk() (*int64, bool) {
-	if o == nil || o.Page == nil {
-		return nil, false
-	}
-	return o.Page, true
-}
-
-// HasPage returns a boolean if a field has been set.
-func (o *Pagination) HasPage() bool {
-	if o != nil && o.Page != nil {
-		return true
-	}
-
-	return false
-}
-
-// SetPage gets a reference to the given int64 and assigns it to the Page field.
-func (o *Pagination) SetPage(v int64) {
-	o.Page = &v
 }
 
 // GetPageSize returns the PageSize field value if set, zero value otherwise.
 func (o *Pagination) GetPageSize() int64 {
-	if o == nil || o.PageSize == nil {
+	if o == nil || IsNil(o.PageSize) {
 		var ret int64
 		return ret
 	}
@@ -107,7 +66,7 @@ func (o *Pagination) GetPageSize() int64 {
 // GetPageSizeOk returns a tuple with the PageSize field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *Pagination) GetPageSizeOk() (*int64, bool) {
-	if o == nil || o.PageSize == nil {
+	if o == nil || IsNil(o.PageSize) {
 		return nil, false
 	}
 	return o.PageSize, true
@@ -115,7 +74,7 @@ func (o *Pagination) GetPageSizeOk() (*int64, bool) {
 
 // HasPageSize returns a boolean if a field has been set.
 func (o *Pagination) HasPageSize() bool {
-	if o != nil && o.PageSize != nil {
+	if o != nil && !IsNil(o.PageSize) {
 		return true
 	}
 
@@ -129,7 +88,7 @@ func (o *Pagination) SetPageSize(v int64) {
 
 // GetPageToken returns the PageToken field value if set, zero value otherwise.
 func (o *Pagination) GetPageToken() string {
-	if o == nil || o.PageToken == nil {
+	if o == nil || IsNil(o.PageToken) {
 		var ret string
 		return ret
 	}
@@ -139,7 +98,7 @@ func (o *Pagination) GetPageToken() string {
 // GetPageTokenOk returns a tuple with the PageToken field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *Pagination) GetPageTokenOk() (*string, bool) {
-	if o == nil || o.PageToken == nil {
+	if o == nil || IsNil(o.PageToken) {
 		return nil, false
 	}
 	return o.PageToken, true
@@ -147,7 +106,7 @@ func (o *Pagination) GetPageTokenOk() (*string, bool) {
 
 // HasPageToken returns a boolean if a field has been set.
 func (o *Pagination) HasPageToken() bool {
-	if o != nil && o.PageToken != nil {
+	if o != nil && !IsNil(o.PageToken) {
 		return true
 	}
 
@@ -159,74 +118,46 @@ func (o *Pagination) SetPageToken(v string) {
 	o.PageToken = &v
 }
 
-// GetPerPage returns the PerPage field value if set, zero value otherwise.
-func (o *Pagination) GetPerPage() int64 {
-	if o == nil || o.PerPage == nil {
-		var ret int64
-		return ret
-	}
-	return *o.PerPage
-}
-
-// GetPerPageOk returns a tuple with the PerPage field value if set, nil otherwise
-// and a boolean to check if the value has been set.
-func (o *Pagination) GetPerPageOk() (*int64, bool) {
-	if o == nil || o.PerPage == nil {
-		return nil, false
-	}
-	return o.PerPage, true
-}
-
-// HasPerPage returns a boolean if a field has been set.
-func (o *Pagination) HasPerPage() bool {
-	if o != nil && o.PerPage != nil {
-		return true
-	}
-
-	return false
-}
-
-// SetPerPage gets a reference to the given int64 and assigns it to the PerPage field.
-func (o *Pagination) SetPerPage(v int64) {
-	o.PerPage = &v
-}
-
 func (o Pagination) MarshalJSON() ([]byte, error) {
-	toSerialize := map[string]interface{}{}
-	if o.Page != nil {
-		toSerialize["page"] = o.Page
+	toSerialize,err := o.ToMap()
+	if err != nil {
+		return []byte{}, err
 	}
-	if o.PageSize != nil {
+	return json.Marshal(toSerialize)
+}
+
+func (o Pagination) ToMap() (map[string]interface{}, error) {
+	toSerialize := map[string]interface{}{}
+	if !IsNil(o.PageSize) {
 		toSerialize["page_size"] = o.PageSize
 	}
-	if o.PageToken != nil {
+	if !IsNil(o.PageToken) {
 		toSerialize["page_token"] = o.PageToken
-	}
-	if o.PerPage != nil {
-		toSerialize["per_page"] = o.PerPage
 	}
 
 	for key, value := range o.AdditionalProperties {
 		toSerialize[key] = value
 	}
 
-	return json.Marshal(toSerialize)
+	return toSerialize, nil
 }
 
 func (o *Pagination) UnmarshalJSON(bytes []byte) (err error) {
 	varPagination := _Pagination{}
 
-	if err = json.Unmarshal(bytes, &varPagination); err == nil {
-		*o = Pagination(varPagination)
+	err = json.Unmarshal(bytes, &varPagination)
+
+	if err != nil {
+		return err
 	}
+
+	*o = Pagination(varPagination)
 
 	additionalProperties := make(map[string]interface{})
 
 	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
-		delete(additionalProperties, "page")
 		delete(additionalProperties, "page_size")
 		delete(additionalProperties, "page_token")
-		delete(additionalProperties, "per_page")
 		o.AdditionalProperties = additionalProperties
 	}
 

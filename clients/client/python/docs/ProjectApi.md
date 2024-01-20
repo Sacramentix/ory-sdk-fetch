@@ -4,21 +4,123 @@ All URIs are relative to *https://playground.projects.oryapis.com*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
+[**create_organization**](ProjectApi.md#create_organization) | **POST** /projects/{project_id}/organizations | 
 [**create_project**](ProjectApi.md#create_project) | **POST** /projects | Create a Project
 [**create_project_api_key**](ProjectApi.md#create_project_api_key) | **POST** /projects/{project}/tokens | Create project API token
+[**delete_organization**](ProjectApi.md#delete_organization) | **DELETE** /projects/{project_id}/organizations/{organization_id} | Delete a B2B SSO Organization for a project.
 [**delete_project_api_key**](ProjectApi.md#delete_project_api_key) | **DELETE** /projects/{project}/tokens/{token_id} | Delete project API token
 [**get_active_project_in_console**](ProjectApi.md#get_active_project_in_console) | **GET** /console/active/project | Returns the Ory Network Project selected in the Ory Network Console
+[**get_organization**](ProjectApi.md#get_organization) | **GET** /projects/{project_id}/organizations/{organization_id} | Returns a B2B SSO Organization for a project by it&#39;s ID.
 [**get_project**](ProjectApi.md#get_project) | **GET** /projects/{project_id} | Get a Project
-[**get_project_members**](ProjectApi.md#get_project_members) | **GET** /projects/{project_id}/members | Get all members associated with this project
+[**get_project_members**](ProjectApi.md#get_project_members) | **GET** /projects/{project}/members | Get all members associated with this project
 [**get_project_metrics**](ProjectApi.md#get_project_metrics) | **GET** /projects/{project_id}/metrics | 
+[**list_organizations**](ProjectApi.md#list_organizations) | **GET** /projects/{project_id}/organizations | 
 [**list_project_api_keys**](ProjectApi.md#list_project_api_keys) | **GET** /projects/{project}/tokens | List a project&#39;s API Tokens
 [**list_projects**](ProjectApi.md#list_projects) | **GET** /projects | List All Projects
 [**patch_project**](ProjectApi.md#patch_project) | **PATCH** /projects/{project_id} | Patch an Ory Network Project Configuration
 [**purge_project**](ProjectApi.md#purge_project) | **DELETE** /projects/{project_id} | Irrecoverably purge a project
-[**remove_project_member**](ProjectApi.md#remove_project_member) | **DELETE** /projects/{project_id}/members/{member_id} | Remove a member associated with this project
+[**remove_project_member**](ProjectApi.md#remove_project_member) | **DELETE** /projects/{project}/members/{member} | Remove a member associated with this project
 [**set_active_project_in_console**](ProjectApi.md#set_active_project_in_console) | **PUT** /console/active/project | Sets the Ory Network Project active in the Ory Network Console
 [**set_project**](ProjectApi.md#set_project) | **PUT** /projects/{project_id} | Update an Ory Network Project Configuration
+[**update_organization**](ProjectApi.md#update_organization) | **PUT** /projects/{project_id}/organizations/{organization_id} | Update a B2B SSO Organization for a project.
 
+
+# **create_organization**
+> Organization create_organization(project_id)
+
+
+
+Create a B2B SSO Organization
+
+### Example
+
+* Bearer Authentication (oryAccessToken):
+
+```python
+import time
+import ory_client
+from ory_client.api import project_api
+from ory_client.model.organization_body import OrganizationBody
+from ory_client.model.error_generic import ErrorGeneric
+from ory_client.model.organization import Organization
+from pprint import pprint
+# Defining the host is optional and defaults to https://playground.projects.oryapis.com
+# See configuration.py for a list of all supported configuration parameters.
+configuration = ory_client.Configuration(
+    host = "https://playground.projects.oryapis.com"
+)
+
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
+# Configure Bearer authorization: oryAccessToken
+configuration = ory_client.Configuration(
+    access_token = 'YOUR_BEARER_TOKEN'
+)
+
+# Enter a context with an instance of the API client
+with ory_client.ApiClient(configuration) as api_client:
+    # Create an instance of the API class
+    api_instance = project_api.ProjectApi(api_client)
+    project_id = "project_id_example" # str | Project ID  The project's ID.
+    organization_body = OrganizationBody(
+        domains=[
+            "domains_example",
+        ],
+        label="label_example",
+    ) # OrganizationBody |  (optional)
+
+    # example passing only required values which don't have defaults set
+    try:
+        api_response = api_instance.create_organization(project_id)
+        pprint(api_response)
+    except ory_client.ApiException as e:
+        print("Exception when calling ProjectApi->create_organization: %s\n" % e)
+
+    # example passing only required values which don't have defaults set
+    # and optional values
+    try:
+        api_response = api_instance.create_organization(project_id, organization_body=organization_body)
+        pprint(api_response)
+    except ory_client.ApiException as e:
+        print("Exception when calling ProjectApi->create_organization: %s\n" % e)
+```
+
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **project_id** | **str**| Project ID  The project&#39;s ID. |
+ **organization_body** | [**OrganizationBody**](OrganizationBody.md)|  | [optional]
+
+### Return type
+
+[**Organization**](Organization.md)
+
+### Authorization
+
+[oryAccessToken](../README.md#oryAccessToken)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+
+### HTTP response details
+
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**201** | organization |  -  |
+**400** | errorGeneric |  -  |
+**403** | errorGeneric |  -  |
+**409** | errorGeneric |  -  |
+**0** | errorGeneric |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **create_project**
 > Project create_project()
@@ -61,6 +163,7 @@ with ory_client.ApiClient(configuration) as api_client:
     api_instance = project_api.ProjectApi(api_client)
     create_project_body = CreateProjectBody(
         name="name_example",
+        workspace_id="workspace_id_example",
     ) # CreateProjectBody |  (optional)
 
     # example passing only required values which don't have defaults set
@@ -195,6 +298,87 @@ Name | Type | Description  | Notes
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **201** | projectApiKey |  -  |
+**0** | errorGeneric |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **delete_organization**
+> delete_organization(project_id, organization_id)
+
+Delete a B2B SSO Organization for a project.
+
+### Example
+
+* Bearer Authentication (oryAccessToken):
+
+```python
+import time
+import ory_client
+from ory_client.api import project_api
+from ory_client.model.error_generic import ErrorGeneric
+from pprint import pprint
+# Defining the host is optional and defaults to https://playground.projects.oryapis.com
+# See configuration.py for a list of all supported configuration parameters.
+configuration = ory_client.Configuration(
+    host = "https://playground.projects.oryapis.com"
+)
+
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
+# Configure Bearer authorization: oryAccessToken
+configuration = ory_client.Configuration(
+    access_token = 'YOUR_BEARER_TOKEN'
+)
+
+# Enter a context with an instance of the API client
+with ory_client.ApiClient(configuration) as api_client:
+    # Create an instance of the API class
+    api_instance = project_api.ProjectApi(api_client)
+    project_id = "project_id_example" # str | Project ID  The project's ID.
+    organization_id = "organization_id_example" # str | Organization ID  The Organization's ID.
+
+    # example passing only required values which don't have defaults set
+    try:
+        # Delete a B2B SSO Organization for a project.
+        api_instance.delete_organization(project_id, organization_id)
+    except ory_client.ApiException as e:
+        print("Exception when calling ProjectApi->delete_organization: %s\n" % e)
+```
+
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **project_id** | **str**| Project ID  The project&#39;s ID. |
+ **organization_id** | **str**| Organization ID  The Organization&#39;s ID. |
+
+### Return type
+
+void (empty response body)
+
+### Authorization
+
+[oryAccessToken](../README.md#oryAccessToken)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+
+### HTTP response details
+
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**204** | Empty responses are sent when, for example, resources are deleted. The HTTP status code for empty responses is typically 201. |  -  |
+**400** | errorGeneric |  -  |
+**403** | errorGeneric |  -  |
+**404** | errorGeneric |  -  |
+**409** | errorGeneric |  -  |
 **0** | errorGeneric |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
@@ -354,6 +538,87 @@ This endpoint does not need any parameter.
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
+# **get_organization**
+> GetOrganizationResponse get_organization(project_id, organization_id)
+
+Returns a B2B SSO Organization for a project by it's ID.
+
+### Example
+
+* Bearer Authentication (oryAccessToken):
+
+```python
+import time
+import ory_client
+from ory_client.api import project_api
+from ory_client.model.get_organization_response import GetOrganizationResponse
+from ory_client.model.error_generic import ErrorGeneric
+from pprint import pprint
+# Defining the host is optional and defaults to https://playground.projects.oryapis.com
+# See configuration.py for a list of all supported configuration parameters.
+configuration = ory_client.Configuration(
+    host = "https://playground.projects.oryapis.com"
+)
+
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
+# Configure Bearer authorization: oryAccessToken
+configuration = ory_client.Configuration(
+    access_token = 'YOUR_BEARER_TOKEN'
+)
+
+# Enter a context with an instance of the API client
+with ory_client.ApiClient(configuration) as api_client:
+    # Create an instance of the API class
+    api_instance = project_api.ProjectApi(api_client)
+    project_id = "project_id_example" # str | Project ID  The project's ID.
+    organization_id = "organization_id_example" # str | Organization ID  The Organization's ID.
+
+    # example passing only required values which don't have defaults set
+    try:
+        # Returns a B2B SSO Organization for a project by it's ID.
+        api_response = api_instance.get_organization(project_id, organization_id)
+        pprint(api_response)
+    except ory_client.ApiException as e:
+        print("Exception when calling ProjectApi->get_organization: %s\n" % e)
+```
+
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **project_id** | **str**| Project ID  The project&#39;s ID. |
+ **organization_id** | **str**| Organization ID  The Organization&#39;s ID. |
+
+### Return type
+
+[**GetOrganizationResponse**](GetOrganizationResponse.md)
+
+### Authorization
+
+[oryAccessToken](../README.md#oryAccessToken)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+
+### HTTP response details
+
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | getOrganizationResponse |  -  |
+**400** | errorGeneric |  -  |
+**403** | errorGeneric |  -  |
+**0** | errorGeneric |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
 # **get_project**
 > Project get_project(project_id)
 
@@ -437,7 +702,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **get_project_members**
-> ProjectMembers get_project_members(project_id)
+> ProjectMembers get_project_members(project)
 
 Get all members associated with this project
 
@@ -474,12 +739,12 @@ configuration = ory_client.Configuration(
 with ory_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = project_api.ProjectApi(api_client)
-    project_id = "project_id_example" # str | Project ID  The project's ID.
+    project = "project_example" # str | 
 
     # example passing only required values which don't have defaults set
     try:
         # Get all members associated with this project
-        api_response = api_instance.get_project_members(project_id)
+        api_response = api_instance.get_project_members(project)
         pprint(api_response)
     except ory_client.ApiException as e:
         print("Exception when calling ProjectApi->get_project_members: %s\n" % e)
@@ -490,7 +755,7 @@ with ory_client.ApiClient(configuration) as api_client:
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **project_id** | **str**| Project ID  The project&#39;s ID. |
+ **project** | **str**|  |
 
 ### Return type
 
@@ -558,8 +823,8 @@ with ory_client.ApiClient(configuration) as api_client:
     project_id = "project_id_example" # str | Project ID
     event_type = "event_type_example" # str | The event type to query for
     resolution = "4ms" # str | The resolution of the buckets  The minimum resolution is 1 hour.
-    _from = dateutil_parser('1970-01-01T00:00:00.00Z') # datetime | The start time of the time window
-    to = dateutil_parser('1970-01-01T00:00:00.00Z') # datetime | The end time of the time window
+    _from = dateutil_parser('1970-01-01T00:00:00.00Z') # datetime | The start RFC3339 date of the time window
+    to = dateutil_parser('1970-01-01T00:00:00.00Z') # datetime | The end RFC3339 date of the time window
 
     # example passing only required values which don't have defaults set
     try:
@@ -577,8 +842,8 @@ Name | Type | Description  | Notes
  **project_id** | **str**| Project ID |
  **event_type** | **str**| The event type to query for |
  **resolution** | **str**| The resolution of the buckets  The minimum resolution is 1 hour. |
- **_from** | **datetime**| The start time of the time window |
- **to** | **datetime**| The end time of the time window |
+ **_from** | **datetime**| The start RFC3339 date of the time window |
+ **to** | **datetime**| The end RFC3339 date of the time window |
 
 ### Return type
 
@@ -602,6 +867,84 @@ Name | Type | Description  | Notes
 **400** | genericError |  -  |
 **403** | genericError |  -  |
 **0** | genericError |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **list_organizations**
+> ListOrganizationsResponse list_organizations(project_id)
+
+
+
+### Example
+
+* Bearer Authentication (oryAccessToken):
+
+```python
+import time
+import ory_client
+from ory_client.api import project_api
+from ory_client.model.error_generic import ErrorGeneric
+from ory_client.model.list_organizations_response import ListOrganizationsResponse
+from pprint import pprint
+# Defining the host is optional and defaults to https://playground.projects.oryapis.com
+# See configuration.py for a list of all supported configuration parameters.
+configuration = ory_client.Configuration(
+    host = "https://playground.projects.oryapis.com"
+)
+
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
+# Configure Bearer authorization: oryAccessToken
+configuration = ory_client.Configuration(
+    access_token = 'YOUR_BEARER_TOKEN'
+)
+
+# Enter a context with an instance of the API client
+with ory_client.ApiClient(configuration) as api_client:
+    # Create an instance of the API class
+    api_instance = project_api.ProjectApi(api_client)
+    project_id = "project_id_example" # str | Project ID  The project's ID.
+
+    # example passing only required values which don't have defaults set
+    try:
+        api_response = api_instance.list_organizations(project_id)
+        pprint(api_response)
+    except ory_client.ApiException as e:
+        print("Exception when calling ProjectApi->list_organizations: %s\n" % e)
+```
+
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **project_id** | **str**| Project ID  The project&#39;s ID. |
+
+### Return type
+
+[**ListOrganizationsResponse**](ListOrganizationsResponse.md)
+
+### Authorization
+
+[oryAccessToken](../README.md#oryAccessToken)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+
+### HTTP response details
+
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | listOrganizationsResponse |  -  |
+**400** | errorGeneric |  -  |
+**403** | errorGeneric |  -  |
+**0** | errorGeneric |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
@@ -945,7 +1288,7 @@ void (empty response body)
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **remove_project_member**
-> remove_project_member(project_id, member_id)
+> remove_project_member(project, member)
 
 Remove a member associated with this project
 
@@ -981,13 +1324,13 @@ configuration = ory_client.Configuration(
 with ory_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = project_api.ProjectApi(api_client)
-    project_id = "project_id_example" # str | Project ID  The project's ID.
-    member_id = "member_id_example" # str | Member ID
+    project = "project_example" # str | 
+    member = "member_example" # str | 
 
     # example passing only required values which don't have defaults set
     try:
         # Remove a member associated with this project
-        api_instance.remove_project_member(project_id, member_id)
+        api_instance.remove_project_member(project, member)
     except ory_client.ApiException as e:
         print("Exception when calling ProjectApi->remove_project_member: %s\n" % e)
 ```
@@ -997,8 +1340,8 @@ with ory_client.ApiClient(configuration) as api_client:
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **project_id** | **str**| Project ID  The project&#39;s ID. |
- **member_id** | **str**| Member ID |
+ **project** | **str**|  |
+ **member** | **str**|  |
 
 ### Return type
 
@@ -1148,6 +1491,18 @@ with ory_client.ApiClient(configuration) as api_client:
     api_instance = project_api.ProjectApi(api_client)
     project_id = "project_id_example" # str | Project ID  The project's ID.
     set_project = SetProject(
+        cors_admin=ProjectCors(
+            enabled=True,
+            origins=[
+                "origins_example",
+            ],
+        ),
+        cors_public=ProjectCors(
+            enabled=True,
+            origins=[
+                "origins_example",
+            ],
+        ),
         name="name_example",
         services=ProjectServices(
             identity=ProjectServiceIdentity(
@@ -1211,6 +1566,106 @@ Name | Type | Description  | Notes
 **401** | errorGeneric |  -  |
 **403** | errorGeneric |  -  |
 **404** | errorGeneric |  -  |
+**0** | errorGeneric |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **update_organization**
+> Organization update_organization(project_id, organization_id)
+
+Update a B2B SSO Organization for a project.
+
+### Example
+
+* Bearer Authentication (oryAccessToken):
+
+```python
+import time
+import ory_client
+from ory_client.api import project_api
+from ory_client.model.organization_body import OrganizationBody
+from ory_client.model.error_generic import ErrorGeneric
+from ory_client.model.organization import Organization
+from pprint import pprint
+# Defining the host is optional and defaults to https://playground.projects.oryapis.com
+# See configuration.py for a list of all supported configuration parameters.
+configuration = ory_client.Configuration(
+    host = "https://playground.projects.oryapis.com"
+)
+
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
+# Configure Bearer authorization: oryAccessToken
+configuration = ory_client.Configuration(
+    access_token = 'YOUR_BEARER_TOKEN'
+)
+
+# Enter a context with an instance of the API client
+with ory_client.ApiClient(configuration) as api_client:
+    # Create an instance of the API class
+    api_instance = project_api.ProjectApi(api_client)
+    project_id = "project_id_example" # str | Project ID  The project's ID.
+    organization_id = "organization_id_example" # str | Organization ID  The Organization's ID.
+    organization_body = OrganizationBody(
+        domains=[
+            "domains_example",
+        ],
+        label="label_example",
+    ) # OrganizationBody |  (optional)
+
+    # example passing only required values which don't have defaults set
+    try:
+        # Update a B2B SSO Organization for a project.
+        api_response = api_instance.update_organization(project_id, organization_id)
+        pprint(api_response)
+    except ory_client.ApiException as e:
+        print("Exception when calling ProjectApi->update_organization: %s\n" % e)
+
+    # example passing only required values which don't have defaults set
+    # and optional values
+    try:
+        # Update a B2B SSO Organization for a project.
+        api_response = api_instance.update_organization(project_id, organization_id, organization_body=organization_body)
+        pprint(api_response)
+    except ory_client.ApiException as e:
+        print("Exception when calling ProjectApi->update_organization: %s\n" % e)
+```
+
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **project_id** | **str**| Project ID  The project&#39;s ID. |
+ **organization_id** | **str**| Organization ID  The Organization&#39;s ID. |
+ **organization_body** | [**OrganizationBody**](OrganizationBody.md)|  | [optional]
+
+### Return type
+
+[**Organization**](Organization.md)
+
+### Authorization
+
+[oryAccessToken](../README.md#oryAccessToken)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+
+### HTTP response details
+
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | organization |  -  |
+**400** | errorGeneric |  -  |
+**403** | errorGeneric |  -  |
+**404** | errorGeneric |  -  |
+**409** | errorGeneric |  -  |
 **0** | errorGeneric |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)

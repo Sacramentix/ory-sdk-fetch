@@ -3,7 +3,7 @@ Ory APIs
 
 Documentation for all public and administrative Ory APIs. Administrative APIs can only be accessed with a valid Personal Access Token. Public APIs are mostly used in browsers. 
 
-API version: v1.1.39
+API version: v1.5.1
 Contact: support@ory.sh
 */
 
@@ -16,8 +16,12 @@ import (
 	"time"
 )
 
+// checks if the NormalizedProjectRevisionThirdPartyProvider type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &NormalizedProjectRevisionThirdPartyProvider{}
+
 // NormalizedProjectRevisionThirdPartyProvider struct for NormalizedProjectRevisionThirdPartyProvider
 type NormalizedProjectRevisionThirdPartyProvider struct {
+	AdditionalIdTokenAudiences []string `json:"additional_id_token_audiences,omitempty"`
 	ApplePrivateKey NullableString `json:"apple_private_key,omitempty"`
 	// Apple Private Key Identifier  Sign In with Apple Private Key Identifier needed for generating a JWT token for client secret
 	ApplePrivateKeyId *string `json:"apple_private_key_id,omitempty"`
@@ -37,8 +41,9 @@ type NormalizedProjectRevisionThirdPartyProvider struct {
 	IssuerUrl *string `json:"issuer_url,omitempty"`
 	// Label represents an optional label which can be used in the UI generation.
 	Label *string `json:"label,omitempty"`
-	// Mapper specifies the JSONNet code snippet which uses the OpenID Connect Provider's data (e.g. GitHub or Google profile information) to hydrate the identity's data.  It can be either a URL (file://, http(s)://, base64://) or an inline JSONNet code snippet.
+	// Mapper specifies the JSONNet code snippet which uses the OpenID Connect Provider's data (e.g. GitHub or Google profile information) to hydrate the identity's data.
 	MapperUrl *string `json:"mapper_url,omitempty"`
+	OrganizationId NullableString `json:"organization_id,omitempty"`
 	// The Revision's ID this schema belongs to
 	ProjectRevisionId *string `json:"project_revision_id,omitempty"`
 	// Provider is either \"generic\" for a generic OAuth 2.0 / OpenID Connect Provider or one of: generic google github gitlab microsoft discord slack facebook vk yandex apple
@@ -76,9 +81,41 @@ func NewNormalizedProjectRevisionThirdPartyProviderWithDefaults() *NormalizedPro
 	return &this
 }
 
+// GetAdditionalIdTokenAudiences returns the AdditionalIdTokenAudiences field value if set, zero value otherwise.
+func (o *NormalizedProjectRevisionThirdPartyProvider) GetAdditionalIdTokenAudiences() []string {
+	if o == nil || IsNil(o.AdditionalIdTokenAudiences) {
+		var ret []string
+		return ret
+	}
+	return o.AdditionalIdTokenAudiences
+}
+
+// GetAdditionalIdTokenAudiencesOk returns a tuple with the AdditionalIdTokenAudiences field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *NormalizedProjectRevisionThirdPartyProvider) GetAdditionalIdTokenAudiencesOk() ([]string, bool) {
+	if o == nil || IsNil(o.AdditionalIdTokenAudiences) {
+		return nil, false
+	}
+	return o.AdditionalIdTokenAudiences, true
+}
+
+// HasAdditionalIdTokenAudiences returns a boolean if a field has been set.
+func (o *NormalizedProjectRevisionThirdPartyProvider) HasAdditionalIdTokenAudiences() bool {
+	if o != nil && !IsNil(o.AdditionalIdTokenAudiences) {
+		return true
+	}
+
+	return false
+}
+
+// SetAdditionalIdTokenAudiences gets a reference to the given []string and assigns it to the AdditionalIdTokenAudiences field.
+func (o *NormalizedProjectRevisionThirdPartyProvider) SetAdditionalIdTokenAudiences(v []string) {
+	o.AdditionalIdTokenAudiences = v
+}
+
 // GetApplePrivateKey returns the ApplePrivateKey field value if set, zero value otherwise (both if not set or set to explicit null).
 func (o *NormalizedProjectRevisionThirdPartyProvider) GetApplePrivateKey() string {
-	if o == nil || o.ApplePrivateKey.Get() == nil {
+	if o == nil || IsNil(o.ApplePrivateKey.Get()) {
 		var ret string
 		return ret
 	}
@@ -120,7 +157,7 @@ func (o *NormalizedProjectRevisionThirdPartyProvider) UnsetApplePrivateKey() {
 
 // GetApplePrivateKeyId returns the ApplePrivateKeyId field value if set, zero value otherwise.
 func (o *NormalizedProjectRevisionThirdPartyProvider) GetApplePrivateKeyId() string {
-	if o == nil || o.ApplePrivateKeyId == nil {
+	if o == nil || IsNil(o.ApplePrivateKeyId) {
 		var ret string
 		return ret
 	}
@@ -130,7 +167,7 @@ func (o *NormalizedProjectRevisionThirdPartyProvider) GetApplePrivateKeyId() str
 // GetApplePrivateKeyIdOk returns a tuple with the ApplePrivateKeyId field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *NormalizedProjectRevisionThirdPartyProvider) GetApplePrivateKeyIdOk() (*string, bool) {
-	if o == nil || o.ApplePrivateKeyId == nil {
+	if o == nil || IsNil(o.ApplePrivateKeyId) {
 		return nil, false
 	}
 	return o.ApplePrivateKeyId, true
@@ -138,7 +175,7 @@ func (o *NormalizedProjectRevisionThirdPartyProvider) GetApplePrivateKeyIdOk() (
 
 // HasApplePrivateKeyId returns a boolean if a field has been set.
 func (o *NormalizedProjectRevisionThirdPartyProvider) HasApplePrivateKeyId() bool {
-	if o != nil && o.ApplePrivateKeyId != nil {
+	if o != nil && !IsNil(o.ApplePrivateKeyId) {
 		return true
 	}
 
@@ -152,7 +189,7 @@ func (o *NormalizedProjectRevisionThirdPartyProvider) SetApplePrivateKeyId(v str
 
 // GetAppleTeamId returns the AppleTeamId field value if set, zero value otherwise.
 func (o *NormalizedProjectRevisionThirdPartyProvider) GetAppleTeamId() string {
-	if o == nil || o.AppleTeamId == nil {
+	if o == nil || IsNil(o.AppleTeamId) {
 		var ret string
 		return ret
 	}
@@ -162,7 +199,7 @@ func (o *NormalizedProjectRevisionThirdPartyProvider) GetAppleTeamId() string {
 // GetAppleTeamIdOk returns a tuple with the AppleTeamId field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *NormalizedProjectRevisionThirdPartyProvider) GetAppleTeamIdOk() (*string, bool) {
-	if o == nil || o.AppleTeamId == nil {
+	if o == nil || IsNil(o.AppleTeamId) {
 		return nil, false
 	}
 	return o.AppleTeamId, true
@@ -170,7 +207,7 @@ func (o *NormalizedProjectRevisionThirdPartyProvider) GetAppleTeamIdOk() (*strin
 
 // HasAppleTeamId returns a boolean if a field has been set.
 func (o *NormalizedProjectRevisionThirdPartyProvider) HasAppleTeamId() bool {
-	if o != nil && o.AppleTeamId != nil {
+	if o != nil && !IsNil(o.AppleTeamId) {
 		return true
 	}
 
@@ -184,7 +221,7 @@ func (o *NormalizedProjectRevisionThirdPartyProvider) SetAppleTeamId(v string) {
 
 // GetAuthUrl returns the AuthUrl field value if set, zero value otherwise.
 func (o *NormalizedProjectRevisionThirdPartyProvider) GetAuthUrl() string {
-	if o == nil || o.AuthUrl == nil {
+	if o == nil || IsNil(o.AuthUrl) {
 		var ret string
 		return ret
 	}
@@ -194,7 +231,7 @@ func (o *NormalizedProjectRevisionThirdPartyProvider) GetAuthUrl() string {
 // GetAuthUrlOk returns a tuple with the AuthUrl field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *NormalizedProjectRevisionThirdPartyProvider) GetAuthUrlOk() (*string, bool) {
-	if o == nil || o.AuthUrl == nil {
+	if o == nil || IsNil(o.AuthUrl) {
 		return nil, false
 	}
 	return o.AuthUrl, true
@@ -202,7 +239,7 @@ func (o *NormalizedProjectRevisionThirdPartyProvider) GetAuthUrlOk() (*string, b
 
 // HasAuthUrl returns a boolean if a field has been set.
 func (o *NormalizedProjectRevisionThirdPartyProvider) HasAuthUrl() bool {
-	if o != nil && o.AuthUrl != nil {
+	if o != nil && !IsNil(o.AuthUrl) {
 		return true
 	}
 
@@ -216,7 +253,7 @@ func (o *NormalizedProjectRevisionThirdPartyProvider) SetAuthUrl(v string) {
 
 // GetAzureTenant returns the AzureTenant field value if set, zero value otherwise.
 func (o *NormalizedProjectRevisionThirdPartyProvider) GetAzureTenant() string {
-	if o == nil || o.AzureTenant == nil {
+	if o == nil || IsNil(o.AzureTenant) {
 		var ret string
 		return ret
 	}
@@ -226,7 +263,7 @@ func (o *NormalizedProjectRevisionThirdPartyProvider) GetAzureTenant() string {
 // GetAzureTenantOk returns a tuple with the AzureTenant field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *NormalizedProjectRevisionThirdPartyProvider) GetAzureTenantOk() (*string, bool) {
-	if o == nil || o.AzureTenant == nil {
+	if o == nil || IsNil(o.AzureTenant) {
 		return nil, false
 	}
 	return o.AzureTenant, true
@@ -234,7 +271,7 @@ func (o *NormalizedProjectRevisionThirdPartyProvider) GetAzureTenantOk() (*strin
 
 // HasAzureTenant returns a boolean if a field has been set.
 func (o *NormalizedProjectRevisionThirdPartyProvider) HasAzureTenant() bool {
-	if o != nil && o.AzureTenant != nil {
+	if o != nil && !IsNil(o.AzureTenant) {
 		return true
 	}
 
@@ -248,7 +285,7 @@ func (o *NormalizedProjectRevisionThirdPartyProvider) SetAzureTenant(v string) {
 
 // GetClientId returns the ClientId field value if set, zero value otherwise.
 func (o *NormalizedProjectRevisionThirdPartyProvider) GetClientId() string {
-	if o == nil || o.ClientId == nil {
+	if o == nil || IsNil(o.ClientId) {
 		var ret string
 		return ret
 	}
@@ -258,7 +295,7 @@ func (o *NormalizedProjectRevisionThirdPartyProvider) GetClientId() string {
 // GetClientIdOk returns a tuple with the ClientId field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *NormalizedProjectRevisionThirdPartyProvider) GetClientIdOk() (*string, bool) {
-	if o == nil || o.ClientId == nil {
+	if o == nil || IsNil(o.ClientId) {
 		return nil, false
 	}
 	return o.ClientId, true
@@ -266,7 +303,7 @@ func (o *NormalizedProjectRevisionThirdPartyProvider) GetClientIdOk() (*string, 
 
 // HasClientId returns a boolean if a field has been set.
 func (o *NormalizedProjectRevisionThirdPartyProvider) HasClientId() bool {
-	if o != nil && o.ClientId != nil {
+	if o != nil && !IsNil(o.ClientId) {
 		return true
 	}
 
@@ -280,7 +317,7 @@ func (o *NormalizedProjectRevisionThirdPartyProvider) SetClientId(v string) {
 
 // GetClientSecret returns the ClientSecret field value if set, zero value otherwise (both if not set or set to explicit null).
 func (o *NormalizedProjectRevisionThirdPartyProvider) GetClientSecret() string {
-	if o == nil || o.ClientSecret.Get() == nil {
+	if o == nil || IsNil(o.ClientSecret.Get()) {
 		var ret string
 		return ret
 	}
@@ -322,7 +359,7 @@ func (o *NormalizedProjectRevisionThirdPartyProvider) UnsetClientSecret() {
 
 // GetCreatedAt returns the CreatedAt field value if set, zero value otherwise.
 func (o *NormalizedProjectRevisionThirdPartyProvider) GetCreatedAt() time.Time {
-	if o == nil || o.CreatedAt == nil {
+	if o == nil || IsNil(o.CreatedAt) {
 		var ret time.Time
 		return ret
 	}
@@ -332,7 +369,7 @@ func (o *NormalizedProjectRevisionThirdPartyProvider) GetCreatedAt() time.Time {
 // GetCreatedAtOk returns a tuple with the CreatedAt field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *NormalizedProjectRevisionThirdPartyProvider) GetCreatedAtOk() (*time.Time, bool) {
-	if o == nil || o.CreatedAt == nil {
+	if o == nil || IsNil(o.CreatedAt) {
 		return nil, false
 	}
 	return o.CreatedAt, true
@@ -340,7 +377,7 @@ func (o *NormalizedProjectRevisionThirdPartyProvider) GetCreatedAtOk() (*time.Ti
 
 // HasCreatedAt returns a boolean if a field has been set.
 func (o *NormalizedProjectRevisionThirdPartyProvider) HasCreatedAt() bool {
-	if o != nil && o.CreatedAt != nil {
+	if o != nil && !IsNil(o.CreatedAt) {
 		return true
 	}
 
@@ -354,7 +391,7 @@ func (o *NormalizedProjectRevisionThirdPartyProvider) SetCreatedAt(v time.Time) 
 
 // GetId returns the Id field value if set, zero value otherwise.
 func (o *NormalizedProjectRevisionThirdPartyProvider) GetId() string {
-	if o == nil || o.Id == nil {
+	if o == nil || IsNil(o.Id) {
 		var ret string
 		return ret
 	}
@@ -364,7 +401,7 @@ func (o *NormalizedProjectRevisionThirdPartyProvider) GetId() string {
 // GetIdOk returns a tuple with the Id field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *NormalizedProjectRevisionThirdPartyProvider) GetIdOk() (*string, bool) {
-	if o == nil || o.Id == nil {
+	if o == nil || IsNil(o.Id) {
 		return nil, false
 	}
 	return o.Id, true
@@ -372,7 +409,7 @@ func (o *NormalizedProjectRevisionThirdPartyProvider) GetIdOk() (*string, bool) 
 
 // HasId returns a boolean if a field has been set.
 func (o *NormalizedProjectRevisionThirdPartyProvider) HasId() bool {
-	if o != nil && o.Id != nil {
+	if o != nil && !IsNil(o.Id) {
 		return true
 	}
 
@@ -386,7 +423,7 @@ func (o *NormalizedProjectRevisionThirdPartyProvider) SetId(v string) {
 
 // GetIssuerUrl returns the IssuerUrl field value if set, zero value otherwise.
 func (o *NormalizedProjectRevisionThirdPartyProvider) GetIssuerUrl() string {
-	if o == nil || o.IssuerUrl == nil {
+	if o == nil || IsNil(o.IssuerUrl) {
 		var ret string
 		return ret
 	}
@@ -396,7 +433,7 @@ func (o *NormalizedProjectRevisionThirdPartyProvider) GetIssuerUrl() string {
 // GetIssuerUrlOk returns a tuple with the IssuerUrl field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *NormalizedProjectRevisionThirdPartyProvider) GetIssuerUrlOk() (*string, bool) {
-	if o == nil || o.IssuerUrl == nil {
+	if o == nil || IsNil(o.IssuerUrl) {
 		return nil, false
 	}
 	return o.IssuerUrl, true
@@ -404,7 +441,7 @@ func (o *NormalizedProjectRevisionThirdPartyProvider) GetIssuerUrlOk() (*string,
 
 // HasIssuerUrl returns a boolean if a field has been set.
 func (o *NormalizedProjectRevisionThirdPartyProvider) HasIssuerUrl() bool {
-	if o != nil && o.IssuerUrl != nil {
+	if o != nil && !IsNil(o.IssuerUrl) {
 		return true
 	}
 
@@ -418,7 +455,7 @@ func (o *NormalizedProjectRevisionThirdPartyProvider) SetIssuerUrl(v string) {
 
 // GetLabel returns the Label field value if set, zero value otherwise.
 func (o *NormalizedProjectRevisionThirdPartyProvider) GetLabel() string {
-	if o == nil || o.Label == nil {
+	if o == nil || IsNil(o.Label) {
 		var ret string
 		return ret
 	}
@@ -428,7 +465,7 @@ func (o *NormalizedProjectRevisionThirdPartyProvider) GetLabel() string {
 // GetLabelOk returns a tuple with the Label field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *NormalizedProjectRevisionThirdPartyProvider) GetLabelOk() (*string, bool) {
-	if o == nil || o.Label == nil {
+	if o == nil || IsNil(o.Label) {
 		return nil, false
 	}
 	return o.Label, true
@@ -436,7 +473,7 @@ func (o *NormalizedProjectRevisionThirdPartyProvider) GetLabelOk() (*string, boo
 
 // HasLabel returns a boolean if a field has been set.
 func (o *NormalizedProjectRevisionThirdPartyProvider) HasLabel() bool {
-	if o != nil && o.Label != nil {
+	if o != nil && !IsNil(o.Label) {
 		return true
 	}
 
@@ -450,7 +487,7 @@ func (o *NormalizedProjectRevisionThirdPartyProvider) SetLabel(v string) {
 
 // GetMapperUrl returns the MapperUrl field value if set, zero value otherwise.
 func (o *NormalizedProjectRevisionThirdPartyProvider) GetMapperUrl() string {
-	if o == nil || o.MapperUrl == nil {
+	if o == nil || IsNil(o.MapperUrl) {
 		var ret string
 		return ret
 	}
@@ -460,7 +497,7 @@ func (o *NormalizedProjectRevisionThirdPartyProvider) GetMapperUrl() string {
 // GetMapperUrlOk returns a tuple with the MapperUrl field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *NormalizedProjectRevisionThirdPartyProvider) GetMapperUrlOk() (*string, bool) {
-	if o == nil || o.MapperUrl == nil {
+	if o == nil || IsNil(o.MapperUrl) {
 		return nil, false
 	}
 	return o.MapperUrl, true
@@ -468,7 +505,7 @@ func (o *NormalizedProjectRevisionThirdPartyProvider) GetMapperUrlOk() (*string,
 
 // HasMapperUrl returns a boolean if a field has been set.
 func (o *NormalizedProjectRevisionThirdPartyProvider) HasMapperUrl() bool {
-	if o != nil && o.MapperUrl != nil {
+	if o != nil && !IsNil(o.MapperUrl) {
 		return true
 	}
 
@@ -480,9 +517,51 @@ func (o *NormalizedProjectRevisionThirdPartyProvider) SetMapperUrl(v string) {
 	o.MapperUrl = &v
 }
 
+// GetOrganizationId returns the OrganizationId field value if set, zero value otherwise (both if not set or set to explicit null).
+func (o *NormalizedProjectRevisionThirdPartyProvider) GetOrganizationId() string {
+	if o == nil || IsNil(o.OrganizationId.Get()) {
+		var ret string
+		return ret
+	}
+	return *o.OrganizationId.Get()
+}
+
+// GetOrganizationIdOk returns a tuple with the OrganizationId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *NormalizedProjectRevisionThirdPartyProvider) GetOrganizationIdOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.OrganizationId.Get(), o.OrganizationId.IsSet()
+}
+
+// HasOrganizationId returns a boolean if a field has been set.
+func (o *NormalizedProjectRevisionThirdPartyProvider) HasOrganizationId() bool {
+	if o != nil && o.OrganizationId.IsSet() {
+		return true
+	}
+
+	return false
+}
+
+// SetOrganizationId gets a reference to the given NullableString and assigns it to the OrganizationId field.
+func (o *NormalizedProjectRevisionThirdPartyProvider) SetOrganizationId(v string) {
+	o.OrganizationId.Set(&v)
+}
+// SetOrganizationIdNil sets the value for OrganizationId to be an explicit nil
+func (o *NormalizedProjectRevisionThirdPartyProvider) SetOrganizationIdNil() {
+	o.OrganizationId.Set(nil)
+}
+
+// UnsetOrganizationId ensures that no value is present for OrganizationId, not even an explicit nil
+func (o *NormalizedProjectRevisionThirdPartyProvider) UnsetOrganizationId() {
+	o.OrganizationId.Unset()
+}
+
 // GetProjectRevisionId returns the ProjectRevisionId field value if set, zero value otherwise.
 func (o *NormalizedProjectRevisionThirdPartyProvider) GetProjectRevisionId() string {
-	if o == nil || o.ProjectRevisionId == nil {
+	if o == nil || IsNil(o.ProjectRevisionId) {
 		var ret string
 		return ret
 	}
@@ -492,7 +571,7 @@ func (o *NormalizedProjectRevisionThirdPartyProvider) GetProjectRevisionId() str
 // GetProjectRevisionIdOk returns a tuple with the ProjectRevisionId field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *NormalizedProjectRevisionThirdPartyProvider) GetProjectRevisionIdOk() (*string, bool) {
-	if o == nil || o.ProjectRevisionId == nil {
+	if o == nil || IsNil(o.ProjectRevisionId) {
 		return nil, false
 	}
 	return o.ProjectRevisionId, true
@@ -500,7 +579,7 @@ func (o *NormalizedProjectRevisionThirdPartyProvider) GetProjectRevisionIdOk() (
 
 // HasProjectRevisionId returns a boolean if a field has been set.
 func (o *NormalizedProjectRevisionThirdPartyProvider) HasProjectRevisionId() bool {
-	if o != nil && o.ProjectRevisionId != nil {
+	if o != nil && !IsNil(o.ProjectRevisionId) {
 		return true
 	}
 
@@ -514,7 +593,7 @@ func (o *NormalizedProjectRevisionThirdPartyProvider) SetProjectRevisionId(v str
 
 // GetProvider returns the Provider field value if set, zero value otherwise.
 func (o *NormalizedProjectRevisionThirdPartyProvider) GetProvider() string {
-	if o == nil || o.Provider == nil {
+	if o == nil || IsNil(o.Provider) {
 		var ret string
 		return ret
 	}
@@ -524,7 +603,7 @@ func (o *NormalizedProjectRevisionThirdPartyProvider) GetProvider() string {
 // GetProviderOk returns a tuple with the Provider field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *NormalizedProjectRevisionThirdPartyProvider) GetProviderOk() (*string, bool) {
-	if o == nil || o.Provider == nil {
+	if o == nil || IsNil(o.Provider) {
 		return nil, false
 	}
 	return o.Provider, true
@@ -532,7 +611,7 @@ func (o *NormalizedProjectRevisionThirdPartyProvider) GetProviderOk() (*string, 
 
 // HasProvider returns a boolean if a field has been set.
 func (o *NormalizedProjectRevisionThirdPartyProvider) HasProvider() bool {
-	if o != nil && o.Provider != nil {
+	if o != nil && !IsNil(o.Provider) {
 		return true
 	}
 
@@ -546,7 +625,7 @@ func (o *NormalizedProjectRevisionThirdPartyProvider) SetProvider(v string) {
 
 // GetProviderId returns the ProviderId field value if set, zero value otherwise.
 func (o *NormalizedProjectRevisionThirdPartyProvider) GetProviderId() string {
-	if o == nil || o.ProviderId == nil {
+	if o == nil || IsNil(o.ProviderId) {
 		var ret string
 		return ret
 	}
@@ -556,7 +635,7 @@ func (o *NormalizedProjectRevisionThirdPartyProvider) GetProviderId() string {
 // GetProviderIdOk returns a tuple with the ProviderId field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *NormalizedProjectRevisionThirdPartyProvider) GetProviderIdOk() (*string, bool) {
-	if o == nil || o.ProviderId == nil {
+	if o == nil || IsNil(o.ProviderId) {
 		return nil, false
 	}
 	return o.ProviderId, true
@@ -564,7 +643,7 @@ func (o *NormalizedProjectRevisionThirdPartyProvider) GetProviderIdOk() (*string
 
 // HasProviderId returns a boolean if a field has been set.
 func (o *NormalizedProjectRevisionThirdPartyProvider) HasProviderId() bool {
-	if o != nil && o.ProviderId != nil {
+	if o != nil && !IsNil(o.ProviderId) {
 		return true
 	}
 
@@ -578,7 +657,7 @@ func (o *NormalizedProjectRevisionThirdPartyProvider) SetProviderId(v string) {
 
 // GetRequestedClaims returns the RequestedClaims field value if set, zero value otherwise.
 func (o *NormalizedProjectRevisionThirdPartyProvider) GetRequestedClaims() map[string]interface{} {
-	if o == nil || o.RequestedClaims == nil {
+	if o == nil || IsNil(o.RequestedClaims) {
 		var ret map[string]interface{}
 		return ret
 	}
@@ -588,15 +667,15 @@ func (o *NormalizedProjectRevisionThirdPartyProvider) GetRequestedClaims() map[s
 // GetRequestedClaimsOk returns a tuple with the RequestedClaims field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *NormalizedProjectRevisionThirdPartyProvider) GetRequestedClaimsOk() (map[string]interface{}, bool) {
-	if o == nil || o.RequestedClaims == nil {
-		return nil, false
+	if o == nil || IsNil(o.RequestedClaims) {
+		return map[string]interface{}{}, false
 	}
 	return o.RequestedClaims, true
 }
 
 // HasRequestedClaims returns a boolean if a field has been set.
 func (o *NormalizedProjectRevisionThirdPartyProvider) HasRequestedClaims() bool {
-	if o != nil && o.RequestedClaims != nil {
+	if o != nil && !IsNil(o.RequestedClaims) {
 		return true
 	}
 
@@ -610,7 +689,7 @@ func (o *NormalizedProjectRevisionThirdPartyProvider) SetRequestedClaims(v map[s
 
 // GetScope returns the Scope field value if set, zero value otherwise.
 func (o *NormalizedProjectRevisionThirdPartyProvider) GetScope() []string {
-	if o == nil || o.Scope == nil {
+	if o == nil || IsNil(o.Scope) {
 		var ret []string
 		return ret
 	}
@@ -620,7 +699,7 @@ func (o *NormalizedProjectRevisionThirdPartyProvider) GetScope() []string {
 // GetScopeOk returns a tuple with the Scope field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *NormalizedProjectRevisionThirdPartyProvider) GetScopeOk() ([]string, bool) {
-	if o == nil || o.Scope == nil {
+	if o == nil || IsNil(o.Scope) {
 		return nil, false
 	}
 	return o.Scope, true
@@ -628,7 +707,7 @@ func (o *NormalizedProjectRevisionThirdPartyProvider) GetScopeOk() ([]string, bo
 
 // HasScope returns a boolean if a field has been set.
 func (o *NormalizedProjectRevisionThirdPartyProvider) HasScope() bool {
-	if o != nil && o.Scope != nil {
+	if o != nil && !IsNil(o.Scope) {
 		return true
 	}
 
@@ -642,7 +721,7 @@ func (o *NormalizedProjectRevisionThirdPartyProvider) SetScope(v []string) {
 
 // GetState returns the State field value if set, zero value otherwise.
 func (o *NormalizedProjectRevisionThirdPartyProvider) GetState() string {
-	if o == nil || o.State == nil {
+	if o == nil || IsNil(o.State) {
 		var ret string
 		return ret
 	}
@@ -652,7 +731,7 @@ func (o *NormalizedProjectRevisionThirdPartyProvider) GetState() string {
 // GetStateOk returns a tuple with the State field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *NormalizedProjectRevisionThirdPartyProvider) GetStateOk() (*string, bool) {
-	if o == nil || o.State == nil {
+	if o == nil || IsNil(o.State) {
 		return nil, false
 	}
 	return o.State, true
@@ -660,7 +739,7 @@ func (o *NormalizedProjectRevisionThirdPartyProvider) GetStateOk() (*string, boo
 
 // HasState returns a boolean if a field has been set.
 func (o *NormalizedProjectRevisionThirdPartyProvider) HasState() bool {
-	if o != nil && o.State != nil {
+	if o != nil && !IsNil(o.State) {
 		return true
 	}
 
@@ -674,7 +753,7 @@ func (o *NormalizedProjectRevisionThirdPartyProvider) SetState(v string) {
 
 // GetSubjectSource returns the SubjectSource field value if set, zero value otherwise (both if not set or set to explicit null).
 func (o *NormalizedProjectRevisionThirdPartyProvider) GetSubjectSource() string {
-	if o == nil || o.SubjectSource.Get() == nil {
+	if o == nil || IsNil(o.SubjectSource.Get()) {
 		var ret string
 		return ret
 	}
@@ -716,7 +795,7 @@ func (o *NormalizedProjectRevisionThirdPartyProvider) UnsetSubjectSource() {
 
 // GetTokenUrl returns the TokenUrl field value if set, zero value otherwise.
 func (o *NormalizedProjectRevisionThirdPartyProvider) GetTokenUrl() string {
-	if o == nil || o.TokenUrl == nil {
+	if o == nil || IsNil(o.TokenUrl) {
 		var ret string
 		return ret
 	}
@@ -726,7 +805,7 @@ func (o *NormalizedProjectRevisionThirdPartyProvider) GetTokenUrl() string {
 // GetTokenUrlOk returns a tuple with the TokenUrl field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *NormalizedProjectRevisionThirdPartyProvider) GetTokenUrlOk() (*string, bool) {
-	if o == nil || o.TokenUrl == nil {
+	if o == nil || IsNil(o.TokenUrl) {
 		return nil, false
 	}
 	return o.TokenUrl, true
@@ -734,7 +813,7 @@ func (o *NormalizedProjectRevisionThirdPartyProvider) GetTokenUrlOk() (*string, 
 
 // HasTokenUrl returns a boolean if a field has been set.
 func (o *NormalizedProjectRevisionThirdPartyProvider) HasTokenUrl() bool {
-	if o != nil && o.TokenUrl != nil {
+	if o != nil && !IsNil(o.TokenUrl) {
 		return true
 	}
 
@@ -748,7 +827,7 @@ func (o *NormalizedProjectRevisionThirdPartyProvider) SetTokenUrl(v string) {
 
 // GetUpdatedAt returns the UpdatedAt field value if set, zero value otherwise.
 func (o *NormalizedProjectRevisionThirdPartyProvider) GetUpdatedAt() time.Time {
-	if o == nil || o.UpdatedAt == nil {
+	if o == nil || IsNil(o.UpdatedAt) {
 		var ret time.Time
 		return ret
 	}
@@ -758,7 +837,7 @@ func (o *NormalizedProjectRevisionThirdPartyProvider) GetUpdatedAt() time.Time {
 // GetUpdatedAtOk returns a tuple with the UpdatedAt field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *NormalizedProjectRevisionThirdPartyProvider) GetUpdatedAtOk() (*time.Time, bool) {
-	if o == nil || o.UpdatedAt == nil {
+	if o == nil || IsNil(o.UpdatedAt) {
 		return nil, false
 	}
 	return o.UpdatedAt, true
@@ -766,7 +845,7 @@ func (o *NormalizedProjectRevisionThirdPartyProvider) GetUpdatedAtOk() (*time.Ti
 
 // HasUpdatedAt returns a boolean if a field has been set.
 func (o *NormalizedProjectRevisionThirdPartyProvider) HasUpdatedAt() bool {
-	if o != nil && o.UpdatedAt != nil {
+	if o != nil && !IsNil(o.UpdatedAt) {
 		return true
 	}
 
@@ -779,68 +858,82 @@ func (o *NormalizedProjectRevisionThirdPartyProvider) SetUpdatedAt(v time.Time) 
 }
 
 func (o NormalizedProjectRevisionThirdPartyProvider) MarshalJSON() ([]byte, error) {
+	toSerialize,err := o.ToMap()
+	if err != nil {
+		return []byte{}, err
+	}
+	return json.Marshal(toSerialize)
+}
+
+func (o NormalizedProjectRevisionThirdPartyProvider) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
+	if !IsNil(o.AdditionalIdTokenAudiences) {
+		toSerialize["additional_id_token_audiences"] = o.AdditionalIdTokenAudiences
+	}
 	if o.ApplePrivateKey.IsSet() {
 		toSerialize["apple_private_key"] = o.ApplePrivateKey.Get()
 	}
-	if o.ApplePrivateKeyId != nil {
+	if !IsNil(o.ApplePrivateKeyId) {
 		toSerialize["apple_private_key_id"] = o.ApplePrivateKeyId
 	}
-	if o.AppleTeamId != nil {
+	if !IsNil(o.AppleTeamId) {
 		toSerialize["apple_team_id"] = o.AppleTeamId
 	}
-	if o.AuthUrl != nil {
+	if !IsNil(o.AuthUrl) {
 		toSerialize["auth_url"] = o.AuthUrl
 	}
-	if o.AzureTenant != nil {
+	if !IsNil(o.AzureTenant) {
 		toSerialize["azure_tenant"] = o.AzureTenant
 	}
-	if o.ClientId != nil {
+	if !IsNil(o.ClientId) {
 		toSerialize["client_id"] = o.ClientId
 	}
 	if o.ClientSecret.IsSet() {
 		toSerialize["client_secret"] = o.ClientSecret.Get()
 	}
-	if o.CreatedAt != nil {
+	if !IsNil(o.CreatedAt) {
 		toSerialize["created_at"] = o.CreatedAt
 	}
-	if o.Id != nil {
+	if !IsNil(o.Id) {
 		toSerialize["id"] = o.Id
 	}
-	if o.IssuerUrl != nil {
+	if !IsNil(o.IssuerUrl) {
 		toSerialize["issuer_url"] = o.IssuerUrl
 	}
-	if o.Label != nil {
+	if !IsNil(o.Label) {
 		toSerialize["label"] = o.Label
 	}
-	if o.MapperUrl != nil {
+	if !IsNil(o.MapperUrl) {
 		toSerialize["mapper_url"] = o.MapperUrl
 	}
-	if o.ProjectRevisionId != nil {
+	if o.OrganizationId.IsSet() {
+		toSerialize["organization_id"] = o.OrganizationId.Get()
+	}
+	if !IsNil(o.ProjectRevisionId) {
 		toSerialize["project_revision_id"] = o.ProjectRevisionId
 	}
-	if o.Provider != nil {
+	if !IsNil(o.Provider) {
 		toSerialize["provider"] = o.Provider
 	}
-	if o.ProviderId != nil {
+	if !IsNil(o.ProviderId) {
 		toSerialize["provider_id"] = o.ProviderId
 	}
-	if o.RequestedClaims != nil {
+	if !IsNil(o.RequestedClaims) {
 		toSerialize["requested_claims"] = o.RequestedClaims
 	}
-	if o.Scope != nil {
+	if !IsNil(o.Scope) {
 		toSerialize["scope"] = o.Scope
 	}
-	if o.State != nil {
+	if !IsNil(o.State) {
 		toSerialize["state"] = o.State
 	}
 	if o.SubjectSource.IsSet() {
 		toSerialize["subject_source"] = o.SubjectSource.Get()
 	}
-	if o.TokenUrl != nil {
+	if !IsNil(o.TokenUrl) {
 		toSerialize["token_url"] = o.TokenUrl
 	}
-	if o.UpdatedAt != nil {
+	if !IsNil(o.UpdatedAt) {
 		toSerialize["updated_at"] = o.UpdatedAt
 	}
 
@@ -848,19 +941,24 @@ func (o NormalizedProjectRevisionThirdPartyProvider) MarshalJSON() ([]byte, erro
 		toSerialize[key] = value
 	}
 
-	return json.Marshal(toSerialize)
+	return toSerialize, nil
 }
 
 func (o *NormalizedProjectRevisionThirdPartyProvider) UnmarshalJSON(bytes []byte) (err error) {
 	varNormalizedProjectRevisionThirdPartyProvider := _NormalizedProjectRevisionThirdPartyProvider{}
 
-	if err = json.Unmarshal(bytes, &varNormalizedProjectRevisionThirdPartyProvider); err == nil {
-		*o = NormalizedProjectRevisionThirdPartyProvider(varNormalizedProjectRevisionThirdPartyProvider)
+	err = json.Unmarshal(bytes, &varNormalizedProjectRevisionThirdPartyProvider)
+
+	if err != nil {
+		return err
 	}
+
+	*o = NormalizedProjectRevisionThirdPartyProvider(varNormalizedProjectRevisionThirdPartyProvider)
 
 	additionalProperties := make(map[string]interface{})
 
 	if err = json.Unmarshal(bytes, &additionalProperties); err == nil {
+		delete(additionalProperties, "additional_id_token_audiences")
 		delete(additionalProperties, "apple_private_key")
 		delete(additionalProperties, "apple_private_key_id")
 		delete(additionalProperties, "apple_team_id")
@@ -873,6 +971,7 @@ func (o *NormalizedProjectRevisionThirdPartyProvider) UnmarshalJSON(bytes []byte
 		delete(additionalProperties, "issuer_url")
 		delete(additionalProperties, "label")
 		delete(additionalProperties, "mapper_url")
+		delete(additionalProperties, "organization_id")
 		delete(additionalProperties, "project_revision_id")
 		delete(additionalProperties, "provider")
 		delete(additionalProperties, "provider_id")

@@ -3,7 +3,7 @@ Ory APIs
 
 Documentation for all public and administrative Ory APIs. Administrative APIs can only be accessed with a valid Personal Access Token. Public APIs are mostly used in browsers. 
 
-API version: v1.1.39
+API version: v1.5.1
 Contact: support@ory.sh
 */
 
@@ -14,7 +14,7 @@ package client
 import (
 	"bytes"
 	"context"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/url"
 	"strings"
@@ -22,7 +22,22 @@ import (
 )
 
 
-type ProjectApi interface {
+type ProjectAPI interface {
+
+	/*
+	CreateOrganization Method for CreateOrganization
+
+	Create a B2B SSO Organization
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param projectId Project ID  The project's ID.
+	@return ProjectAPICreateOrganizationRequest
+	*/
+	CreateOrganization(ctx context.Context, projectId string) ProjectAPICreateOrganizationRequest
+
+	// CreateOrganizationExecute executes the request
+	//  @return Organization
+	CreateOrganizationExecute(r ProjectAPICreateOrganizationRequest) (*Organization, *http.Response, error)
 
 	/*
 	CreateProject Create a Project
@@ -30,13 +45,13 @@ type ProjectApi interface {
 	Creates a new project.
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ProjectApiCreateProjectRequest
+	@return ProjectAPICreateProjectRequest
 	*/
-	CreateProject(ctx context.Context) ProjectApiCreateProjectRequest
+	CreateProject(ctx context.Context) ProjectAPICreateProjectRequest
 
 	// CreateProjectExecute executes the request
 	//  @return Project
-	CreateProjectExecute(r ProjectApiCreateProjectRequest) (*Project, *http.Response, error)
+	CreateProjectExecute(r ProjectAPICreateProjectRequest) (*Project, *http.Response, error)
 
 	/*
 	CreateProjectApiKey Create project API token
@@ -45,13 +60,26 @@ type ProjectApi interface {
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param project The Project ID or Project slug
-	@return ProjectApiCreateProjectApiKeyRequest
+	@return ProjectAPICreateProjectApiKeyRequest
 	*/
-	CreateProjectApiKey(ctx context.Context, project string) ProjectApiCreateProjectApiKeyRequest
+	CreateProjectApiKey(ctx context.Context, project string) ProjectAPICreateProjectApiKeyRequest
 
 	// CreateProjectApiKeyExecute executes the request
 	//  @return ProjectApiKey
-	CreateProjectApiKeyExecute(r ProjectApiCreateProjectApiKeyRequest) (*ProjectApiKey, *http.Response, error)
+	CreateProjectApiKeyExecute(r ProjectAPICreateProjectApiKeyRequest) (*ProjectApiKey, *http.Response, error)
+
+	/*
+	DeleteOrganization Delete a B2B SSO Organization for a project.
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param projectId Project ID  The project's ID.
+	@param organizationId Organization ID  The Organization's ID.
+	@return ProjectAPIDeleteOrganizationRequest
+	*/
+	DeleteOrganization(ctx context.Context, projectId string, organizationId string) ProjectAPIDeleteOrganizationRequest
+
+	// DeleteOrganizationExecute executes the request
+	DeleteOrganizationExecute(r ProjectAPIDeleteOrganizationRequest) (*http.Response, error)
 
 	/*
 	DeleteProjectApiKey Delete project API token
@@ -61,12 +89,12 @@ type ProjectApi interface {
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param project The Project ID or Project slug
 	@param tokenId The Token ID
-	@return ProjectApiDeleteProjectApiKeyRequest
+	@return ProjectAPIDeleteProjectApiKeyRequest
 	*/
-	DeleteProjectApiKey(ctx context.Context, project string, tokenId string) ProjectApiDeleteProjectApiKeyRequest
+	DeleteProjectApiKey(ctx context.Context, project string, tokenId string) ProjectAPIDeleteProjectApiKeyRequest
 
 	// DeleteProjectApiKeyExecute executes the request
-	DeleteProjectApiKeyExecute(r ProjectApiDeleteProjectApiKeyRequest) (*http.Response, error)
+	DeleteProjectApiKeyExecute(r ProjectAPIDeleteProjectApiKeyRequest) (*http.Response, error)
 
 	/*
 	GetActiveProjectInConsole Returns the Ory Network Project selected in the Ory Network Console
@@ -74,13 +102,27 @@ type ProjectApi interface {
 	Use this API to get your active project in the Ory Network Console UI.
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ProjectApiGetActiveProjectInConsoleRequest
+	@return ProjectAPIGetActiveProjectInConsoleRequest
 	*/
-	GetActiveProjectInConsole(ctx context.Context) ProjectApiGetActiveProjectInConsoleRequest
+	GetActiveProjectInConsole(ctx context.Context) ProjectAPIGetActiveProjectInConsoleRequest
 
 	// GetActiveProjectInConsoleExecute executes the request
 	//  @return ActiveProjectInConsole
-	GetActiveProjectInConsoleExecute(r ProjectApiGetActiveProjectInConsoleRequest) (*ActiveProjectInConsole, *http.Response, error)
+	GetActiveProjectInConsoleExecute(r ProjectAPIGetActiveProjectInConsoleRequest) (*ActiveProjectInConsole, *http.Response, error)
+
+	/*
+	GetOrganization Returns a B2B SSO Organization for a project by it's ID.
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param projectId Project ID  The project's ID.
+	@param organizationId Organization ID  The Organization's ID.
+	@return ProjectAPIGetOrganizationRequest
+	*/
+	GetOrganization(ctx context.Context, projectId string, organizationId string) ProjectAPIGetOrganizationRequest
+
+	// GetOrganizationExecute executes the request
+	//  @return GetOrganizationResponse
+	GetOrganizationExecute(r ProjectAPIGetOrganizationRequest) (*GetOrganizationResponse, *http.Response, error)
 
 	/*
 	GetProject Get a Project
@@ -89,13 +131,13 @@ type ProjectApi interface {
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param projectId Project ID  The project's ID.
-	@return ProjectApiGetProjectRequest
+	@return ProjectAPIGetProjectRequest
 	*/
-	GetProject(ctx context.Context, projectId string) ProjectApiGetProjectRequest
+	GetProject(ctx context.Context, projectId string) ProjectAPIGetProjectRequest
 
 	// GetProjectExecute executes the request
 	//  @return Project
-	GetProjectExecute(r ProjectApiGetProjectRequest) (*Project, *http.Response, error)
+	GetProjectExecute(r ProjectAPIGetProjectRequest) (*Project, *http.Response, error)
 
 	/*
 	GetProjectMembers Get all members associated with this project
@@ -103,14 +145,14 @@ type ProjectApi interface {
 	This endpoint requires the user to be a member of the project with the role `OWNER` or `DEVELOPER`.
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param projectId Project ID  The project's ID.
-	@return ProjectApiGetProjectMembersRequest
+	@param project
+	@return ProjectAPIGetProjectMembersRequest
 	*/
-	GetProjectMembers(ctx context.Context, projectId string) ProjectApiGetProjectMembersRequest
+	GetProjectMembers(ctx context.Context, project string) ProjectAPIGetProjectMembersRequest
 
 	// GetProjectMembersExecute executes the request
 	//  @return []CloudAccount
-	GetProjectMembersExecute(r ProjectApiGetProjectMembersRequest) ([]CloudAccount, *http.Response, error)
+	GetProjectMembersExecute(r ProjectAPIGetProjectMembersRequest) ([]CloudAccount, *http.Response, error)
 
 	/*
 	GetProjectMetrics Method for GetProjectMetrics
@@ -119,13 +161,26 @@ type ProjectApi interface {
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param projectId Project ID
-	@return ProjectApiGetProjectMetricsRequest
+	@return ProjectAPIGetProjectMetricsRequest
 	*/
-	GetProjectMetrics(ctx context.Context, projectId string) ProjectApiGetProjectMetricsRequest
+	GetProjectMetrics(ctx context.Context, projectId string) ProjectAPIGetProjectMetricsRequest
 
 	// GetProjectMetricsExecute executes the request
 	//  @return GetProjectMetricsResponse
-	GetProjectMetricsExecute(r ProjectApiGetProjectMetricsRequest) (*GetProjectMetricsResponse, *http.Response, error)
+	GetProjectMetricsExecute(r ProjectAPIGetProjectMetricsRequest) (*GetProjectMetricsResponse, *http.Response, error)
+
+	/*
+	ListOrganizations Method for ListOrganizations
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param projectId Project ID  The project's ID.
+	@return ProjectAPIListOrganizationsRequest
+	*/
+	ListOrganizations(ctx context.Context, projectId string) ProjectAPIListOrganizationsRequest
+
+	// ListOrganizationsExecute executes the request
+	//  @return ListOrganizationsResponse
+	ListOrganizationsExecute(r ProjectAPIListOrganizationsRequest) (*ListOrganizationsResponse, *http.Response, error)
 
 	/*
 	ListProjectApiKeys List a project's API Tokens
@@ -134,13 +189,13 @@ type ProjectApi interface {
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param project The Project ID or Project slug
-	@return ProjectApiListProjectApiKeysRequest
+	@return ProjectAPIListProjectApiKeysRequest
 	*/
-	ListProjectApiKeys(ctx context.Context, project string) ProjectApiListProjectApiKeysRequest
+	ListProjectApiKeys(ctx context.Context, project string) ProjectAPIListProjectApiKeysRequest
 
 	// ListProjectApiKeysExecute executes the request
 	//  @return []ProjectApiKey
-	ListProjectApiKeysExecute(r ProjectApiListProjectApiKeysRequest) ([]ProjectApiKey, *http.Response, error)
+	ListProjectApiKeysExecute(r ProjectAPIListProjectApiKeysRequest) ([]ProjectApiKey, *http.Response, error)
 
 	/*
 	ListProjects List All Projects
@@ -148,13 +203,13 @@ type ProjectApi interface {
 	Lists all projects you have access to.
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ProjectApiListProjectsRequest
+	@return ProjectAPIListProjectsRequest
 	*/
-	ListProjects(ctx context.Context) ProjectApiListProjectsRequest
+	ListProjects(ctx context.Context) ProjectAPIListProjectsRequest
 
 	// ListProjectsExecute executes the request
 	//  @return []ProjectMetadata
-	ListProjectsExecute(r ProjectApiListProjectsRequest) ([]ProjectMetadata, *http.Response, error)
+	ListProjectsExecute(r ProjectAPIListProjectsRequest) ([]ProjectMetadata, *http.Response, error)
 
 	/*
 	PatchProject Patch an Ory Network Project Configuration
@@ -179,13 +234,13 @@ to help you understand which parts of your config could not be processed.
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param projectId Project ID  The project's ID.
-	@return ProjectApiPatchProjectRequest
+	@return ProjectAPIPatchProjectRequest
 	*/
-	PatchProject(ctx context.Context, projectId string) ProjectApiPatchProjectRequest
+	PatchProject(ctx context.Context, projectId string) ProjectAPIPatchProjectRequest
 
 	// PatchProjectExecute executes the request
 	//  @return SuccessfulProjectUpdate
-	PatchProjectExecute(r ProjectApiPatchProjectRequest) (*SuccessfulProjectUpdate, *http.Response, error)
+	PatchProjectExecute(r ProjectAPIPatchProjectRequest) (*SuccessfulProjectUpdate, *http.Response, error)
 
 	/*
 	PurgeProject Irrecoverably purge a project
@@ -199,12 +254,12 @@ This action can not be undone and will delete ALL your data.
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param projectId Project ID  The project's ID.
-	@return ProjectApiPurgeProjectRequest
+	@return ProjectAPIPurgeProjectRequest
 	*/
-	PurgeProject(ctx context.Context, projectId string) ProjectApiPurgeProjectRequest
+	PurgeProject(ctx context.Context, projectId string) ProjectAPIPurgeProjectRequest
 
 	// PurgeProjectExecute executes the request
-	PurgeProjectExecute(r ProjectApiPurgeProjectRequest) (*http.Response, error)
+	PurgeProjectExecute(r ProjectAPIPurgeProjectRequest) (*http.Response, error)
 
 	/*
 	RemoveProjectMember Remove a member associated with this project
@@ -213,14 +268,14 @@ This action can not be undone and will delete ALL your data.
 This endpoint requires the user to be a member of the project with the role `OWNER`.
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param projectId Project ID  The project's ID.
-	@param memberId Member ID
-	@return ProjectApiRemoveProjectMemberRequest
+	@param project
+	@param member
+	@return ProjectAPIRemoveProjectMemberRequest
 	*/
-	RemoveProjectMember(ctx context.Context, projectId string, memberId string) ProjectApiRemoveProjectMemberRequest
+	RemoveProjectMember(ctx context.Context, project string, member string) ProjectAPIRemoveProjectMemberRequest
 
 	// RemoveProjectMemberExecute executes the request
-	RemoveProjectMemberExecute(r ProjectApiRemoveProjectMemberRequest) (*http.Response, error)
+	RemoveProjectMemberExecute(r ProjectAPIRemoveProjectMemberRequest) (*http.Response, error)
 
 	/*
 	SetActiveProjectInConsole Sets the Ory Network Project active in the Ory Network Console
@@ -228,12 +283,12 @@ This endpoint requires the user to be a member of the project with the role `OWN
 	Use this API to set your active project in the Ory Network Console UI.
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ProjectApiSetActiveProjectInConsoleRequest
+	@return ProjectAPISetActiveProjectInConsoleRequest
 	*/
-	SetActiveProjectInConsole(ctx context.Context) ProjectApiSetActiveProjectInConsoleRequest
+	SetActiveProjectInConsole(ctx context.Context) ProjectAPISetActiveProjectInConsoleRequest
 
 	// SetActiveProjectInConsoleExecute executes the request
-	SetActiveProjectInConsoleExecute(r ProjectApiSetActiveProjectInConsoleRequest) (*http.Response, error)
+	SetActiveProjectInConsoleExecute(r ProjectAPISetActiveProjectInConsoleRequest) (*http.Response, error)
 
 	/*
 	SetProject Update an Ory Network Project Configuration
@@ -259,30 +314,196 @@ service!
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param projectId Project ID  The project's ID.
-	@return ProjectApiSetProjectRequest
+	@return ProjectAPISetProjectRequest
 	*/
-	SetProject(ctx context.Context, projectId string) ProjectApiSetProjectRequest
+	SetProject(ctx context.Context, projectId string) ProjectAPISetProjectRequest
 
 	// SetProjectExecute executes the request
 	//  @return SuccessfulProjectUpdate
-	SetProjectExecute(r ProjectApiSetProjectRequest) (*SuccessfulProjectUpdate, *http.Response, error)
+	SetProjectExecute(r ProjectAPISetProjectRequest) (*SuccessfulProjectUpdate, *http.Response, error)
+
+	/*
+	UpdateOrganization Update a B2B SSO Organization for a project.
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param projectId Project ID  The project's ID.
+	@param organizationId Organization ID  The Organization's ID.
+	@return ProjectAPIUpdateOrganizationRequest
+	*/
+	UpdateOrganization(ctx context.Context, projectId string, organizationId string) ProjectAPIUpdateOrganizationRequest
+
+	// UpdateOrganizationExecute executes the request
+	//  @return Organization
+	UpdateOrganizationExecute(r ProjectAPIUpdateOrganizationRequest) (*Organization, *http.Response, error)
 }
 
-// ProjectApiService ProjectApi service
-type ProjectApiService service
+// ProjectAPIService ProjectAPI service
+type ProjectAPIService service
 
-type ProjectApiCreateProjectRequest struct {
+type ProjectAPICreateOrganizationRequest struct {
 	ctx context.Context
-	ApiService ProjectApi
+	ApiService ProjectAPI
+	projectId string
+	organizationBody *OrganizationBody
+}
+
+func (r ProjectAPICreateOrganizationRequest) OrganizationBody(organizationBody OrganizationBody) ProjectAPICreateOrganizationRequest {
+	r.organizationBody = &organizationBody
+	return r
+}
+
+func (r ProjectAPICreateOrganizationRequest) Execute() (*Organization, *http.Response, error) {
+	return r.ApiService.CreateOrganizationExecute(r)
+}
+
+/*
+CreateOrganization Method for CreateOrganization
+
+Create a B2B SSO Organization
+
+ @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ @param projectId Project ID  The project's ID.
+ @return ProjectAPICreateOrganizationRequest
+*/
+func (a *ProjectAPIService) CreateOrganization(ctx context.Context, projectId string) ProjectAPICreateOrganizationRequest {
+	return ProjectAPICreateOrganizationRequest{
+		ApiService: a,
+		ctx: ctx,
+		projectId: projectId,
+	}
+}
+
+// Execute executes the request
+//  @return Organization
+func (a *ProjectAPIService) CreateOrganizationExecute(r ProjectAPICreateOrganizationRequest) (*Organization, *http.Response, error) {
+	var (
+		localVarHTTPMethod   = http.MethodPost
+		localVarPostBody     interface{}
+		formFiles            []formFile
+		localVarReturnValue  *Organization
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ProjectAPIService.CreateOrganization")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/projects/{project_id}/organizations"
+	localVarPath = strings.Replace(localVarPath, "{"+"project_id"+"}", url.PathEscape(parameterValueToString(r.projectId, "projectId")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{"application/json"}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	// body params
+	localVarPostBody = r.organizationBody
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 400 {
+			var v ErrorGeneric
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 403 {
+			var v ErrorGeneric
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 409 {
+			var v ErrorGeneric
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+			var v ErrorGeneric
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type ProjectAPICreateProjectRequest struct {
+	ctx context.Context
+	ApiService ProjectAPI
 	createProjectBody *CreateProjectBody
 }
 
-func (r ProjectApiCreateProjectRequest) CreateProjectBody(createProjectBody CreateProjectBody) ProjectApiCreateProjectRequest {
+func (r ProjectAPICreateProjectRequest) CreateProjectBody(createProjectBody CreateProjectBody) ProjectAPICreateProjectRequest {
 	r.createProjectBody = &createProjectBody
 	return r
 }
 
-func (r ProjectApiCreateProjectRequest) Execute() (*Project, *http.Response, error) {
+func (r ProjectAPICreateProjectRequest) Execute() (*Project, *http.Response, error) {
 	return r.ApiService.CreateProjectExecute(r)
 }
 
@@ -292,10 +513,10 @@ CreateProject Create a Project
 Creates a new project.
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ProjectApiCreateProjectRequest
+ @return ProjectAPICreateProjectRequest
 */
-func (a *ProjectApiService) CreateProject(ctx context.Context) ProjectApiCreateProjectRequest {
-	return ProjectApiCreateProjectRequest{
+func (a *ProjectAPIService) CreateProject(ctx context.Context) ProjectAPICreateProjectRequest {
+	return ProjectAPICreateProjectRequest{
 		ApiService: a,
 		ctx: ctx,
 	}
@@ -303,7 +524,7 @@ func (a *ProjectApiService) CreateProject(ctx context.Context) ProjectApiCreateP
 
 // Execute executes the request
 //  @return Project
-func (a *ProjectApiService) CreateProjectExecute(r ProjectApiCreateProjectRequest) (*Project, *http.Response, error) {
+func (a *ProjectAPIService) CreateProjectExecute(r ProjectAPICreateProjectRequest) (*Project, *http.Response, error) {
 	var (
 		localVarHTTPMethod   = http.MethodPost
 		localVarPostBody     interface{}
@@ -311,7 +532,7 @@ func (a *ProjectApiService) CreateProjectExecute(r ProjectApiCreateProjectReques
 		localVarReturnValue  *Project
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ProjectApiService.CreateProject")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ProjectAPIService.CreateProject")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -351,9 +572,9 @@ func (a *ProjectApiService) CreateProjectExecute(r ProjectApiCreateProjectReques
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
-	localVarBody, err := ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
-	localVarHTTPResponse.Body = ioutil.NopCloser(bytes.NewBuffer(localVarBody))
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -370,7 +591,8 @@ func (a *ProjectApiService) CreateProjectExecute(r ProjectApiCreateProjectReques
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-			newErr.model = v
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
@@ -380,7 +602,8 @@ func (a *ProjectApiService) CreateProjectExecute(r ProjectApiCreateProjectReques
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-			newErr.model = v
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 404 {
@@ -390,7 +613,8 @@ func (a *ProjectApiService) CreateProjectExecute(r ProjectApiCreateProjectReques
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-			newErr.model = v
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 			var v ErrorGeneric
@@ -399,7 +623,8 @@ func (a *ProjectApiService) CreateProjectExecute(r ProjectApiCreateProjectReques
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-			newErr.model = v
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
 
@@ -415,19 +640,19 @@ func (a *ProjectApiService) CreateProjectExecute(r ProjectApiCreateProjectReques
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ProjectApiCreateProjectApiKeyRequest struct {
+type ProjectAPICreateProjectApiKeyRequest struct {
 	ctx context.Context
-	ApiService ProjectApi
+	ApiService ProjectAPI
 	project string
 	createProjectApiKeyRequest *CreateProjectApiKeyRequest
 }
 
-func (r ProjectApiCreateProjectApiKeyRequest) CreateProjectApiKeyRequest(createProjectApiKeyRequest CreateProjectApiKeyRequest) ProjectApiCreateProjectApiKeyRequest {
+func (r ProjectAPICreateProjectApiKeyRequest) CreateProjectApiKeyRequest(createProjectApiKeyRequest CreateProjectApiKeyRequest) ProjectAPICreateProjectApiKeyRequest {
 	r.createProjectApiKeyRequest = &createProjectApiKeyRequest
 	return r
 }
 
-func (r ProjectApiCreateProjectApiKeyRequest) Execute() (*ProjectApiKey, *http.Response, error) {
+func (r ProjectAPICreateProjectApiKeyRequest) Execute() (*ProjectApiKey, *http.Response, error) {
 	return r.ApiService.CreateProjectApiKeyExecute(r)
 }
 
@@ -438,10 +663,10 @@ Create an API token for a project.
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  @param project The Project ID or Project slug
- @return ProjectApiCreateProjectApiKeyRequest
+ @return ProjectAPICreateProjectApiKeyRequest
 */
-func (a *ProjectApiService) CreateProjectApiKey(ctx context.Context, project string) ProjectApiCreateProjectApiKeyRequest {
-	return ProjectApiCreateProjectApiKeyRequest{
+func (a *ProjectAPIService) CreateProjectApiKey(ctx context.Context, project string) ProjectAPICreateProjectApiKeyRequest {
+	return ProjectAPICreateProjectApiKeyRequest{
 		ApiService: a,
 		ctx: ctx,
 		project: project,
@@ -450,7 +675,7 @@ func (a *ProjectApiService) CreateProjectApiKey(ctx context.Context, project str
 
 // Execute executes the request
 //  @return ProjectApiKey
-func (a *ProjectApiService) CreateProjectApiKeyExecute(r ProjectApiCreateProjectApiKeyRequest) (*ProjectApiKey, *http.Response, error) {
+func (a *ProjectAPIService) CreateProjectApiKeyExecute(r ProjectAPICreateProjectApiKeyRequest) (*ProjectApiKey, *http.Response, error) {
 	var (
 		localVarHTTPMethod   = http.MethodPost
 		localVarPostBody     interface{}
@@ -458,13 +683,13 @@ func (a *ProjectApiService) CreateProjectApiKeyExecute(r ProjectApiCreateProject
 		localVarReturnValue  *ProjectApiKey
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ProjectApiService.CreateProjectApiKey")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ProjectAPIService.CreateProjectApiKey")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
 
 	localVarPath := localBasePath + "/projects/{project}/tokens"
-	localVarPath = strings.Replace(localVarPath, "{"+"project"+"}", url.PathEscape(parameterToString(r.project, "")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"project"+"}", url.PathEscape(parameterValueToString(r.project, "project")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
@@ -499,9 +724,9 @@ func (a *ProjectApiService) CreateProjectApiKeyExecute(r ProjectApiCreateProject
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
-	localVarBody, err := ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
-	localVarHTTPResponse.Body = ioutil.NopCloser(bytes.NewBuffer(localVarBody))
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -517,7 +742,8 @@ func (a *ProjectApiService) CreateProjectApiKeyExecute(r ProjectApiCreateProject
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-			newErr.model = v
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
 
@@ -533,52 +759,50 @@ func (a *ProjectApiService) CreateProjectApiKeyExecute(r ProjectApiCreateProject
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ProjectApiDeleteProjectApiKeyRequest struct {
+type ProjectAPIDeleteOrganizationRequest struct {
 	ctx context.Context
-	ApiService ProjectApi
-	project string
-	tokenId string
+	ApiService ProjectAPI
+	projectId string
+	organizationId string
 }
 
-func (r ProjectApiDeleteProjectApiKeyRequest) Execute() (*http.Response, error) {
-	return r.ApiService.DeleteProjectApiKeyExecute(r)
+func (r ProjectAPIDeleteOrganizationRequest) Execute() (*http.Response, error) {
+	return r.ApiService.DeleteOrganizationExecute(r)
 }
 
 /*
-DeleteProjectApiKey Delete project API token
-
-Deletes an API token and immediately removes it.
+DeleteOrganization Delete a B2B SSO Organization for a project.
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param project The Project ID or Project slug
- @param tokenId The Token ID
- @return ProjectApiDeleteProjectApiKeyRequest
+ @param projectId Project ID  The project's ID.
+ @param organizationId Organization ID  The Organization's ID.
+ @return ProjectAPIDeleteOrganizationRequest
 */
-func (a *ProjectApiService) DeleteProjectApiKey(ctx context.Context, project string, tokenId string) ProjectApiDeleteProjectApiKeyRequest {
-	return ProjectApiDeleteProjectApiKeyRequest{
+func (a *ProjectAPIService) DeleteOrganization(ctx context.Context, projectId string, organizationId string) ProjectAPIDeleteOrganizationRequest {
+	return ProjectAPIDeleteOrganizationRequest{
 		ApiService: a,
 		ctx: ctx,
-		project: project,
-		tokenId: tokenId,
+		projectId: projectId,
+		organizationId: organizationId,
 	}
 }
 
 // Execute executes the request
-func (a *ProjectApiService) DeleteProjectApiKeyExecute(r ProjectApiDeleteProjectApiKeyRequest) (*http.Response, error) {
+func (a *ProjectAPIService) DeleteOrganizationExecute(r ProjectAPIDeleteOrganizationRequest) (*http.Response, error) {
 	var (
 		localVarHTTPMethod   = http.MethodDelete
 		localVarPostBody     interface{}
 		formFiles            []formFile
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ProjectApiService.DeleteProjectApiKey")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ProjectAPIService.DeleteOrganization")
 	if err != nil {
 		return nil, &GenericOpenAPIError{error: err.Error()}
 	}
 
-	localVarPath := localBasePath + "/projects/{project}/tokens/{token_id}"
-	localVarPath = strings.Replace(localVarPath, "{"+"project"+"}", url.PathEscape(parameterToString(r.project, "")), -1)
-	localVarPath = strings.Replace(localVarPath, "{"+"token_id"+"}", url.PathEscape(parameterToString(r.tokenId, "")), -1)
+	localVarPath := localBasePath + "/projects/{project_id}/organizations/{organization_id}"
+	localVarPath = strings.Replace(localVarPath, "{"+"project_id"+"}", url.PathEscape(parameterValueToString(r.projectId, "projectId")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"organization_id"+"}", url.PathEscape(parameterValueToString(r.organizationId, "organizationId")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
@@ -611,9 +835,157 @@ func (a *ProjectApiService) DeleteProjectApiKeyExecute(r ProjectApiDeleteProject
 		return localVarHTTPResponse, err
 	}
 
-	localVarBody, err := ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
-	localVarHTTPResponse.Body = ioutil.NopCloser(bytes.NewBuffer(localVarBody))
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 400 {
+			var v ErrorGeneric
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 403 {
+			var v ErrorGeneric
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 404 {
+			var v ErrorGeneric
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 409 {
+			var v ErrorGeneric
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarHTTPResponse, newErr
+		}
+			var v ErrorGeneric
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+		return localVarHTTPResponse, newErr
+	}
+
+	return localVarHTTPResponse, nil
+}
+
+type ProjectAPIDeleteProjectApiKeyRequest struct {
+	ctx context.Context
+	ApiService ProjectAPI
+	project string
+	tokenId string
+}
+
+func (r ProjectAPIDeleteProjectApiKeyRequest) Execute() (*http.Response, error) {
+	return r.ApiService.DeleteProjectApiKeyExecute(r)
+}
+
+/*
+DeleteProjectApiKey Delete project API token
+
+Deletes an API token and immediately removes it.
+
+ @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ @param project The Project ID or Project slug
+ @param tokenId The Token ID
+ @return ProjectAPIDeleteProjectApiKeyRequest
+*/
+func (a *ProjectAPIService) DeleteProjectApiKey(ctx context.Context, project string, tokenId string) ProjectAPIDeleteProjectApiKeyRequest {
+	return ProjectAPIDeleteProjectApiKeyRequest{
+		ApiService: a,
+		ctx: ctx,
+		project: project,
+		tokenId: tokenId,
+	}
+}
+
+// Execute executes the request
+func (a *ProjectAPIService) DeleteProjectApiKeyExecute(r ProjectAPIDeleteProjectApiKeyRequest) (*http.Response, error) {
+	var (
+		localVarHTTPMethod   = http.MethodDelete
+		localVarPostBody     interface{}
+		formFiles            []formFile
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ProjectAPIService.DeleteProjectApiKey")
+	if err != nil {
+		return nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/projects/{project}/tokens/{token_id}"
+	localVarPath = strings.Replace(localVarPath, "{"+"project"+"}", url.PathEscape(parameterValueToString(r.project, "project")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"token_id"+"}", url.PathEscape(parameterValueToString(r.tokenId, "tokenId")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarHTTPResponse, err
 	}
@@ -629,19 +1001,20 @@ func (a *ProjectApiService) DeleteProjectApiKeyExecute(r ProjectApiDeleteProject
 				newErr.error = err.Error()
 				return localVarHTTPResponse, newErr
 			}
-			newErr.model = v
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
 		return localVarHTTPResponse, newErr
 	}
 
 	return localVarHTTPResponse, nil
 }
 
-type ProjectApiGetActiveProjectInConsoleRequest struct {
+type ProjectAPIGetActiveProjectInConsoleRequest struct {
 	ctx context.Context
-	ApiService ProjectApi
+	ApiService ProjectAPI
 }
 
-func (r ProjectApiGetActiveProjectInConsoleRequest) Execute() (*ActiveProjectInConsole, *http.Response, error) {
+func (r ProjectAPIGetActiveProjectInConsoleRequest) Execute() (*ActiveProjectInConsole, *http.Response, error) {
 	return r.ApiService.GetActiveProjectInConsoleExecute(r)
 }
 
@@ -651,10 +1024,10 @@ GetActiveProjectInConsole Returns the Ory Network Project selected in the Ory Ne
 Use this API to get your active project in the Ory Network Console UI.
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ProjectApiGetActiveProjectInConsoleRequest
+ @return ProjectAPIGetActiveProjectInConsoleRequest
 */
-func (a *ProjectApiService) GetActiveProjectInConsole(ctx context.Context) ProjectApiGetActiveProjectInConsoleRequest {
-	return ProjectApiGetActiveProjectInConsoleRequest{
+func (a *ProjectAPIService) GetActiveProjectInConsole(ctx context.Context) ProjectAPIGetActiveProjectInConsoleRequest {
+	return ProjectAPIGetActiveProjectInConsoleRequest{
 		ApiService: a,
 		ctx: ctx,
 	}
@@ -662,7 +1035,7 @@ func (a *ProjectApiService) GetActiveProjectInConsole(ctx context.Context) Proje
 
 // Execute executes the request
 //  @return ActiveProjectInConsole
-func (a *ProjectApiService) GetActiveProjectInConsoleExecute(r ProjectApiGetActiveProjectInConsoleRequest) (*ActiveProjectInConsole, *http.Response, error) {
+func (a *ProjectAPIService) GetActiveProjectInConsoleExecute(r ProjectAPIGetActiveProjectInConsoleRequest) (*ActiveProjectInConsole, *http.Response, error) {
 	var (
 		localVarHTTPMethod   = http.MethodGet
 		localVarPostBody     interface{}
@@ -670,7 +1043,7 @@ func (a *ProjectApiService) GetActiveProjectInConsoleExecute(r ProjectApiGetActi
 		localVarReturnValue  *ActiveProjectInConsole
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ProjectApiService.GetActiveProjectInConsole")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ProjectAPIService.GetActiveProjectInConsole")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -708,9 +1081,9 @@ func (a *ProjectApiService) GetActiveProjectInConsoleExecute(r ProjectApiGetActi
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
-	localVarBody, err := ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
-	localVarHTTPResponse.Body = ioutil.NopCloser(bytes.NewBuffer(localVarBody))
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -727,7 +1100,8 @@ func (a *ProjectApiService) GetActiveProjectInConsoleExecute(r ProjectApiGetActi
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-			newErr.model = v
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 			var v GenericError
@@ -736,7 +1110,8 @@ func (a *ProjectApiService) GetActiveProjectInConsoleExecute(r ProjectApiGetActi
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-			newErr.model = v
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
 
@@ -752,13 +1127,148 @@ func (a *ProjectApiService) GetActiveProjectInConsoleExecute(r ProjectApiGetActi
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ProjectApiGetProjectRequest struct {
+type ProjectAPIGetOrganizationRequest struct {
 	ctx context.Context
-	ApiService ProjectApi
+	ApiService ProjectAPI
+	projectId string
+	organizationId string
+}
+
+func (r ProjectAPIGetOrganizationRequest) Execute() (*GetOrganizationResponse, *http.Response, error) {
+	return r.ApiService.GetOrganizationExecute(r)
+}
+
+/*
+GetOrganization Returns a B2B SSO Organization for a project by it's ID.
+
+ @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ @param projectId Project ID  The project's ID.
+ @param organizationId Organization ID  The Organization's ID.
+ @return ProjectAPIGetOrganizationRequest
+*/
+func (a *ProjectAPIService) GetOrganization(ctx context.Context, projectId string, organizationId string) ProjectAPIGetOrganizationRequest {
+	return ProjectAPIGetOrganizationRequest{
+		ApiService: a,
+		ctx: ctx,
+		projectId: projectId,
+		organizationId: organizationId,
+	}
+}
+
+// Execute executes the request
+//  @return GetOrganizationResponse
+func (a *ProjectAPIService) GetOrganizationExecute(r ProjectAPIGetOrganizationRequest) (*GetOrganizationResponse, *http.Response, error) {
+	var (
+		localVarHTTPMethod   = http.MethodGet
+		localVarPostBody     interface{}
+		formFiles            []formFile
+		localVarReturnValue  *GetOrganizationResponse
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ProjectAPIService.GetOrganization")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/projects/{project_id}/organizations/{organization_id}"
+	localVarPath = strings.Replace(localVarPath, "{"+"project_id"+"}", url.PathEscape(parameterValueToString(r.projectId, "projectId")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"organization_id"+"}", url.PathEscape(parameterValueToString(r.organizationId, "organizationId")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 400 {
+			var v ErrorGeneric
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 403 {
+			var v ErrorGeneric
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+			var v ErrorGeneric
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type ProjectAPIGetProjectRequest struct {
+	ctx context.Context
+	ApiService ProjectAPI
 	projectId string
 }
 
-func (r ProjectApiGetProjectRequest) Execute() (*Project, *http.Response, error) {
+func (r ProjectAPIGetProjectRequest) Execute() (*Project, *http.Response, error) {
 	return r.ApiService.GetProjectExecute(r)
 }
 
@@ -769,10 +1279,10 @@ Get a projects you have access to by its ID.
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  @param projectId Project ID  The project's ID.
- @return ProjectApiGetProjectRequest
+ @return ProjectAPIGetProjectRequest
 */
-func (a *ProjectApiService) GetProject(ctx context.Context, projectId string) ProjectApiGetProjectRequest {
-	return ProjectApiGetProjectRequest{
+func (a *ProjectAPIService) GetProject(ctx context.Context, projectId string) ProjectAPIGetProjectRequest {
+	return ProjectAPIGetProjectRequest{
 		ApiService: a,
 		ctx: ctx,
 		projectId: projectId,
@@ -781,7 +1291,7 @@ func (a *ProjectApiService) GetProject(ctx context.Context, projectId string) Pr
 
 // Execute executes the request
 //  @return Project
-func (a *ProjectApiService) GetProjectExecute(r ProjectApiGetProjectRequest) (*Project, *http.Response, error) {
+func (a *ProjectAPIService) GetProjectExecute(r ProjectAPIGetProjectRequest) (*Project, *http.Response, error) {
 	var (
 		localVarHTTPMethod   = http.MethodGet
 		localVarPostBody     interface{}
@@ -789,13 +1299,13 @@ func (a *ProjectApiService) GetProjectExecute(r ProjectApiGetProjectRequest) (*P
 		localVarReturnValue  *Project
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ProjectApiService.GetProject")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ProjectAPIService.GetProject")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
 
 	localVarPath := localBasePath + "/projects/{project_id}"
-	localVarPath = strings.Replace(localVarPath, "{"+"project_id"+"}", url.PathEscape(parameterToString(r.projectId, "")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"project_id"+"}", url.PathEscape(parameterValueToString(r.projectId, "projectId")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
@@ -828,9 +1338,9 @@ func (a *ProjectApiService) GetProjectExecute(r ProjectApiGetProjectRequest) (*P
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
-	localVarBody, err := ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
-	localVarHTTPResponse.Body = ioutil.NopCloser(bytes.NewBuffer(localVarBody))
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -847,7 +1357,8 @@ func (a *ProjectApiService) GetProjectExecute(r ProjectApiGetProjectRequest) (*P
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-			newErr.model = v
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
@@ -857,7 +1368,8 @@ func (a *ProjectApiService) GetProjectExecute(r ProjectApiGetProjectRequest) (*P
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-			newErr.model = v
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 404 {
@@ -867,7 +1379,8 @@ func (a *ProjectApiService) GetProjectExecute(r ProjectApiGetProjectRequest) (*P
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-			newErr.model = v
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 			var v ErrorGeneric
@@ -876,7 +1389,8 @@ func (a *ProjectApiService) GetProjectExecute(r ProjectApiGetProjectRequest) (*P
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-			newErr.model = v
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
 
@@ -892,13 +1406,13 @@ func (a *ProjectApiService) GetProjectExecute(r ProjectApiGetProjectRequest) (*P
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ProjectApiGetProjectMembersRequest struct {
+type ProjectAPIGetProjectMembersRequest struct {
 	ctx context.Context
-	ApiService ProjectApi
-	projectId string
+	ApiService ProjectAPI
+	project string
 }
 
-func (r ProjectApiGetProjectMembersRequest) Execute() ([]CloudAccount, *http.Response, error) {
+func (r ProjectAPIGetProjectMembersRequest) Execute() ([]CloudAccount, *http.Response, error) {
 	return r.ApiService.GetProjectMembersExecute(r)
 }
 
@@ -908,20 +1422,20 @@ GetProjectMembers Get all members associated with this project
 This endpoint requires the user to be a member of the project with the role `OWNER` or `DEVELOPER`.
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param projectId Project ID  The project's ID.
- @return ProjectApiGetProjectMembersRequest
+ @param project
+ @return ProjectAPIGetProjectMembersRequest
 */
-func (a *ProjectApiService) GetProjectMembers(ctx context.Context, projectId string) ProjectApiGetProjectMembersRequest {
-	return ProjectApiGetProjectMembersRequest{
+func (a *ProjectAPIService) GetProjectMembers(ctx context.Context, project string) ProjectAPIGetProjectMembersRequest {
+	return ProjectAPIGetProjectMembersRequest{
 		ApiService: a,
 		ctx: ctx,
-		projectId: projectId,
+		project: project,
 	}
 }
 
 // Execute executes the request
 //  @return []CloudAccount
-func (a *ProjectApiService) GetProjectMembersExecute(r ProjectApiGetProjectMembersRequest) ([]CloudAccount, *http.Response, error) {
+func (a *ProjectAPIService) GetProjectMembersExecute(r ProjectAPIGetProjectMembersRequest) ([]CloudAccount, *http.Response, error) {
 	var (
 		localVarHTTPMethod   = http.MethodGet
 		localVarPostBody     interface{}
@@ -929,13 +1443,13 @@ func (a *ProjectApiService) GetProjectMembersExecute(r ProjectApiGetProjectMembe
 		localVarReturnValue  []CloudAccount
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ProjectApiService.GetProjectMembers")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ProjectAPIService.GetProjectMembers")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
 
-	localVarPath := localBasePath + "/projects/{project_id}/members"
-	localVarPath = strings.Replace(localVarPath, "{"+"project_id"+"}", url.PathEscape(parameterToString(r.projectId, "")), -1)
+	localVarPath := localBasePath + "/projects/{project}/members"
+	localVarPath = strings.Replace(localVarPath, "{"+"project"+"}", url.PathEscape(parameterValueToString(r.project, "project")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
@@ -968,9 +1482,9 @@ func (a *ProjectApiService) GetProjectMembersExecute(r ProjectApiGetProjectMembe
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
-	localVarBody, err := ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
-	localVarHTTPResponse.Body = ioutil.NopCloser(bytes.NewBuffer(localVarBody))
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -987,7 +1501,8 @@ func (a *ProjectApiService) GetProjectMembersExecute(r ProjectApiGetProjectMembe
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-			newErr.model = v
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 406 {
@@ -997,7 +1512,8 @@ func (a *ProjectApiService) GetProjectMembersExecute(r ProjectApiGetProjectMembe
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-			newErr.model = v
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 			var v GenericError
@@ -1006,7 +1522,8 @@ func (a *ProjectApiService) GetProjectMembersExecute(r ProjectApiGetProjectMembe
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-			newErr.model = v
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
 
@@ -1022,9 +1539,9 @@ func (a *ProjectApiService) GetProjectMembersExecute(r ProjectApiGetProjectMembe
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ProjectApiGetProjectMetricsRequest struct {
+type ProjectAPIGetProjectMetricsRequest struct {
 	ctx context.Context
-	ApiService ProjectApi
+	ApiService ProjectAPI
 	projectId string
 	eventType *string
 	resolution *string
@@ -1033,30 +1550,30 @@ type ProjectApiGetProjectMetricsRequest struct {
 }
 
 // The event type to query for
-func (r ProjectApiGetProjectMetricsRequest) EventType(eventType string) ProjectApiGetProjectMetricsRequest {
+func (r ProjectAPIGetProjectMetricsRequest) EventType(eventType string) ProjectAPIGetProjectMetricsRequest {
 	r.eventType = &eventType
 	return r
 }
 
 // The resolution of the buckets  The minimum resolution is 1 hour.
-func (r ProjectApiGetProjectMetricsRequest) Resolution(resolution string) ProjectApiGetProjectMetricsRequest {
+func (r ProjectAPIGetProjectMetricsRequest) Resolution(resolution string) ProjectAPIGetProjectMetricsRequest {
 	r.resolution = &resolution
 	return r
 }
 
-// The start time of the time window
-func (r ProjectApiGetProjectMetricsRequest) From(from time.Time) ProjectApiGetProjectMetricsRequest {
+// The start RFC3339 date of the time window
+func (r ProjectAPIGetProjectMetricsRequest) From(from time.Time) ProjectAPIGetProjectMetricsRequest {
 	r.from = &from
 	return r
 }
 
-// The end time of the time window
-func (r ProjectApiGetProjectMetricsRequest) To(to time.Time) ProjectApiGetProjectMetricsRequest {
+// The end RFC3339 date of the time window
+func (r ProjectAPIGetProjectMetricsRequest) To(to time.Time) ProjectAPIGetProjectMetricsRequest {
 	r.to = &to
 	return r
 }
 
-func (r ProjectApiGetProjectMetricsRequest) Execute() (*GetProjectMetricsResponse, *http.Response, error) {
+func (r ProjectAPIGetProjectMetricsRequest) Execute() (*GetProjectMetricsResponse, *http.Response, error) {
 	return r.ApiService.GetProjectMetricsExecute(r)
 }
 
@@ -1067,10 +1584,10 @@ Retrieves project metrics for the specified event type and time range
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  @param projectId Project ID
- @return ProjectApiGetProjectMetricsRequest
+ @return ProjectAPIGetProjectMetricsRequest
 */
-func (a *ProjectApiService) GetProjectMetrics(ctx context.Context, projectId string) ProjectApiGetProjectMetricsRequest {
-	return ProjectApiGetProjectMetricsRequest{
+func (a *ProjectAPIService) GetProjectMetrics(ctx context.Context, projectId string) ProjectAPIGetProjectMetricsRequest {
+	return ProjectAPIGetProjectMetricsRequest{
 		ApiService: a,
 		ctx: ctx,
 		projectId: projectId,
@@ -1079,7 +1596,7 @@ func (a *ProjectApiService) GetProjectMetrics(ctx context.Context, projectId str
 
 // Execute executes the request
 //  @return GetProjectMetricsResponse
-func (a *ProjectApiService) GetProjectMetricsExecute(r ProjectApiGetProjectMetricsRequest) (*GetProjectMetricsResponse, *http.Response, error) {
+func (a *ProjectAPIService) GetProjectMetricsExecute(r ProjectAPIGetProjectMetricsRequest) (*GetProjectMetricsResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod   = http.MethodGet
 		localVarPostBody     interface{}
@@ -1087,13 +1604,13 @@ func (a *ProjectApiService) GetProjectMetricsExecute(r ProjectApiGetProjectMetri
 		localVarReturnValue  *GetProjectMetricsResponse
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ProjectApiService.GetProjectMetrics")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ProjectAPIService.GetProjectMetrics")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
 
 	localVarPath := localBasePath + "/projects/{project_id}/metrics"
-	localVarPath = strings.Replace(localVarPath, "{"+"project_id"+"}", url.PathEscape(parameterToString(r.projectId, "")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"project_id"+"}", url.PathEscape(parameterValueToString(r.projectId, "projectId")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
@@ -1111,10 +1628,10 @@ func (a *ProjectApiService) GetProjectMetricsExecute(r ProjectApiGetProjectMetri
 		return localVarReturnValue, nil, reportError("to is required and must be specified")
 	}
 
-	localVarQueryParams.Add("event_type", parameterToString(*r.eventType, ""))
-	localVarQueryParams.Add("resolution", parameterToString(*r.resolution, ""))
-	localVarQueryParams.Add("from", parameterToString(*r.from, ""))
-	localVarQueryParams.Add("to", parameterToString(*r.to, ""))
+	parameterAddToHeaderOrQuery(localVarQueryParams, "event_type", r.eventType, "")
+	parameterAddToHeaderOrQuery(localVarQueryParams, "resolution", r.resolution, "")
+	parameterAddToHeaderOrQuery(localVarQueryParams, "from", r.from, "")
+	parameterAddToHeaderOrQuery(localVarQueryParams, "to", r.to, "")
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
 
@@ -1142,9 +1659,9 @@ func (a *ProjectApiService) GetProjectMetricsExecute(r ProjectApiGetProjectMetri
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
-	localVarBody, err := ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
-	localVarHTTPResponse.Body = ioutil.NopCloser(bytes.NewBuffer(localVarBody))
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -1161,7 +1678,8 @@ func (a *ProjectApiService) GetProjectMetricsExecute(r ProjectApiGetProjectMetri
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-			newErr.model = v
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
@@ -1171,7 +1689,8 @@ func (a *ProjectApiService) GetProjectMetricsExecute(r ProjectApiGetProjectMetri
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-			newErr.model = v
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 			var v GenericError
@@ -1180,7 +1699,8 @@ func (a *ProjectApiService) GetProjectMetricsExecute(r ProjectApiGetProjectMetri
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-			newErr.model = v
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
 
@@ -1196,50 +1716,48 @@ func (a *ProjectApiService) GetProjectMetricsExecute(r ProjectApiGetProjectMetri
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ProjectApiListProjectApiKeysRequest struct {
+type ProjectAPIListOrganizationsRequest struct {
 	ctx context.Context
-	ApiService ProjectApi
-	project string
+	ApiService ProjectAPI
+	projectId string
 }
 
-func (r ProjectApiListProjectApiKeysRequest) Execute() ([]ProjectApiKey, *http.Response, error) {
-	return r.ApiService.ListProjectApiKeysExecute(r)
+func (r ProjectAPIListOrganizationsRequest) Execute() (*ListOrganizationsResponse, *http.Response, error) {
+	return r.ApiService.ListOrganizationsExecute(r)
 }
 
 /*
-ListProjectApiKeys List a project's API Tokens
-
-A list of all the project's API tokens.
+ListOrganizations Method for ListOrganizations
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param project The Project ID or Project slug
- @return ProjectApiListProjectApiKeysRequest
+ @param projectId Project ID  The project's ID.
+ @return ProjectAPIListOrganizationsRequest
 */
-func (a *ProjectApiService) ListProjectApiKeys(ctx context.Context, project string) ProjectApiListProjectApiKeysRequest {
-	return ProjectApiListProjectApiKeysRequest{
+func (a *ProjectAPIService) ListOrganizations(ctx context.Context, projectId string) ProjectAPIListOrganizationsRequest {
+	return ProjectAPIListOrganizationsRequest{
 		ApiService: a,
 		ctx: ctx,
-		project: project,
+		projectId: projectId,
 	}
 }
 
 // Execute executes the request
-//  @return []ProjectApiKey
-func (a *ProjectApiService) ListProjectApiKeysExecute(r ProjectApiListProjectApiKeysRequest) ([]ProjectApiKey, *http.Response, error) {
+//  @return ListOrganizationsResponse
+func (a *ProjectAPIService) ListOrganizationsExecute(r ProjectAPIListOrganizationsRequest) (*ListOrganizationsResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod   = http.MethodGet
 		localVarPostBody     interface{}
 		formFiles            []formFile
-		localVarReturnValue  []ProjectApiKey
+		localVarReturnValue  *ListOrganizationsResponse
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ProjectApiService.ListProjectApiKeys")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ProjectAPIService.ListOrganizations")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
 
-	localVarPath := localBasePath + "/projects/{project}/tokens"
-	localVarPath = strings.Replace(localVarPath, "{"+"project"+"}", url.PathEscape(parameterToString(r.project, "")), -1)
+	localVarPath := localBasePath + "/projects/{project_id}/organizations"
+	localVarPath = strings.Replace(localVarPath, "{"+"project_id"+"}", url.PathEscape(parameterValueToString(r.projectId, "projectId")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
@@ -1272,9 +1790,9 @@ func (a *ProjectApiService) ListProjectApiKeysExecute(r ProjectApiListProjectApi
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
-	localVarBody, err := ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
-	localVarHTTPResponse.Body = ioutil.NopCloser(bytes.NewBuffer(localVarBody))
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -1284,13 +1802,36 @@ func (a *ProjectApiService) ListProjectApiKeysExecute(r ProjectApiListProjectApi
 			body:  localVarBody,
 			error: localVarHTTPResponse.Status,
 		}
+		if localVarHTTPResponse.StatusCode == 400 {
 			var v ErrorGeneric
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-			newErr.model = v
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 403 {
+			var v ErrorGeneric
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+			var v ErrorGeneric
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
 
@@ -1306,12 +1847,123 @@ func (a *ProjectApiService) ListProjectApiKeysExecute(r ProjectApiListProjectApi
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ProjectApiListProjectsRequest struct {
+type ProjectAPIListProjectApiKeysRequest struct {
 	ctx context.Context
-	ApiService ProjectApi
+	ApiService ProjectAPI
+	project string
 }
 
-func (r ProjectApiListProjectsRequest) Execute() ([]ProjectMetadata, *http.Response, error) {
+func (r ProjectAPIListProjectApiKeysRequest) Execute() ([]ProjectApiKey, *http.Response, error) {
+	return r.ApiService.ListProjectApiKeysExecute(r)
+}
+
+/*
+ListProjectApiKeys List a project's API Tokens
+
+A list of all the project's API tokens.
+
+ @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ @param project The Project ID or Project slug
+ @return ProjectAPIListProjectApiKeysRequest
+*/
+func (a *ProjectAPIService) ListProjectApiKeys(ctx context.Context, project string) ProjectAPIListProjectApiKeysRequest {
+	return ProjectAPIListProjectApiKeysRequest{
+		ApiService: a,
+		ctx: ctx,
+		project: project,
+	}
+}
+
+// Execute executes the request
+//  @return []ProjectApiKey
+func (a *ProjectAPIService) ListProjectApiKeysExecute(r ProjectAPIListProjectApiKeysRequest) ([]ProjectApiKey, *http.Response, error) {
+	var (
+		localVarHTTPMethod   = http.MethodGet
+		localVarPostBody     interface{}
+		formFiles            []formFile
+		localVarReturnValue  []ProjectApiKey
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ProjectAPIService.ListProjectApiKeys")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/projects/{project}/tokens"
+	localVarPath = strings.Replace(localVarPath, "{"+"project"+"}", url.PathEscape(parameterValueToString(r.project, "project")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+			var v ErrorGeneric
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type ProjectAPIListProjectsRequest struct {
+	ctx context.Context
+	ApiService ProjectAPI
+}
+
+func (r ProjectAPIListProjectsRequest) Execute() ([]ProjectMetadata, *http.Response, error) {
 	return r.ApiService.ListProjectsExecute(r)
 }
 
@@ -1321,10 +1973,10 @@ ListProjects List All Projects
 Lists all projects you have access to.
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ProjectApiListProjectsRequest
+ @return ProjectAPIListProjectsRequest
 */
-func (a *ProjectApiService) ListProjects(ctx context.Context) ProjectApiListProjectsRequest {
-	return ProjectApiListProjectsRequest{
+func (a *ProjectAPIService) ListProjects(ctx context.Context) ProjectAPIListProjectsRequest {
+	return ProjectAPIListProjectsRequest{
 		ApiService: a,
 		ctx: ctx,
 	}
@@ -1332,7 +1984,7 @@ func (a *ProjectApiService) ListProjects(ctx context.Context) ProjectApiListProj
 
 // Execute executes the request
 //  @return []ProjectMetadata
-func (a *ProjectApiService) ListProjectsExecute(r ProjectApiListProjectsRequest) ([]ProjectMetadata, *http.Response, error) {
+func (a *ProjectAPIService) ListProjectsExecute(r ProjectAPIListProjectsRequest) ([]ProjectMetadata, *http.Response, error) {
 	var (
 		localVarHTTPMethod   = http.MethodGet
 		localVarPostBody     interface{}
@@ -1340,7 +1992,7 @@ func (a *ProjectApiService) ListProjectsExecute(r ProjectApiListProjectsRequest)
 		localVarReturnValue  []ProjectMetadata
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ProjectApiService.ListProjects")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ProjectAPIService.ListProjects")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -1378,9 +2030,9 @@ func (a *ProjectApiService) ListProjectsExecute(r ProjectApiListProjectsRequest)
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
-	localVarBody, err := ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
-	localVarHTTPResponse.Body = ioutil.NopCloser(bytes.NewBuffer(localVarBody))
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -1397,7 +2049,8 @@ func (a *ProjectApiService) ListProjectsExecute(r ProjectApiListProjectsRequest)
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-			newErr.model = v
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
@@ -1407,7 +2060,8 @@ func (a *ProjectApiService) ListProjectsExecute(r ProjectApiListProjectsRequest)
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-			newErr.model = v
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 404 {
@@ -1417,7 +2071,8 @@ func (a *ProjectApiService) ListProjectsExecute(r ProjectApiListProjectsRequest)
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-			newErr.model = v
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 			var v ErrorGeneric
@@ -1426,7 +2081,8 @@ func (a *ProjectApiService) ListProjectsExecute(r ProjectApiListProjectsRequest)
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-			newErr.model = v
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
 
@@ -1442,19 +2098,19 @@ func (a *ProjectApiService) ListProjectsExecute(r ProjectApiListProjectsRequest)
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ProjectApiPatchProjectRequest struct {
+type ProjectAPIPatchProjectRequest struct {
 	ctx context.Context
-	ApiService ProjectApi
+	ApiService ProjectAPI
 	projectId string
 	jsonPatch *[]JsonPatch
 }
 
-func (r ProjectApiPatchProjectRequest) JsonPatch(jsonPatch []JsonPatch) ProjectApiPatchProjectRequest {
+func (r ProjectAPIPatchProjectRequest) JsonPatch(jsonPatch []JsonPatch) ProjectAPIPatchProjectRequest {
 	r.jsonPatch = &jsonPatch
 	return r
 }
 
-func (r ProjectApiPatchProjectRequest) Execute() (*SuccessfulProjectUpdate, *http.Response, error) {
+func (r ProjectAPIPatchProjectRequest) Execute() (*SuccessfulProjectUpdate, *http.Response, error) {
 	return r.ApiService.PatchProjectExecute(r)
 }
 
@@ -1481,10 +2137,10 @@ to help you understand which parts of your config could not be processed.
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  @param projectId Project ID  The project's ID.
- @return ProjectApiPatchProjectRequest
+ @return ProjectAPIPatchProjectRequest
 */
-func (a *ProjectApiService) PatchProject(ctx context.Context, projectId string) ProjectApiPatchProjectRequest {
-	return ProjectApiPatchProjectRequest{
+func (a *ProjectAPIService) PatchProject(ctx context.Context, projectId string) ProjectAPIPatchProjectRequest {
+	return ProjectAPIPatchProjectRequest{
 		ApiService: a,
 		ctx: ctx,
 		projectId: projectId,
@@ -1493,7 +2149,7 @@ func (a *ProjectApiService) PatchProject(ctx context.Context, projectId string) 
 
 // Execute executes the request
 //  @return SuccessfulProjectUpdate
-func (a *ProjectApiService) PatchProjectExecute(r ProjectApiPatchProjectRequest) (*SuccessfulProjectUpdate, *http.Response, error) {
+func (a *ProjectAPIService) PatchProjectExecute(r ProjectAPIPatchProjectRequest) (*SuccessfulProjectUpdate, *http.Response, error) {
 	var (
 		localVarHTTPMethod   = http.MethodPatch
 		localVarPostBody     interface{}
@@ -1501,13 +2157,13 @@ func (a *ProjectApiService) PatchProjectExecute(r ProjectApiPatchProjectRequest)
 		localVarReturnValue  *SuccessfulProjectUpdate
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ProjectApiService.PatchProject")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ProjectAPIService.PatchProject")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
 
 	localVarPath := localBasePath + "/projects/{project_id}"
-	localVarPath = strings.Replace(localVarPath, "{"+"project_id"+"}", url.PathEscape(parameterToString(r.projectId, "")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"project_id"+"}", url.PathEscape(parameterValueToString(r.projectId, "projectId")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
@@ -1542,9 +2198,9 @@ func (a *ProjectApiService) PatchProjectExecute(r ProjectApiPatchProjectRequest)
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
-	localVarBody, err := ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
-	localVarHTTPResponse.Body = ioutil.NopCloser(bytes.NewBuffer(localVarBody))
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -1561,7 +2217,8 @@ func (a *ProjectApiService) PatchProjectExecute(r ProjectApiPatchProjectRequest)
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-			newErr.model = v
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
@@ -1571,7 +2228,8 @@ func (a *ProjectApiService) PatchProjectExecute(r ProjectApiPatchProjectRequest)
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-			newErr.model = v
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
@@ -1581,7 +2239,8 @@ func (a *ProjectApiService) PatchProjectExecute(r ProjectApiPatchProjectRequest)
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-			newErr.model = v
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 404 {
@@ -1591,7 +2250,8 @@ func (a *ProjectApiService) PatchProjectExecute(r ProjectApiPatchProjectRequest)
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-			newErr.model = v
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 			var v ErrorGeneric
@@ -1600,7 +2260,8 @@ func (a *ProjectApiService) PatchProjectExecute(r ProjectApiPatchProjectRequest)
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-			newErr.model = v
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
 
@@ -1616,13 +2277,13 @@ func (a *ProjectApiService) PatchProjectExecute(r ProjectApiPatchProjectRequest)
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
 
-type ProjectApiPurgeProjectRequest struct {
+type ProjectAPIPurgeProjectRequest struct {
 	ctx context.Context
-	ApiService ProjectApi
+	ApiService ProjectAPI
 	projectId string
 }
 
-func (r ProjectApiPurgeProjectRequest) Execute() (*http.Response, error) {
+func (r ProjectAPIPurgeProjectRequest) Execute() (*http.Response, error) {
 	return r.ApiService.PurgeProjectExecute(r)
 }
 
@@ -1638,10 +2299,10 @@ This action can not be undone and will delete ALL your data.
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  @param projectId Project ID  The project's ID.
- @return ProjectApiPurgeProjectRequest
+ @return ProjectAPIPurgeProjectRequest
 */
-func (a *ProjectApiService) PurgeProject(ctx context.Context, projectId string) ProjectApiPurgeProjectRequest {
-	return ProjectApiPurgeProjectRequest{
+func (a *ProjectAPIService) PurgeProject(ctx context.Context, projectId string) ProjectAPIPurgeProjectRequest {
+	return ProjectAPIPurgeProjectRequest{
 		ApiService: a,
 		ctx: ctx,
 		projectId: projectId,
@@ -1649,20 +2310,20 @@ func (a *ProjectApiService) PurgeProject(ctx context.Context, projectId string) 
 }
 
 // Execute executes the request
-func (a *ProjectApiService) PurgeProjectExecute(r ProjectApiPurgeProjectRequest) (*http.Response, error) {
+func (a *ProjectAPIService) PurgeProjectExecute(r ProjectAPIPurgeProjectRequest) (*http.Response, error) {
 	var (
 		localVarHTTPMethod   = http.MethodDelete
 		localVarPostBody     interface{}
 		formFiles            []formFile
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ProjectApiService.PurgeProject")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ProjectAPIService.PurgeProject")
 	if err != nil {
 		return nil, &GenericOpenAPIError{error: err.Error()}
 	}
 
 	localVarPath := localBasePath + "/projects/{project_id}"
-	localVarPath = strings.Replace(localVarPath, "{"+"project_id"+"}", url.PathEscape(parameterToString(r.projectId, "")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"project_id"+"}", url.PathEscape(parameterValueToString(r.projectId, "projectId")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
@@ -1695,9 +2356,9 @@ func (a *ProjectApiService) PurgeProjectExecute(r ProjectApiPurgeProjectRequest)
 		return localVarHTTPResponse, err
 	}
 
-	localVarBody, err := ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
-	localVarHTTPResponse.Body = ioutil.NopCloser(bytes.NewBuffer(localVarBody))
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarHTTPResponse, err
 	}
@@ -1714,7 +2375,8 @@ func (a *ProjectApiService) PurgeProjectExecute(r ProjectApiPurgeProjectRequest)
 				newErr.error = err.Error()
 				return localVarHTTPResponse, newErr
 			}
-			newErr.model = v
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
 			return localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
@@ -1724,7 +2386,8 @@ func (a *ProjectApiService) PurgeProjectExecute(r ProjectApiPurgeProjectRequest)
 				newErr.error = err.Error()
 				return localVarHTTPResponse, newErr
 			}
-			newErr.model = v
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
 			return localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 404 {
@@ -1734,7 +2397,8 @@ func (a *ProjectApiService) PurgeProjectExecute(r ProjectApiPurgeProjectRequest)
 				newErr.error = err.Error()
 				return localVarHTTPResponse, newErr
 			}
-			newErr.model = v
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
 			return localVarHTTPResponse, newErr
 		}
 			var v GenericError
@@ -1743,21 +2407,22 @@ func (a *ProjectApiService) PurgeProjectExecute(r ProjectApiPurgeProjectRequest)
 				newErr.error = err.Error()
 				return localVarHTTPResponse, newErr
 			}
-			newErr.model = v
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
 		return localVarHTTPResponse, newErr
 	}
 
 	return localVarHTTPResponse, nil
 }
 
-type ProjectApiRemoveProjectMemberRequest struct {
+type ProjectAPIRemoveProjectMemberRequest struct {
 	ctx context.Context
-	ApiService ProjectApi
-	projectId string
-	memberId string
+	ApiService ProjectAPI
+	project string
+	member string
 }
 
-func (r ProjectApiRemoveProjectMemberRequest) Execute() (*http.Response, error) {
+func (r ProjectAPIRemoveProjectMemberRequest) Execute() (*http.Response, error) {
 	return r.ApiService.RemoveProjectMemberExecute(r)
 }
 
@@ -1768,35 +2433,35 @@ This also sets their invite status to `REMOVED`.
 This endpoint requires the user to be a member of the project with the role `OWNER`.
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param projectId Project ID  The project's ID.
- @param memberId Member ID
- @return ProjectApiRemoveProjectMemberRequest
+ @param project
+ @param member
+ @return ProjectAPIRemoveProjectMemberRequest
 */
-func (a *ProjectApiService) RemoveProjectMember(ctx context.Context, projectId string, memberId string) ProjectApiRemoveProjectMemberRequest {
-	return ProjectApiRemoveProjectMemberRequest{
+func (a *ProjectAPIService) RemoveProjectMember(ctx context.Context, project string, member string) ProjectAPIRemoveProjectMemberRequest {
+	return ProjectAPIRemoveProjectMemberRequest{
 		ApiService: a,
 		ctx: ctx,
-		projectId: projectId,
-		memberId: memberId,
+		project: project,
+		member: member,
 	}
 }
 
 // Execute executes the request
-func (a *ProjectApiService) RemoveProjectMemberExecute(r ProjectApiRemoveProjectMemberRequest) (*http.Response, error) {
+func (a *ProjectAPIService) RemoveProjectMemberExecute(r ProjectAPIRemoveProjectMemberRequest) (*http.Response, error) {
 	var (
 		localVarHTTPMethod   = http.MethodDelete
 		localVarPostBody     interface{}
 		formFiles            []formFile
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ProjectApiService.RemoveProjectMember")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ProjectAPIService.RemoveProjectMember")
 	if err != nil {
 		return nil, &GenericOpenAPIError{error: err.Error()}
 	}
 
-	localVarPath := localBasePath + "/projects/{project_id}/members/{member_id}"
-	localVarPath = strings.Replace(localVarPath, "{"+"project_id"+"}", url.PathEscape(parameterToString(r.projectId, "")), -1)
-	localVarPath = strings.Replace(localVarPath, "{"+"member_id"+"}", url.PathEscape(parameterToString(r.memberId, "")), -1)
+	localVarPath := localBasePath + "/projects/{project}/members/{member}"
+	localVarPath = strings.Replace(localVarPath, "{"+"project"+"}", url.PathEscape(parameterValueToString(r.project, "project")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"member"+"}", url.PathEscape(parameterValueToString(r.member, "member")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
@@ -1829,9 +2494,9 @@ func (a *ProjectApiService) RemoveProjectMemberExecute(r ProjectApiRemoveProject
 		return localVarHTTPResponse, err
 	}
 
-	localVarBody, err := ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
-	localVarHTTPResponse.Body = ioutil.NopCloser(bytes.NewBuffer(localVarBody))
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarHTTPResponse, err
 	}
@@ -1848,7 +2513,8 @@ func (a *ProjectApiService) RemoveProjectMemberExecute(r ProjectApiRemoveProject
 				newErr.error = err.Error()
 				return localVarHTTPResponse, newErr
 			}
-			newErr.model = v
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
 			return localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 406 {
@@ -1858,7 +2524,8 @@ func (a *ProjectApiService) RemoveProjectMemberExecute(r ProjectApiRemoveProject
 				newErr.error = err.Error()
 				return localVarHTTPResponse, newErr
 			}
-			newErr.model = v
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
 			return localVarHTTPResponse, newErr
 		}
 			var v GenericError
@@ -1867,25 +2534,26 @@ func (a *ProjectApiService) RemoveProjectMemberExecute(r ProjectApiRemoveProject
 				newErr.error = err.Error()
 				return localVarHTTPResponse, newErr
 			}
-			newErr.model = v
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
 		return localVarHTTPResponse, newErr
 	}
 
 	return localVarHTTPResponse, nil
 }
 
-type ProjectApiSetActiveProjectInConsoleRequest struct {
+type ProjectAPISetActiveProjectInConsoleRequest struct {
 	ctx context.Context
-	ApiService ProjectApi
+	ApiService ProjectAPI
 	setActiveProjectInConsoleBody *SetActiveProjectInConsoleBody
 }
 
-func (r ProjectApiSetActiveProjectInConsoleRequest) SetActiveProjectInConsoleBody(setActiveProjectInConsoleBody SetActiveProjectInConsoleBody) ProjectApiSetActiveProjectInConsoleRequest {
+func (r ProjectAPISetActiveProjectInConsoleRequest) SetActiveProjectInConsoleBody(setActiveProjectInConsoleBody SetActiveProjectInConsoleBody) ProjectAPISetActiveProjectInConsoleRequest {
 	r.setActiveProjectInConsoleBody = &setActiveProjectInConsoleBody
 	return r
 }
 
-func (r ProjectApiSetActiveProjectInConsoleRequest) Execute() (*http.Response, error) {
+func (r ProjectAPISetActiveProjectInConsoleRequest) Execute() (*http.Response, error) {
 	return r.ApiService.SetActiveProjectInConsoleExecute(r)
 }
 
@@ -1895,24 +2563,24 @@ SetActiveProjectInConsole Sets the Ory Network Project active in the Ory Network
 Use this API to set your active project in the Ory Network Console UI.
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ProjectApiSetActiveProjectInConsoleRequest
+ @return ProjectAPISetActiveProjectInConsoleRequest
 */
-func (a *ProjectApiService) SetActiveProjectInConsole(ctx context.Context) ProjectApiSetActiveProjectInConsoleRequest {
-	return ProjectApiSetActiveProjectInConsoleRequest{
+func (a *ProjectAPIService) SetActiveProjectInConsole(ctx context.Context) ProjectAPISetActiveProjectInConsoleRequest {
+	return ProjectAPISetActiveProjectInConsoleRequest{
 		ApiService: a,
 		ctx: ctx,
 	}
 }
 
 // Execute executes the request
-func (a *ProjectApiService) SetActiveProjectInConsoleExecute(r ProjectApiSetActiveProjectInConsoleRequest) (*http.Response, error) {
+func (a *ProjectAPIService) SetActiveProjectInConsoleExecute(r ProjectAPISetActiveProjectInConsoleRequest) (*http.Response, error) {
 	var (
 		localVarHTTPMethod   = http.MethodPut
 		localVarPostBody     interface{}
 		formFiles            []formFile
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ProjectApiService.SetActiveProjectInConsole")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ProjectAPIService.SetActiveProjectInConsole")
 	if err != nil {
 		return nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -1952,9 +2620,9 @@ func (a *ProjectApiService) SetActiveProjectInConsoleExecute(r ProjectApiSetActi
 		return localVarHTTPResponse, err
 	}
 
-	localVarBody, err := ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
-	localVarHTTPResponse.Body = ioutil.NopCloser(bytes.NewBuffer(localVarBody))
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarHTTPResponse, err
 	}
@@ -1971,7 +2639,8 @@ func (a *ProjectApiService) SetActiveProjectInConsoleExecute(r ProjectApiSetActi
 				newErr.error = err.Error()
 				return localVarHTTPResponse, newErr
 			}
-			newErr.model = v
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
 			return localVarHTTPResponse, newErr
 		}
 			var v GenericError
@@ -1980,26 +2649,27 @@ func (a *ProjectApiService) SetActiveProjectInConsoleExecute(r ProjectApiSetActi
 				newErr.error = err.Error()
 				return localVarHTTPResponse, newErr
 			}
-			newErr.model = v
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
 		return localVarHTTPResponse, newErr
 	}
 
 	return localVarHTTPResponse, nil
 }
 
-type ProjectApiSetProjectRequest struct {
+type ProjectAPISetProjectRequest struct {
 	ctx context.Context
-	ApiService ProjectApi
+	ApiService ProjectAPI
 	projectId string
 	setProject *SetProject
 }
 
-func (r ProjectApiSetProjectRequest) SetProject(setProject SetProject) ProjectApiSetProjectRequest {
+func (r ProjectAPISetProjectRequest) SetProject(setProject SetProject) ProjectAPISetProjectRequest {
 	r.setProject = &setProject
 	return r
 }
 
-func (r ProjectApiSetProjectRequest) Execute() (*SuccessfulProjectUpdate, *http.Response, error) {
+func (r ProjectAPISetProjectRequest) Execute() (*SuccessfulProjectUpdate, *http.Response, error) {
 	return r.ApiService.SetProjectExecute(r)
 }
 
@@ -2027,10 +2697,10 @@ service!
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  @param projectId Project ID  The project's ID.
- @return ProjectApiSetProjectRequest
+ @return ProjectAPISetProjectRequest
 */
-func (a *ProjectApiService) SetProject(ctx context.Context, projectId string) ProjectApiSetProjectRequest {
-	return ProjectApiSetProjectRequest{
+func (a *ProjectAPIService) SetProject(ctx context.Context, projectId string) ProjectAPISetProjectRequest {
+	return ProjectAPISetProjectRequest{
 		ApiService: a,
 		ctx: ctx,
 		projectId: projectId,
@@ -2039,7 +2709,7 @@ func (a *ProjectApiService) SetProject(ctx context.Context, projectId string) Pr
 
 // Execute executes the request
 //  @return SuccessfulProjectUpdate
-func (a *ProjectApiService) SetProjectExecute(r ProjectApiSetProjectRequest) (*SuccessfulProjectUpdate, *http.Response, error) {
+func (a *ProjectAPIService) SetProjectExecute(r ProjectAPISetProjectRequest) (*SuccessfulProjectUpdate, *http.Response, error) {
 	var (
 		localVarHTTPMethod   = http.MethodPut
 		localVarPostBody     interface{}
@@ -2047,13 +2717,13 @@ func (a *ProjectApiService) SetProjectExecute(r ProjectApiSetProjectRequest) (*S
 		localVarReturnValue  *SuccessfulProjectUpdate
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ProjectApiService.SetProject")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ProjectAPIService.SetProject")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
 
 	localVarPath := localBasePath + "/projects/{project_id}"
-	localVarPath = strings.Replace(localVarPath, "{"+"project_id"+"}", url.PathEscape(parameterToString(r.projectId, "")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"project_id"+"}", url.PathEscape(parameterValueToString(r.projectId, "projectId")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
@@ -2088,9 +2758,9 @@ func (a *ProjectApiService) SetProjectExecute(r ProjectApiSetProjectRequest) (*S
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
-	localVarBody, err := ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
-	localVarHTTPResponse.Body = ioutil.NopCloser(bytes.NewBuffer(localVarBody))
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
 		return localVarReturnValue, localVarHTTPResponse, err
 	}
@@ -2107,7 +2777,8 @@ func (a *ProjectApiService) SetProjectExecute(r ProjectApiSetProjectRequest) (*S
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-			newErr.model = v
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 401 {
@@ -2117,7 +2788,8 @@ func (a *ProjectApiService) SetProjectExecute(r ProjectApiSetProjectRequest) (*S
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-			newErr.model = v
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 403 {
@@ -2127,7 +2799,8 @@ func (a *ProjectApiService) SetProjectExecute(r ProjectApiSetProjectRequest) (*S
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-			newErr.model = v
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 		if localVarHTTPResponse.StatusCode == 404 {
@@ -2137,7 +2810,8 @@ func (a *ProjectApiService) SetProjectExecute(r ProjectApiSetProjectRequest) (*S
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-			newErr.model = v
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
 			var v ErrorGeneric
@@ -2146,7 +2820,173 @@ func (a *ProjectApiService) SetProjectExecute(r ProjectApiSetProjectRequest) (*S
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-			newErr.model = v
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type ProjectAPIUpdateOrganizationRequest struct {
+	ctx context.Context
+	ApiService ProjectAPI
+	projectId string
+	organizationId string
+	organizationBody *OrganizationBody
+}
+
+func (r ProjectAPIUpdateOrganizationRequest) OrganizationBody(organizationBody OrganizationBody) ProjectAPIUpdateOrganizationRequest {
+	r.organizationBody = &organizationBody
+	return r
+}
+
+func (r ProjectAPIUpdateOrganizationRequest) Execute() (*Organization, *http.Response, error) {
+	return r.ApiService.UpdateOrganizationExecute(r)
+}
+
+/*
+UpdateOrganization Update a B2B SSO Organization for a project.
+
+ @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ @param projectId Project ID  The project's ID.
+ @param organizationId Organization ID  The Organization's ID.
+ @return ProjectAPIUpdateOrganizationRequest
+*/
+func (a *ProjectAPIService) UpdateOrganization(ctx context.Context, projectId string, organizationId string) ProjectAPIUpdateOrganizationRequest {
+	return ProjectAPIUpdateOrganizationRequest{
+		ApiService: a,
+		ctx: ctx,
+		projectId: projectId,
+		organizationId: organizationId,
+	}
+}
+
+// Execute executes the request
+//  @return Organization
+func (a *ProjectAPIService) UpdateOrganizationExecute(r ProjectAPIUpdateOrganizationRequest) (*Organization, *http.Response, error) {
+	var (
+		localVarHTTPMethod   = http.MethodPut
+		localVarPostBody     interface{}
+		formFiles            []formFile
+		localVarReturnValue  *Organization
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "ProjectAPIService.UpdateOrganization")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/projects/{project_id}/organizations/{organization_id}"
+	localVarPath = strings.Replace(localVarPath, "{"+"project_id"+"}", url.PathEscape(parameterValueToString(r.projectId, "projectId")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"organization_id"+"}", url.PathEscape(parameterValueToString(r.organizationId, "organizationId")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{"application/json"}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	// body params
+	localVarPostBody = r.organizationBody
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 400 {
+			var v ErrorGeneric
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 403 {
+			var v ErrorGeneric
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 404 {
+			var v ErrorGeneric
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 409 {
+			var v ErrorGeneric
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+			var v ErrorGeneric
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
 

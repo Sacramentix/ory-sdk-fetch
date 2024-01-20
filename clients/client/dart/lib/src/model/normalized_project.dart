@@ -15,12 +15,15 @@ part 'normalized_project.g.dart';
 /// Properties:
 /// * [createdAt] - The Project's Creation Date
 /// * [currentRevision] 
+/// * [environment] - The environment of the project. prod Production dev Development
 /// * [hosts] 
 /// * [id] - The project's ID.
 /// * [slug] - The project's slug
 /// * [state] - The state of the project. running Running halted Halted deleted Deleted
 /// * [subscriptionId] 
+/// * [subscriptionPlan] 
 /// * [updatedAt] - Last Time Project was Updated
+/// * [workspaceId] 
 @BuiltValue()
 abstract class NormalizedProject implements Built<NormalizedProject, NormalizedProjectBuilder> {
   /// The Project's Creation Date
@@ -29,6 +32,11 @@ abstract class NormalizedProject implements Built<NormalizedProject, NormalizedP
 
   @BuiltValueField(wireName: r'current_revision')
   NormalizedProjectRevision get currentRevision;
+
+  /// The environment of the project. prod Production dev Development
+  @BuiltValueField(wireName: r'environment')
+  NormalizedProjectEnvironmentEnum get environment;
+  // enum environmentEnum {  prod,  dev,  };
 
   @BuiltValueField(wireName: r'hosts')
   BuiltList<String> get hosts;
@@ -49,9 +57,15 @@ abstract class NormalizedProject implements Built<NormalizedProject, NormalizedP
   @BuiltValueField(wireName: r'subscription_id')
   String? get subscriptionId;
 
+  @BuiltValueField(wireName: r'subscription_plan')
+  String? get subscriptionPlan;
+
   /// Last Time Project was Updated
   @BuiltValueField(wireName: r'updated_at')
   DateTime get updatedAt;
+
+  @BuiltValueField(wireName: r'workspace_id')
+  String? get workspaceId;
 
   NormalizedProject._();
 
@@ -86,6 +100,11 @@ class _$NormalizedProjectSerializer implements PrimitiveSerializer<NormalizedPro
       object.currentRevision,
       specifiedType: const FullType(NormalizedProjectRevision),
     );
+    yield r'environment';
+    yield serializers.serialize(
+      object.environment,
+      specifiedType: const FullType(NormalizedProjectEnvironmentEnum),
+    );
     yield r'hosts';
     yield serializers.serialize(
       object.hosts,
@@ -113,10 +132,22 @@ class _$NormalizedProjectSerializer implements PrimitiveSerializer<NormalizedPro
         specifiedType: const FullType.nullable(String),
       );
     }
+    if (object.subscriptionPlan != null) {
+      yield r'subscription_plan';
+      yield serializers.serialize(
+        object.subscriptionPlan,
+        specifiedType: const FullType.nullable(String),
+      );
+    }
     yield r'updated_at';
     yield serializers.serialize(
       object.updatedAt,
       specifiedType: const FullType(DateTime),
+    );
+    yield r'workspace_id';
+    yield object.workspaceId == null ? null : serializers.serialize(
+      object.workspaceId,
+      specifiedType: const FullType.nullable(String),
     );
   }
 
@@ -155,6 +186,13 @@ class _$NormalizedProjectSerializer implements PrimitiveSerializer<NormalizedPro
           ) as NormalizedProjectRevision;
           result.currentRevision.replace(valueDes);
           break;
+        case r'environment':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(NormalizedProjectEnvironmentEnum),
+          ) as NormalizedProjectEnvironmentEnum;
+          result.environment = valueDes;
+          break;
         case r'hosts':
           final valueDes = serializers.deserialize(
             value,
@@ -191,12 +229,28 @@ class _$NormalizedProjectSerializer implements PrimitiveSerializer<NormalizedPro
           if (valueDes == null) continue;
           result.subscriptionId = valueDes;
           break;
+        case r'subscription_plan':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType.nullable(String),
+          ) as String?;
+          if (valueDes == null) continue;
+          result.subscriptionPlan = valueDes;
+          break;
         case r'updated_at':
           final valueDes = serializers.deserialize(
             value,
             specifiedType: const FullType(DateTime),
           ) as DateTime;
           result.updatedAt = valueDes;
+          break;
+        case r'workspace_id':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType.nullable(String),
+          ) as String?;
+          if (valueDes == null) continue;
+          result.workspaceId = valueDes;
           break;
         default:
           unhandled.add(key);
@@ -225,6 +279,23 @@ class _$NormalizedProjectSerializer implements PrimitiveSerializer<NormalizedPro
     );
     return result.build();
   }
+}
+
+class NormalizedProjectEnvironmentEnum extends EnumClass {
+
+  /// The environment of the project. prod Production dev Development
+  @BuiltValueEnumConst(wireName: r'prod')
+  static const NormalizedProjectEnvironmentEnum prod = _$normalizedProjectEnvironmentEnum_prod;
+  /// The environment of the project. prod Production dev Development
+  @BuiltValueEnumConst(wireName: r'dev')
+  static const NormalizedProjectEnvironmentEnum dev = _$normalizedProjectEnvironmentEnum_dev;
+
+  static Serializer<NormalizedProjectEnvironmentEnum> get serializer => _$normalizedProjectEnvironmentEnumSerializer;
+
+  const NormalizedProjectEnvironmentEnum._(String name): super(name);
+
+  static BuiltSet<NormalizedProjectEnvironmentEnum> get values => _$normalizedProjectEnvironmentEnumValues;
+  static NormalizedProjectEnvironmentEnum valueOf(String name) => _$normalizedProjectEnvironmentEnumValueOf(name);
 }
 
 class NormalizedProjectStateEnum extends EnumClass {

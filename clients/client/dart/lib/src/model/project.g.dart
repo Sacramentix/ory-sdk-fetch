@@ -68,6 +68,10 @@ class _$ProjectStateEnumSerializer
 
 class _$Project extends Project {
   @override
+  final ProjectCors? corsAdmin;
+  @override
+  final ProjectCors? corsPublic;
+  @override
   final String id;
   @override
   final String name;
@@ -79,17 +83,22 @@ class _$Project extends Project {
   final String slug;
   @override
   final ProjectStateEnum state;
+  @override
+  final String? workspaceId;
 
   factory _$Project([void Function(ProjectBuilder)? updates]) =>
       (new ProjectBuilder()..update(updates))._build();
 
   _$Project._(
-      {required this.id,
+      {this.corsAdmin,
+      this.corsPublic,
+      required this.id,
       required this.name,
       required this.revisionId,
       required this.services,
       required this.slug,
-      required this.state})
+      required this.state,
+      this.workspaceId})
       : super._() {
     BuiltValueNullFieldError.checkNotNull(id, r'Project', 'id');
     BuiltValueNullFieldError.checkNotNull(name, r'Project', 'name');
@@ -110,23 +119,29 @@ class _$Project extends Project {
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
     return other is Project &&
+        corsAdmin == other.corsAdmin &&
+        corsPublic == other.corsPublic &&
         id == other.id &&
         name == other.name &&
         revisionId == other.revisionId &&
         services == other.services &&
         slug == other.slug &&
-        state == other.state;
+        state == other.state &&
+        workspaceId == other.workspaceId;
   }
 
   @override
   int get hashCode {
     var _$hash = 0;
+    _$hash = $jc(_$hash, corsAdmin.hashCode);
+    _$hash = $jc(_$hash, corsPublic.hashCode);
     _$hash = $jc(_$hash, id.hashCode);
     _$hash = $jc(_$hash, name.hashCode);
     _$hash = $jc(_$hash, revisionId.hashCode);
     _$hash = $jc(_$hash, services.hashCode);
     _$hash = $jc(_$hash, slug.hashCode);
     _$hash = $jc(_$hash, state.hashCode);
+    _$hash = $jc(_$hash, workspaceId.hashCode);
     _$hash = $jf(_$hash);
     return _$hash;
   }
@@ -134,18 +149,32 @@ class _$Project extends Project {
   @override
   String toString() {
     return (newBuiltValueToStringHelper(r'Project')
+          ..add('corsAdmin', corsAdmin)
+          ..add('corsPublic', corsPublic)
           ..add('id', id)
           ..add('name', name)
           ..add('revisionId', revisionId)
           ..add('services', services)
           ..add('slug', slug)
-          ..add('state', state))
+          ..add('state', state)
+          ..add('workspaceId', workspaceId))
         .toString();
   }
 }
 
 class ProjectBuilder implements Builder<Project, ProjectBuilder> {
   _$Project? _$v;
+
+  ProjectCorsBuilder? _corsAdmin;
+  ProjectCorsBuilder get corsAdmin =>
+      _$this._corsAdmin ??= new ProjectCorsBuilder();
+  set corsAdmin(ProjectCorsBuilder? corsAdmin) => _$this._corsAdmin = corsAdmin;
+
+  ProjectCorsBuilder? _corsPublic;
+  ProjectCorsBuilder get corsPublic =>
+      _$this._corsPublic ??= new ProjectCorsBuilder();
+  set corsPublic(ProjectCorsBuilder? corsPublic) =>
+      _$this._corsPublic = corsPublic;
 
   String? _id;
   String? get id => _$this._id;
@@ -172,6 +201,10 @@ class ProjectBuilder implements Builder<Project, ProjectBuilder> {
   ProjectStateEnum? get state => _$this._state;
   set state(ProjectStateEnum? state) => _$this._state = state;
 
+  String? _workspaceId;
+  String? get workspaceId => _$this._workspaceId;
+  set workspaceId(String? workspaceId) => _$this._workspaceId = workspaceId;
+
   ProjectBuilder() {
     Project._defaults(this);
   }
@@ -179,12 +212,15 @@ class ProjectBuilder implements Builder<Project, ProjectBuilder> {
   ProjectBuilder get _$this {
     final $v = _$v;
     if ($v != null) {
+      _corsAdmin = $v.corsAdmin?.toBuilder();
+      _corsPublic = $v.corsPublic?.toBuilder();
       _id = $v.id;
       _name = $v.name;
       _revisionId = $v.revisionId;
       _services = $v.services.toBuilder();
       _slug = $v.slug;
       _state = $v.state;
+      _workspaceId = $v.workspaceId;
       _$v = null;
     }
     return this;
@@ -209,6 +245,8 @@ class ProjectBuilder implements Builder<Project, ProjectBuilder> {
     try {
       _$result = _$v ??
           new _$Project._(
+              corsAdmin: _corsAdmin?.build(),
+              corsPublic: _corsPublic?.build(),
               id: BuiltValueNullFieldError.checkNotNull(id, r'Project', 'id'),
               name: BuiltValueNullFieldError.checkNotNull(
                   name, r'Project', 'name'),
@@ -218,10 +256,16 @@ class ProjectBuilder implements Builder<Project, ProjectBuilder> {
               slug: BuiltValueNullFieldError.checkNotNull(
                   slug, r'Project', 'slug'),
               state: BuiltValueNullFieldError.checkNotNull(
-                  state, r'Project', 'state'));
+                  state, r'Project', 'state'),
+              workspaceId: workspaceId);
     } catch (_) {
       late String _$failedField;
       try {
+        _$failedField = 'corsAdmin';
+        _corsAdmin?.build();
+        _$failedField = 'corsPublic';
+        _corsPublic?.build();
+
         _$failedField = 'services';
         services.build();
       } catch (e) {

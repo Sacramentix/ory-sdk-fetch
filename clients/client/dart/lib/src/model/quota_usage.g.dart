@@ -20,6 +20,8 @@ const QuotaUsageFeatureEnum _$quotaUsageFeatureEnum_dailyActiveUsers =
     const QuotaUsageFeatureEnum._('dailyActiveUsers');
 const QuotaUsageFeatureEnum _$quotaUsageFeatureEnum_customDomains =
     const QuotaUsageFeatureEnum._('customDomains');
+const QuotaUsageFeatureEnum _$quotaUsageFeatureEnum_eventStreams =
+    const QuotaUsageFeatureEnum._('eventStreams');
 const QuotaUsageFeatureEnum _$quotaUsageFeatureEnum_sla =
     const QuotaUsageFeatureEnum._('sla');
 const QuotaUsageFeatureEnum _$quotaUsageFeatureEnum_collaboratorSeats =
@@ -32,10 +34,22 @@ const QuotaUsageFeatureEnum _$quotaUsageFeatureEnum_zendeskSupport =
     const QuotaUsageFeatureEnum._('zendeskSupport');
 const QuotaUsageFeatureEnum _$quotaUsageFeatureEnum_projectMetrics =
     const QuotaUsageFeatureEnum._('projectMetrics');
+const QuotaUsageFeatureEnum _$quotaUsageFeatureEnum_projectMetricsTimeWindow =
+    const QuotaUsageFeatureEnum._('projectMetricsTimeWindow');
+const QuotaUsageFeatureEnum
+    _$quotaUsageFeatureEnum_projectMetricsEventsHistory =
+    const QuotaUsageFeatureEnum._('projectMetricsEventsHistory');
+const QuotaUsageFeatureEnum _$quotaUsageFeatureEnum_organizations =
+    const QuotaUsageFeatureEnum._('organizations');
+const QuotaUsageFeatureEnum _$quotaUsageFeatureEnum_ropGrant =
+    const QuotaUsageFeatureEnum._('ropGrant');
 const QuotaUsageFeatureEnum _$quotaUsageFeatureEnum_rateLimitTier =
     const QuotaUsageFeatureEnum._('rateLimitTier');
 const QuotaUsageFeatureEnum _$quotaUsageFeatureEnum_sessionRateLimitTier =
     const QuotaUsageFeatureEnum._('sessionRateLimitTier');
+const QuotaUsageFeatureEnum
+    _$quotaUsageFeatureEnum_identitiesListRateLimitTier =
+    const QuotaUsageFeatureEnum._('identitiesListRateLimitTier');
 
 QuotaUsageFeatureEnum _$quotaUsageFeatureEnumValueOf(String name) {
   switch (name) {
@@ -53,6 +67,8 @@ QuotaUsageFeatureEnum _$quotaUsageFeatureEnumValueOf(String name) {
       return _$quotaUsageFeatureEnum_dailyActiveUsers;
     case 'customDomains':
       return _$quotaUsageFeatureEnum_customDomains;
+    case 'eventStreams':
+      return _$quotaUsageFeatureEnum_eventStreams;
     case 'sla':
       return _$quotaUsageFeatureEnum_sla;
     case 'collaboratorSeats':
@@ -65,10 +81,20 @@ QuotaUsageFeatureEnum _$quotaUsageFeatureEnumValueOf(String name) {
       return _$quotaUsageFeatureEnum_zendeskSupport;
     case 'projectMetrics':
       return _$quotaUsageFeatureEnum_projectMetrics;
+    case 'projectMetricsTimeWindow':
+      return _$quotaUsageFeatureEnum_projectMetricsTimeWindow;
+    case 'projectMetricsEventsHistory':
+      return _$quotaUsageFeatureEnum_projectMetricsEventsHistory;
+    case 'organizations':
+      return _$quotaUsageFeatureEnum_organizations;
+    case 'ropGrant':
+      return _$quotaUsageFeatureEnum_ropGrant;
     case 'rateLimitTier':
       return _$quotaUsageFeatureEnum_rateLimitTier;
     case 'sessionRateLimitTier':
       return _$quotaUsageFeatureEnum_sessionRateLimitTier;
+    case 'identitiesListRateLimitTier':
+      return _$quotaUsageFeatureEnum_identitiesListRateLimitTier;
     default:
       throw new ArgumentError(name);
   }
@@ -83,14 +109,20 @@ final BuiltSet<QuotaUsageFeatureEnum> _$quotaUsageFeatureEnumValues =
   _$quotaUsageFeatureEnum_productionProjects,
   _$quotaUsageFeatureEnum_dailyActiveUsers,
   _$quotaUsageFeatureEnum_customDomains,
+  _$quotaUsageFeatureEnum_eventStreams,
   _$quotaUsageFeatureEnum_sla,
   _$quotaUsageFeatureEnum_collaboratorSeats,
   _$quotaUsageFeatureEnum_edgeCache,
   _$quotaUsageFeatureEnum_brandingThemes,
   _$quotaUsageFeatureEnum_zendeskSupport,
   _$quotaUsageFeatureEnum_projectMetrics,
+  _$quotaUsageFeatureEnum_projectMetricsTimeWindow,
+  _$quotaUsageFeatureEnum_projectMetricsEventsHistory,
+  _$quotaUsageFeatureEnum_organizations,
+  _$quotaUsageFeatureEnum_ropGrant,
   _$quotaUsageFeatureEnum_rateLimitTier,
   _$quotaUsageFeatureEnum_sessionRateLimitTier,
+  _$quotaUsageFeatureEnum_identitiesListRateLimitTier,
 ]);
 
 Serializer<QuotaUsageFeatureEnum> _$quotaUsageFeatureEnumSerializer =
@@ -106,14 +138,20 @@ class _$QuotaUsageFeatureEnumSerializer
     'productionProjects': 'production_projects',
     'dailyActiveUsers': 'daily_active_users',
     'customDomains': 'custom_domains',
+    'eventStreams': 'event_streams',
     'sla': 'sla',
     'collaboratorSeats': 'collaborator_seats',
     'edgeCache': 'edge_cache',
     'brandingThemes': 'branding_themes',
     'zendeskSupport': 'zendesk_support',
     'projectMetrics': 'project_metrics',
+    'projectMetricsTimeWindow': 'project_metrics_time_window',
+    'projectMetricsEventsHistory': 'project_metrics_events_history',
+    'organizations': 'organizations',
+    'ropGrant': 'rop_grant',
     'rateLimitTier': 'rate_limit_tier',
     'sessionRateLimitTier': 'session_rate_limit_tier',
+    'identitiesListRateLimitTier': 'identities_list_rate_limit_tier',
   };
   static const Map<Object, String> _fromWire = const <Object, String>{
     'region_eu': 'regionEu',
@@ -123,14 +161,20 @@ class _$QuotaUsageFeatureEnumSerializer
     'production_projects': 'productionProjects',
     'daily_active_users': 'dailyActiveUsers',
     'custom_domains': 'customDomains',
+    'event_streams': 'eventStreams',
     'sla': 'sla',
     'collaborator_seats': 'collaboratorSeats',
     'edge_cache': 'edgeCache',
     'branding_themes': 'brandingThemes',
     'zendesk_support': 'zendeskSupport',
     'project_metrics': 'projectMetrics',
+    'project_metrics_time_window': 'projectMetricsTimeWindow',
+    'project_metrics_events_history': 'projectMetricsEventsHistory',
+    'organizations': 'organizations',
+    'rop_grant': 'ropGrant',
     'rate_limit_tier': 'rateLimitTier',
     'session_rate_limit_tier': 'sessionRateLimitTier',
+    'identities_list_rate_limit_tier': 'identitiesListRateLimitTier',
   };
 
   @override

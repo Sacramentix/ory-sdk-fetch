@@ -3,7 +3,7 @@ Ory APIs
 
 Documentation for all public and administrative Ory APIs. Administrative APIs can only be accessed with a valid Personal Access Token. Public APIs are mostly used in browsers. 
 
-API version: v1.1.39
+API version: v1.5.1
 Contact: support@ory.sh
 */
 
@@ -13,13 +13,18 @@ package client
 
 import (
 	"encoding/json"
+	"fmt"
 )
+
+// checks if the QuotaUsage type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &QuotaUsage{}
 
 // QuotaUsage struct for QuotaUsage
 type QuotaUsage struct {
+	// The additional price per unit in cents.
 	AdditionalPrice int64 `json:"additional_price"`
 	CanUseMore bool `json:"can_use_more"`
-	//  region_eu RegionEU region_us RegionUS region_apac RegionAPAC region_global RegionGlobal production_projects ProductionProjects daily_active_users DailyActiveUsers custom_domains CustomDomains sla SLA collaborator_seats CollaboratorSeats edge_cache EdgeCache branding_themes BrandingThemes zendesk_support ZendeskSupport project_metrics ProjectMetrics rate_limit_tier RateLimitTier session_rate_limit_tier RateLimitTierSessions
+	//  region_eu RegionEU region_us RegionUS region_apac RegionAPAC region_global RegionGlobal production_projects ProductionProjects daily_active_users DailyActiveUsers custom_domains CustomDomains event_streams EventStreams sla SLA collaborator_seats CollaboratorSeats edge_cache EdgeCache branding_themes BrandingThemes zendesk_support ZendeskSupport project_metrics ProjectMetrics project_metrics_time_window ProjectMetricsTimeWindow project_metrics_events_history ProjectMetricsEventsHistory organizations Organizations rop_grant ResourceOwnerPasswordGrant rate_limit_tier RateLimitTier session_rate_limit_tier RateLimitTierSessions identities_list_rate_limit_tier RateLimitTierIdentitiesList
 	Feature string `json:"feature"`
 	FeatureAvailable bool `json:"feature_available"`
 	Included int64 `json:"included"`
@@ -197,39 +202,65 @@ func (o *QuotaUsage) SetUsed(v int64) {
 }
 
 func (o QuotaUsage) MarshalJSON() ([]byte, error) {
+	toSerialize,err := o.ToMap()
+	if err != nil {
+		return []byte{}, err
+	}
+	return json.Marshal(toSerialize)
+}
+
+func (o QuotaUsage) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
-	if true {
-		toSerialize["additional_price"] = o.AdditionalPrice
-	}
-	if true {
-		toSerialize["can_use_more"] = o.CanUseMore
-	}
-	if true {
-		toSerialize["feature"] = o.Feature
-	}
-	if true {
-		toSerialize["feature_available"] = o.FeatureAvailable
-	}
-	if true {
-		toSerialize["included"] = o.Included
-	}
-	if true {
-		toSerialize["used"] = o.Used
-	}
+	toSerialize["additional_price"] = o.AdditionalPrice
+	toSerialize["can_use_more"] = o.CanUseMore
+	toSerialize["feature"] = o.Feature
+	toSerialize["feature_available"] = o.FeatureAvailable
+	toSerialize["included"] = o.Included
+	toSerialize["used"] = o.Used
 
 	for key, value := range o.AdditionalProperties {
 		toSerialize[key] = value
 	}
 
-	return json.Marshal(toSerialize)
+	return toSerialize, nil
 }
 
 func (o *QuotaUsage) UnmarshalJSON(bytes []byte) (err error) {
+    // This validates that all required properties are included in the JSON object
+	// by unmarshalling the object into a generic map with string keys and checking
+	// that every required field exists as a key in the generic map.
+	requiredProperties := []string{
+		"additional_price",
+		"can_use_more",
+		"feature",
+		"feature_available",
+		"included",
+		"used",
+	}
+
+	allProperties := make(map[string]interface{})
+
+	err = json.Unmarshal(bytes, &allProperties)
+
+	if err != nil {
+		return err;
+	}
+
+	for _, requiredProperty := range(requiredProperties) {
+		if _, exists := allProperties[requiredProperty]; !exists {
+			return fmt.Errorf("no value given for required property %v", requiredProperty)
+		}
+	}
+
 	varQuotaUsage := _QuotaUsage{}
 
-	if err = json.Unmarshal(bytes, &varQuotaUsage); err == nil {
-		*o = QuotaUsage(varQuotaUsage)
+	err = json.Unmarshal(bytes, &varQuotaUsage)
+
+	if err != nil {
+		return err
 	}
+
+	*o = QuotaUsage(varQuotaUsage)
 
 	additionalProperties := make(map[string]interface{})
 

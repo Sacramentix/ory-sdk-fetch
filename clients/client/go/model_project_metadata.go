@@ -3,7 +3,7 @@ Ory APIs
 
 Documentation for all public and administrative Ory APIs. Administrative APIs can only be accessed with a valid Personal Access Token. Public APIs are mostly used in browsers. 
 
-API version: v1.1.39
+API version: v1.5.1
 Contact: support@ory.sh
 */
 
@@ -14,7 +14,11 @@ package client
 import (
 	"encoding/json"
 	"time"
+	"fmt"
 )
+
+// checks if the ProjectMetadata type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &ProjectMetadata{}
 
 // ProjectMetadata struct for ProjectMetadata
 type ProjectMetadata struct {
@@ -30,8 +34,10 @@ type ProjectMetadata struct {
 	// The state of the project. running Running halted Halted deleted Deleted
 	State string `json:"state"`
 	SubscriptionId NullableString `json:"subscription_id,omitempty"`
+	SubscriptionPlan NullableString `json:"subscription_plan,omitempty"`
 	// Last Time Project was Updated
 	UpdatedAt time.Time `json:"updated_at"`
+	WorkspaceId NullableString `json:"workspace_id,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -158,7 +164,7 @@ func (o *ProjectMetadata) SetName(v string) {
 
 // GetSlug returns the Slug field value if set, zero value otherwise.
 func (o *ProjectMetadata) GetSlug() string {
-	if o == nil || o.Slug == nil {
+	if o == nil || IsNil(o.Slug) {
 		var ret string
 		return ret
 	}
@@ -168,7 +174,7 @@ func (o *ProjectMetadata) GetSlug() string {
 // GetSlugOk returns a tuple with the Slug field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ProjectMetadata) GetSlugOk() (*string, bool) {
-	if o == nil || o.Slug == nil {
+	if o == nil || IsNil(o.Slug) {
 		return nil, false
 	}
 	return o.Slug, true
@@ -176,7 +182,7 @@ func (o *ProjectMetadata) GetSlugOk() (*string, bool) {
 
 // HasSlug returns a boolean if a field has been set.
 func (o *ProjectMetadata) HasSlug() bool {
-	if o != nil && o.Slug != nil {
+	if o != nil && !IsNil(o.Slug) {
 		return true
 	}
 
@@ -214,7 +220,7 @@ func (o *ProjectMetadata) SetState(v string) {
 
 // GetSubscriptionId returns the SubscriptionId field value if set, zero value otherwise (both if not set or set to explicit null).
 func (o *ProjectMetadata) GetSubscriptionId() string {
-	if o == nil || o.SubscriptionId.Get() == nil {
+	if o == nil || IsNil(o.SubscriptionId.Get()) {
 		var ret string
 		return ret
 	}
@@ -254,6 +260,48 @@ func (o *ProjectMetadata) UnsetSubscriptionId() {
 	o.SubscriptionId.Unset()
 }
 
+// GetSubscriptionPlan returns the SubscriptionPlan field value if set, zero value otherwise (both if not set or set to explicit null).
+func (o *ProjectMetadata) GetSubscriptionPlan() string {
+	if o == nil || IsNil(o.SubscriptionPlan.Get()) {
+		var ret string
+		return ret
+	}
+	return *o.SubscriptionPlan.Get()
+}
+
+// GetSubscriptionPlanOk returns a tuple with the SubscriptionPlan field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *ProjectMetadata) GetSubscriptionPlanOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.SubscriptionPlan.Get(), o.SubscriptionPlan.IsSet()
+}
+
+// HasSubscriptionPlan returns a boolean if a field has been set.
+func (o *ProjectMetadata) HasSubscriptionPlan() bool {
+	if o != nil && o.SubscriptionPlan.IsSet() {
+		return true
+	}
+
+	return false
+}
+
+// SetSubscriptionPlan gets a reference to the given NullableString and assigns it to the SubscriptionPlan field.
+func (o *ProjectMetadata) SetSubscriptionPlan(v string) {
+	o.SubscriptionPlan.Set(&v)
+}
+// SetSubscriptionPlanNil sets the value for SubscriptionPlan to be an explicit nil
+func (o *ProjectMetadata) SetSubscriptionPlanNil() {
+	o.SubscriptionPlan.Set(nil)
+}
+
+// UnsetSubscriptionPlan ensures that no value is present for SubscriptionPlan, not even an explicit nil
+func (o *ProjectMetadata) UnsetSubscriptionPlan() {
+	o.SubscriptionPlan.Unset()
+}
+
 // GetUpdatedAt returns the UpdatedAt field value
 func (o *ProjectMetadata) GetUpdatedAt() time.Time {
 	if o == nil {
@@ -278,46 +326,120 @@ func (o *ProjectMetadata) SetUpdatedAt(v time.Time) {
 	o.UpdatedAt = v
 }
 
+// GetWorkspaceId returns the WorkspaceId field value if set, zero value otherwise (both if not set or set to explicit null).
+func (o *ProjectMetadata) GetWorkspaceId() string {
+	if o == nil || IsNil(o.WorkspaceId.Get()) {
+		var ret string
+		return ret
+	}
+	return *o.WorkspaceId.Get()
+}
+
+// GetWorkspaceIdOk returns a tuple with the WorkspaceId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *ProjectMetadata) GetWorkspaceIdOk() (*string, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.WorkspaceId.Get(), o.WorkspaceId.IsSet()
+}
+
+// HasWorkspaceId returns a boolean if a field has been set.
+func (o *ProjectMetadata) HasWorkspaceId() bool {
+	if o != nil && o.WorkspaceId.IsSet() {
+		return true
+	}
+
+	return false
+}
+
+// SetWorkspaceId gets a reference to the given NullableString and assigns it to the WorkspaceId field.
+func (o *ProjectMetadata) SetWorkspaceId(v string) {
+	o.WorkspaceId.Set(&v)
+}
+// SetWorkspaceIdNil sets the value for WorkspaceId to be an explicit nil
+func (o *ProjectMetadata) SetWorkspaceIdNil() {
+	o.WorkspaceId.Set(nil)
+}
+
+// UnsetWorkspaceId ensures that no value is present for WorkspaceId, not even an explicit nil
+func (o *ProjectMetadata) UnsetWorkspaceId() {
+	o.WorkspaceId.Unset()
+}
+
 func (o ProjectMetadata) MarshalJSON() ([]byte, error) {
+	toSerialize,err := o.ToMap()
+	if err != nil {
+		return []byte{}, err
+	}
+	return json.Marshal(toSerialize)
+}
+
+func (o ProjectMetadata) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
-	if true {
-		toSerialize["created_at"] = o.CreatedAt
-	}
-	if true {
-		toSerialize["hosts"] = o.Hosts
-	}
-	if true {
-		toSerialize["id"] = o.Id
-	}
-	if true {
-		toSerialize["name"] = o.Name
-	}
-	if o.Slug != nil {
+	toSerialize["created_at"] = o.CreatedAt
+	toSerialize["hosts"] = o.Hosts
+	toSerialize["id"] = o.Id
+	toSerialize["name"] = o.Name
+	if !IsNil(o.Slug) {
 		toSerialize["slug"] = o.Slug
 	}
-	if true {
-		toSerialize["state"] = o.State
-	}
+	toSerialize["state"] = o.State
 	if o.SubscriptionId.IsSet() {
 		toSerialize["subscription_id"] = o.SubscriptionId.Get()
 	}
-	if true {
-		toSerialize["updated_at"] = o.UpdatedAt
+	if o.SubscriptionPlan.IsSet() {
+		toSerialize["subscription_plan"] = o.SubscriptionPlan.Get()
+	}
+	toSerialize["updated_at"] = o.UpdatedAt
+	if o.WorkspaceId.IsSet() {
+		toSerialize["workspace_id"] = o.WorkspaceId.Get()
 	}
 
 	for key, value := range o.AdditionalProperties {
 		toSerialize[key] = value
 	}
 
-	return json.Marshal(toSerialize)
+	return toSerialize, nil
 }
 
 func (o *ProjectMetadata) UnmarshalJSON(bytes []byte) (err error) {
+    // This validates that all required properties are included in the JSON object
+	// by unmarshalling the object into a generic map with string keys and checking
+	// that every required field exists as a key in the generic map.
+	requiredProperties := []string{
+		"created_at",
+		"hosts",
+		"id",
+		"name",
+		"state",
+		"updated_at",
+	}
+
+	allProperties := make(map[string]interface{})
+
+	err = json.Unmarshal(bytes, &allProperties)
+
+	if err != nil {
+		return err;
+	}
+
+	for _, requiredProperty := range(requiredProperties) {
+		if _, exists := allProperties[requiredProperty]; !exists {
+			return fmt.Errorf("no value given for required property %v", requiredProperty)
+		}
+	}
+
 	varProjectMetadata := _ProjectMetadata{}
 
-	if err = json.Unmarshal(bytes, &varProjectMetadata); err == nil {
-		*o = ProjectMetadata(varProjectMetadata)
+	err = json.Unmarshal(bytes, &varProjectMetadata)
+
+	if err != nil {
+		return err
 	}
+
+	*o = ProjectMetadata(varProjectMetadata)
 
 	additionalProperties := make(map[string]interface{})
 
@@ -329,7 +451,9 @@ func (o *ProjectMetadata) UnmarshalJSON(bytes []byte) (err error) {
 		delete(additionalProperties, "slug")
 		delete(additionalProperties, "state")
 		delete(additionalProperties, "subscription_id")
+		delete(additionalProperties, "subscription_plan")
 		delete(additionalProperties, "updated_at")
+		delete(additionalProperties, "workspace_id")
 		o.AdditionalProperties = additionalProperties
 	}
 

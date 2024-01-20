@@ -3,7 +3,7 @@ Ory APIs
 
 Documentation for all public and administrative Ory APIs. Administrative APIs can only be accessed with a valid Personal Access Token. Public APIs are mostly used in browsers. 
 
-API version: v1.1.39
+API version: v1.5.1
 Contact: support@ory.sh
 */
 
@@ -14,9 +14,13 @@ package client
 import (
 	"encoding/json"
 	"time"
+	"fmt"
 )
 
-// ProjectBrandingTheme The Project Branding Theme
+// checks if the ProjectBrandingTheme type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &ProjectBrandingTheme{}
+
+// ProjectBrandingTheme struct for ProjectBrandingTheme
 type ProjectBrandingTheme struct {
 	// AccentDefaultColor is a hex color code used by the Ory Account Experience theme.
 	AccentDefaultColor *string `json:"accent_default_color,omitempty"`
@@ -36,7 +40,7 @@ type ProjectBrandingTheme struct {
 	BackgroundSurfaceColor *string `json:"background_surface_color,omitempty"`
 	// BorderDefaultColor is a hex color code used by the Ory Account Experience theme.
 	BorderDefaultColor *string `json:"border_default_color,omitempty"`
-	// The Customiation Creation Date
+	// The Customization Creation Date.
 	CreatedAt time.Time `json:"created_at"`
 	// ErrorDefaultColor is a hex color code used by the Ory Account Experience theme.
 	ErrorDefaultColor *string `json:"error_default_color,omitempty"`
@@ -46,6 +50,10 @@ type ProjectBrandingTheme struct {
 	ErrorMutedColor *string `json:"error_muted_color,omitempty"`
 	// ErrorSubtleColor is a hex color code used by the Ory Account Experience theme.
 	ErrorSubtleColor *string `json:"error_subtle_color,omitempty"`
+	// Favicon Type The Favicon mime type.
+	FaviconType *string `json:"favicon_type,omitempty"`
+	// Favicon URL Favicon can be an https:// or base64:// URL. If the URL is not allowed, the favicon will be stored inside the Ory Network storage bucket.
+	FaviconUrl *string `json:"favicon_url,omitempty"`
 	// ForegroundDefaultColor is a hex color code used by the Ory Account Experience theme.
 	ForegroundDefaultColor *string `json:"foreground_default_color,omitempty"`
 	// ForegroundDisabledColor is a hex color code used by the Ory Account Experience theme.
@@ -78,7 +86,7 @@ type ProjectBrandingTheme struct {
 	Name string `json:"name"`
 	// Primary color is an hsla color value used to derive the other colors from for the Ory Account Experience theme.
 	PrimaryColor *string `json:"primary_color,omitempty"`
-	// The ProjectBranding ID this customization is associated with
+	// The ProjectBranding ID this customization is associated with.
 	ProjectBrandingId string `json:"project_branding_id"`
 	// Secondary color is a hsla color code used to derive the other colors from for the Ory Account Experience theme.
 	SecondaryColor *string `json:"secondary_color,omitempty"`
@@ -88,7 +96,7 @@ type ProjectBrandingTheme struct {
 	TextDefaultColor *string `json:"text_default_color,omitempty"`
 	// TextDisabledColor is a hex color code used by the Ory Account Experience theme.
 	TextDisabledColor *string `json:"text_disabled_color,omitempty"`
-	// Last Time Branding was Updated
+	// Last Time Branding was Updated.
 	UpdatedAt time.Time `json:"updated_at"`
 	AdditionalProperties map[string]interface{}
 }
@@ -119,7 +127,7 @@ func NewProjectBrandingThemeWithDefaults() *ProjectBrandingTheme {
 
 // GetAccentDefaultColor returns the AccentDefaultColor field value if set, zero value otherwise.
 func (o *ProjectBrandingTheme) GetAccentDefaultColor() string {
-	if o == nil || o.AccentDefaultColor == nil {
+	if o == nil || IsNil(o.AccentDefaultColor) {
 		var ret string
 		return ret
 	}
@@ -129,7 +137,7 @@ func (o *ProjectBrandingTheme) GetAccentDefaultColor() string {
 // GetAccentDefaultColorOk returns a tuple with the AccentDefaultColor field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ProjectBrandingTheme) GetAccentDefaultColorOk() (*string, bool) {
-	if o == nil || o.AccentDefaultColor == nil {
+	if o == nil || IsNil(o.AccentDefaultColor) {
 		return nil, false
 	}
 	return o.AccentDefaultColor, true
@@ -137,7 +145,7 @@ func (o *ProjectBrandingTheme) GetAccentDefaultColorOk() (*string, bool) {
 
 // HasAccentDefaultColor returns a boolean if a field has been set.
 func (o *ProjectBrandingTheme) HasAccentDefaultColor() bool {
-	if o != nil && o.AccentDefaultColor != nil {
+	if o != nil && !IsNil(o.AccentDefaultColor) {
 		return true
 	}
 
@@ -151,7 +159,7 @@ func (o *ProjectBrandingTheme) SetAccentDefaultColor(v string) {
 
 // GetAccentDisabledColor returns the AccentDisabledColor field value if set, zero value otherwise.
 func (o *ProjectBrandingTheme) GetAccentDisabledColor() string {
-	if o == nil || o.AccentDisabledColor == nil {
+	if o == nil || IsNil(o.AccentDisabledColor) {
 		var ret string
 		return ret
 	}
@@ -161,7 +169,7 @@ func (o *ProjectBrandingTheme) GetAccentDisabledColor() string {
 // GetAccentDisabledColorOk returns a tuple with the AccentDisabledColor field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ProjectBrandingTheme) GetAccentDisabledColorOk() (*string, bool) {
-	if o == nil || o.AccentDisabledColor == nil {
+	if o == nil || IsNil(o.AccentDisabledColor) {
 		return nil, false
 	}
 	return o.AccentDisabledColor, true
@@ -169,7 +177,7 @@ func (o *ProjectBrandingTheme) GetAccentDisabledColorOk() (*string, bool) {
 
 // HasAccentDisabledColor returns a boolean if a field has been set.
 func (o *ProjectBrandingTheme) HasAccentDisabledColor() bool {
-	if o != nil && o.AccentDisabledColor != nil {
+	if o != nil && !IsNil(o.AccentDisabledColor) {
 		return true
 	}
 
@@ -183,7 +191,7 @@ func (o *ProjectBrandingTheme) SetAccentDisabledColor(v string) {
 
 // GetAccentEmphasisColor returns the AccentEmphasisColor field value if set, zero value otherwise.
 func (o *ProjectBrandingTheme) GetAccentEmphasisColor() string {
-	if o == nil || o.AccentEmphasisColor == nil {
+	if o == nil || IsNil(o.AccentEmphasisColor) {
 		var ret string
 		return ret
 	}
@@ -193,7 +201,7 @@ func (o *ProjectBrandingTheme) GetAccentEmphasisColor() string {
 // GetAccentEmphasisColorOk returns a tuple with the AccentEmphasisColor field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ProjectBrandingTheme) GetAccentEmphasisColorOk() (*string, bool) {
-	if o == nil || o.AccentEmphasisColor == nil {
+	if o == nil || IsNil(o.AccentEmphasisColor) {
 		return nil, false
 	}
 	return o.AccentEmphasisColor, true
@@ -201,7 +209,7 @@ func (o *ProjectBrandingTheme) GetAccentEmphasisColorOk() (*string, bool) {
 
 // HasAccentEmphasisColor returns a boolean if a field has been set.
 func (o *ProjectBrandingTheme) HasAccentEmphasisColor() bool {
-	if o != nil && o.AccentEmphasisColor != nil {
+	if o != nil && !IsNil(o.AccentEmphasisColor) {
 		return true
 	}
 
@@ -215,7 +223,7 @@ func (o *ProjectBrandingTheme) SetAccentEmphasisColor(v string) {
 
 // GetAccentMutedColor returns the AccentMutedColor field value if set, zero value otherwise.
 func (o *ProjectBrandingTheme) GetAccentMutedColor() string {
-	if o == nil || o.AccentMutedColor == nil {
+	if o == nil || IsNil(o.AccentMutedColor) {
 		var ret string
 		return ret
 	}
@@ -225,7 +233,7 @@ func (o *ProjectBrandingTheme) GetAccentMutedColor() string {
 // GetAccentMutedColorOk returns a tuple with the AccentMutedColor field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ProjectBrandingTheme) GetAccentMutedColorOk() (*string, bool) {
-	if o == nil || o.AccentMutedColor == nil {
+	if o == nil || IsNil(o.AccentMutedColor) {
 		return nil, false
 	}
 	return o.AccentMutedColor, true
@@ -233,7 +241,7 @@ func (o *ProjectBrandingTheme) GetAccentMutedColorOk() (*string, bool) {
 
 // HasAccentMutedColor returns a boolean if a field has been set.
 func (o *ProjectBrandingTheme) HasAccentMutedColor() bool {
-	if o != nil && o.AccentMutedColor != nil {
+	if o != nil && !IsNil(o.AccentMutedColor) {
 		return true
 	}
 
@@ -247,7 +255,7 @@ func (o *ProjectBrandingTheme) SetAccentMutedColor(v string) {
 
 // GetAccentSubtleColor returns the AccentSubtleColor field value if set, zero value otherwise.
 func (o *ProjectBrandingTheme) GetAccentSubtleColor() string {
-	if o == nil || o.AccentSubtleColor == nil {
+	if o == nil || IsNil(o.AccentSubtleColor) {
 		var ret string
 		return ret
 	}
@@ -257,7 +265,7 @@ func (o *ProjectBrandingTheme) GetAccentSubtleColor() string {
 // GetAccentSubtleColorOk returns a tuple with the AccentSubtleColor field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ProjectBrandingTheme) GetAccentSubtleColorOk() (*string, bool) {
-	if o == nil || o.AccentSubtleColor == nil {
+	if o == nil || IsNil(o.AccentSubtleColor) {
 		return nil, false
 	}
 	return o.AccentSubtleColor, true
@@ -265,7 +273,7 @@ func (o *ProjectBrandingTheme) GetAccentSubtleColorOk() (*string, bool) {
 
 // HasAccentSubtleColor returns a boolean if a field has been set.
 func (o *ProjectBrandingTheme) HasAccentSubtleColor() bool {
-	if o != nil && o.AccentSubtleColor != nil {
+	if o != nil && !IsNil(o.AccentSubtleColor) {
 		return true
 	}
 
@@ -279,7 +287,7 @@ func (o *ProjectBrandingTheme) SetAccentSubtleColor(v string) {
 
 // GetBackgroundCanvasColor returns the BackgroundCanvasColor field value if set, zero value otherwise.
 func (o *ProjectBrandingTheme) GetBackgroundCanvasColor() string {
-	if o == nil || o.BackgroundCanvasColor == nil {
+	if o == nil || IsNil(o.BackgroundCanvasColor) {
 		var ret string
 		return ret
 	}
@@ -289,7 +297,7 @@ func (o *ProjectBrandingTheme) GetBackgroundCanvasColor() string {
 // GetBackgroundCanvasColorOk returns a tuple with the BackgroundCanvasColor field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ProjectBrandingTheme) GetBackgroundCanvasColorOk() (*string, bool) {
-	if o == nil || o.BackgroundCanvasColor == nil {
+	if o == nil || IsNil(o.BackgroundCanvasColor) {
 		return nil, false
 	}
 	return o.BackgroundCanvasColor, true
@@ -297,7 +305,7 @@ func (o *ProjectBrandingTheme) GetBackgroundCanvasColorOk() (*string, bool) {
 
 // HasBackgroundCanvasColor returns a boolean if a field has been set.
 func (o *ProjectBrandingTheme) HasBackgroundCanvasColor() bool {
-	if o != nil && o.BackgroundCanvasColor != nil {
+	if o != nil && !IsNil(o.BackgroundCanvasColor) {
 		return true
 	}
 
@@ -311,7 +319,7 @@ func (o *ProjectBrandingTheme) SetBackgroundCanvasColor(v string) {
 
 // GetBackgroundSubtleColor returns the BackgroundSubtleColor field value if set, zero value otherwise.
 func (o *ProjectBrandingTheme) GetBackgroundSubtleColor() string {
-	if o == nil || o.BackgroundSubtleColor == nil {
+	if o == nil || IsNil(o.BackgroundSubtleColor) {
 		var ret string
 		return ret
 	}
@@ -321,7 +329,7 @@ func (o *ProjectBrandingTheme) GetBackgroundSubtleColor() string {
 // GetBackgroundSubtleColorOk returns a tuple with the BackgroundSubtleColor field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ProjectBrandingTheme) GetBackgroundSubtleColorOk() (*string, bool) {
-	if o == nil || o.BackgroundSubtleColor == nil {
+	if o == nil || IsNil(o.BackgroundSubtleColor) {
 		return nil, false
 	}
 	return o.BackgroundSubtleColor, true
@@ -329,7 +337,7 @@ func (o *ProjectBrandingTheme) GetBackgroundSubtleColorOk() (*string, bool) {
 
 // HasBackgroundSubtleColor returns a boolean if a field has been set.
 func (o *ProjectBrandingTheme) HasBackgroundSubtleColor() bool {
-	if o != nil && o.BackgroundSubtleColor != nil {
+	if o != nil && !IsNil(o.BackgroundSubtleColor) {
 		return true
 	}
 
@@ -343,7 +351,7 @@ func (o *ProjectBrandingTheme) SetBackgroundSubtleColor(v string) {
 
 // GetBackgroundSurfaceColor returns the BackgroundSurfaceColor field value if set, zero value otherwise.
 func (o *ProjectBrandingTheme) GetBackgroundSurfaceColor() string {
-	if o == nil || o.BackgroundSurfaceColor == nil {
+	if o == nil || IsNil(o.BackgroundSurfaceColor) {
 		var ret string
 		return ret
 	}
@@ -353,7 +361,7 @@ func (o *ProjectBrandingTheme) GetBackgroundSurfaceColor() string {
 // GetBackgroundSurfaceColorOk returns a tuple with the BackgroundSurfaceColor field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ProjectBrandingTheme) GetBackgroundSurfaceColorOk() (*string, bool) {
-	if o == nil || o.BackgroundSurfaceColor == nil {
+	if o == nil || IsNil(o.BackgroundSurfaceColor) {
 		return nil, false
 	}
 	return o.BackgroundSurfaceColor, true
@@ -361,7 +369,7 @@ func (o *ProjectBrandingTheme) GetBackgroundSurfaceColorOk() (*string, bool) {
 
 // HasBackgroundSurfaceColor returns a boolean if a field has been set.
 func (o *ProjectBrandingTheme) HasBackgroundSurfaceColor() bool {
-	if o != nil && o.BackgroundSurfaceColor != nil {
+	if o != nil && !IsNil(o.BackgroundSurfaceColor) {
 		return true
 	}
 
@@ -375,7 +383,7 @@ func (o *ProjectBrandingTheme) SetBackgroundSurfaceColor(v string) {
 
 // GetBorderDefaultColor returns the BorderDefaultColor field value if set, zero value otherwise.
 func (o *ProjectBrandingTheme) GetBorderDefaultColor() string {
-	if o == nil || o.BorderDefaultColor == nil {
+	if o == nil || IsNil(o.BorderDefaultColor) {
 		var ret string
 		return ret
 	}
@@ -385,7 +393,7 @@ func (o *ProjectBrandingTheme) GetBorderDefaultColor() string {
 // GetBorderDefaultColorOk returns a tuple with the BorderDefaultColor field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ProjectBrandingTheme) GetBorderDefaultColorOk() (*string, bool) {
-	if o == nil || o.BorderDefaultColor == nil {
+	if o == nil || IsNil(o.BorderDefaultColor) {
 		return nil, false
 	}
 	return o.BorderDefaultColor, true
@@ -393,7 +401,7 @@ func (o *ProjectBrandingTheme) GetBorderDefaultColorOk() (*string, bool) {
 
 // HasBorderDefaultColor returns a boolean if a field has been set.
 func (o *ProjectBrandingTheme) HasBorderDefaultColor() bool {
-	if o != nil && o.BorderDefaultColor != nil {
+	if o != nil && !IsNil(o.BorderDefaultColor) {
 		return true
 	}
 
@@ -431,7 +439,7 @@ func (o *ProjectBrandingTheme) SetCreatedAt(v time.Time) {
 
 // GetErrorDefaultColor returns the ErrorDefaultColor field value if set, zero value otherwise.
 func (o *ProjectBrandingTheme) GetErrorDefaultColor() string {
-	if o == nil || o.ErrorDefaultColor == nil {
+	if o == nil || IsNil(o.ErrorDefaultColor) {
 		var ret string
 		return ret
 	}
@@ -441,7 +449,7 @@ func (o *ProjectBrandingTheme) GetErrorDefaultColor() string {
 // GetErrorDefaultColorOk returns a tuple with the ErrorDefaultColor field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ProjectBrandingTheme) GetErrorDefaultColorOk() (*string, bool) {
-	if o == nil || o.ErrorDefaultColor == nil {
+	if o == nil || IsNil(o.ErrorDefaultColor) {
 		return nil, false
 	}
 	return o.ErrorDefaultColor, true
@@ -449,7 +457,7 @@ func (o *ProjectBrandingTheme) GetErrorDefaultColorOk() (*string, bool) {
 
 // HasErrorDefaultColor returns a boolean if a field has been set.
 func (o *ProjectBrandingTheme) HasErrorDefaultColor() bool {
-	if o != nil && o.ErrorDefaultColor != nil {
+	if o != nil && !IsNil(o.ErrorDefaultColor) {
 		return true
 	}
 
@@ -463,7 +471,7 @@ func (o *ProjectBrandingTheme) SetErrorDefaultColor(v string) {
 
 // GetErrorEmphasisColor returns the ErrorEmphasisColor field value if set, zero value otherwise.
 func (o *ProjectBrandingTheme) GetErrorEmphasisColor() string {
-	if o == nil || o.ErrorEmphasisColor == nil {
+	if o == nil || IsNil(o.ErrorEmphasisColor) {
 		var ret string
 		return ret
 	}
@@ -473,7 +481,7 @@ func (o *ProjectBrandingTheme) GetErrorEmphasisColor() string {
 // GetErrorEmphasisColorOk returns a tuple with the ErrorEmphasisColor field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ProjectBrandingTheme) GetErrorEmphasisColorOk() (*string, bool) {
-	if o == nil || o.ErrorEmphasisColor == nil {
+	if o == nil || IsNil(o.ErrorEmphasisColor) {
 		return nil, false
 	}
 	return o.ErrorEmphasisColor, true
@@ -481,7 +489,7 @@ func (o *ProjectBrandingTheme) GetErrorEmphasisColorOk() (*string, bool) {
 
 // HasErrorEmphasisColor returns a boolean if a field has been set.
 func (o *ProjectBrandingTheme) HasErrorEmphasisColor() bool {
-	if o != nil && o.ErrorEmphasisColor != nil {
+	if o != nil && !IsNil(o.ErrorEmphasisColor) {
 		return true
 	}
 
@@ -495,7 +503,7 @@ func (o *ProjectBrandingTheme) SetErrorEmphasisColor(v string) {
 
 // GetErrorMutedColor returns the ErrorMutedColor field value if set, zero value otherwise.
 func (o *ProjectBrandingTheme) GetErrorMutedColor() string {
-	if o == nil || o.ErrorMutedColor == nil {
+	if o == nil || IsNil(o.ErrorMutedColor) {
 		var ret string
 		return ret
 	}
@@ -505,7 +513,7 @@ func (o *ProjectBrandingTheme) GetErrorMutedColor() string {
 // GetErrorMutedColorOk returns a tuple with the ErrorMutedColor field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ProjectBrandingTheme) GetErrorMutedColorOk() (*string, bool) {
-	if o == nil || o.ErrorMutedColor == nil {
+	if o == nil || IsNil(o.ErrorMutedColor) {
 		return nil, false
 	}
 	return o.ErrorMutedColor, true
@@ -513,7 +521,7 @@ func (o *ProjectBrandingTheme) GetErrorMutedColorOk() (*string, bool) {
 
 // HasErrorMutedColor returns a boolean if a field has been set.
 func (o *ProjectBrandingTheme) HasErrorMutedColor() bool {
-	if o != nil && o.ErrorMutedColor != nil {
+	if o != nil && !IsNil(o.ErrorMutedColor) {
 		return true
 	}
 
@@ -527,7 +535,7 @@ func (o *ProjectBrandingTheme) SetErrorMutedColor(v string) {
 
 // GetErrorSubtleColor returns the ErrorSubtleColor field value if set, zero value otherwise.
 func (o *ProjectBrandingTheme) GetErrorSubtleColor() string {
-	if o == nil || o.ErrorSubtleColor == nil {
+	if o == nil || IsNil(o.ErrorSubtleColor) {
 		var ret string
 		return ret
 	}
@@ -537,7 +545,7 @@ func (o *ProjectBrandingTheme) GetErrorSubtleColor() string {
 // GetErrorSubtleColorOk returns a tuple with the ErrorSubtleColor field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ProjectBrandingTheme) GetErrorSubtleColorOk() (*string, bool) {
-	if o == nil || o.ErrorSubtleColor == nil {
+	if o == nil || IsNil(o.ErrorSubtleColor) {
 		return nil, false
 	}
 	return o.ErrorSubtleColor, true
@@ -545,7 +553,7 @@ func (o *ProjectBrandingTheme) GetErrorSubtleColorOk() (*string, bool) {
 
 // HasErrorSubtleColor returns a boolean if a field has been set.
 func (o *ProjectBrandingTheme) HasErrorSubtleColor() bool {
-	if o != nil && o.ErrorSubtleColor != nil {
+	if o != nil && !IsNil(o.ErrorSubtleColor) {
 		return true
 	}
 
@@ -557,9 +565,73 @@ func (o *ProjectBrandingTheme) SetErrorSubtleColor(v string) {
 	o.ErrorSubtleColor = &v
 }
 
+// GetFaviconType returns the FaviconType field value if set, zero value otherwise.
+func (o *ProjectBrandingTheme) GetFaviconType() string {
+	if o == nil || IsNil(o.FaviconType) {
+		var ret string
+		return ret
+	}
+	return *o.FaviconType
+}
+
+// GetFaviconTypeOk returns a tuple with the FaviconType field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProjectBrandingTheme) GetFaviconTypeOk() (*string, bool) {
+	if o == nil || IsNil(o.FaviconType) {
+		return nil, false
+	}
+	return o.FaviconType, true
+}
+
+// HasFaviconType returns a boolean if a field has been set.
+func (o *ProjectBrandingTheme) HasFaviconType() bool {
+	if o != nil && !IsNil(o.FaviconType) {
+		return true
+	}
+
+	return false
+}
+
+// SetFaviconType gets a reference to the given string and assigns it to the FaviconType field.
+func (o *ProjectBrandingTheme) SetFaviconType(v string) {
+	o.FaviconType = &v
+}
+
+// GetFaviconUrl returns the FaviconUrl field value if set, zero value otherwise.
+func (o *ProjectBrandingTheme) GetFaviconUrl() string {
+	if o == nil || IsNil(o.FaviconUrl) {
+		var ret string
+		return ret
+	}
+	return *o.FaviconUrl
+}
+
+// GetFaviconUrlOk returns a tuple with the FaviconUrl field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ProjectBrandingTheme) GetFaviconUrlOk() (*string, bool) {
+	if o == nil || IsNil(o.FaviconUrl) {
+		return nil, false
+	}
+	return o.FaviconUrl, true
+}
+
+// HasFaviconUrl returns a boolean if a field has been set.
+func (o *ProjectBrandingTheme) HasFaviconUrl() bool {
+	if o != nil && !IsNil(o.FaviconUrl) {
+		return true
+	}
+
+	return false
+}
+
+// SetFaviconUrl gets a reference to the given string and assigns it to the FaviconUrl field.
+func (o *ProjectBrandingTheme) SetFaviconUrl(v string) {
+	o.FaviconUrl = &v
+}
+
 // GetForegroundDefaultColor returns the ForegroundDefaultColor field value if set, zero value otherwise.
 func (o *ProjectBrandingTheme) GetForegroundDefaultColor() string {
-	if o == nil || o.ForegroundDefaultColor == nil {
+	if o == nil || IsNil(o.ForegroundDefaultColor) {
 		var ret string
 		return ret
 	}
@@ -569,7 +641,7 @@ func (o *ProjectBrandingTheme) GetForegroundDefaultColor() string {
 // GetForegroundDefaultColorOk returns a tuple with the ForegroundDefaultColor field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ProjectBrandingTheme) GetForegroundDefaultColorOk() (*string, bool) {
-	if o == nil || o.ForegroundDefaultColor == nil {
+	if o == nil || IsNil(o.ForegroundDefaultColor) {
 		return nil, false
 	}
 	return o.ForegroundDefaultColor, true
@@ -577,7 +649,7 @@ func (o *ProjectBrandingTheme) GetForegroundDefaultColorOk() (*string, bool) {
 
 // HasForegroundDefaultColor returns a boolean if a field has been set.
 func (o *ProjectBrandingTheme) HasForegroundDefaultColor() bool {
-	if o != nil && o.ForegroundDefaultColor != nil {
+	if o != nil && !IsNil(o.ForegroundDefaultColor) {
 		return true
 	}
 
@@ -591,7 +663,7 @@ func (o *ProjectBrandingTheme) SetForegroundDefaultColor(v string) {
 
 // GetForegroundDisabledColor returns the ForegroundDisabledColor field value if set, zero value otherwise.
 func (o *ProjectBrandingTheme) GetForegroundDisabledColor() string {
-	if o == nil || o.ForegroundDisabledColor == nil {
+	if o == nil || IsNil(o.ForegroundDisabledColor) {
 		var ret string
 		return ret
 	}
@@ -601,7 +673,7 @@ func (o *ProjectBrandingTheme) GetForegroundDisabledColor() string {
 // GetForegroundDisabledColorOk returns a tuple with the ForegroundDisabledColor field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ProjectBrandingTheme) GetForegroundDisabledColorOk() (*string, bool) {
-	if o == nil || o.ForegroundDisabledColor == nil {
+	if o == nil || IsNil(o.ForegroundDisabledColor) {
 		return nil, false
 	}
 	return o.ForegroundDisabledColor, true
@@ -609,7 +681,7 @@ func (o *ProjectBrandingTheme) GetForegroundDisabledColorOk() (*string, bool) {
 
 // HasForegroundDisabledColor returns a boolean if a field has been set.
 func (o *ProjectBrandingTheme) HasForegroundDisabledColor() bool {
-	if o != nil && o.ForegroundDisabledColor != nil {
+	if o != nil && !IsNil(o.ForegroundDisabledColor) {
 		return true
 	}
 
@@ -623,7 +695,7 @@ func (o *ProjectBrandingTheme) SetForegroundDisabledColor(v string) {
 
 // GetForegroundMutedColor returns the ForegroundMutedColor field value if set, zero value otherwise.
 func (o *ProjectBrandingTheme) GetForegroundMutedColor() string {
-	if o == nil || o.ForegroundMutedColor == nil {
+	if o == nil || IsNil(o.ForegroundMutedColor) {
 		var ret string
 		return ret
 	}
@@ -633,7 +705,7 @@ func (o *ProjectBrandingTheme) GetForegroundMutedColor() string {
 // GetForegroundMutedColorOk returns a tuple with the ForegroundMutedColor field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ProjectBrandingTheme) GetForegroundMutedColorOk() (*string, bool) {
-	if o == nil || o.ForegroundMutedColor == nil {
+	if o == nil || IsNil(o.ForegroundMutedColor) {
 		return nil, false
 	}
 	return o.ForegroundMutedColor, true
@@ -641,7 +713,7 @@ func (o *ProjectBrandingTheme) GetForegroundMutedColorOk() (*string, bool) {
 
 // HasForegroundMutedColor returns a boolean if a field has been set.
 func (o *ProjectBrandingTheme) HasForegroundMutedColor() bool {
-	if o != nil && o.ForegroundMutedColor != nil {
+	if o != nil && !IsNil(o.ForegroundMutedColor) {
 		return true
 	}
 
@@ -655,7 +727,7 @@ func (o *ProjectBrandingTheme) SetForegroundMutedColor(v string) {
 
 // GetForegroundOnAccentColor returns the ForegroundOnAccentColor field value if set, zero value otherwise.
 func (o *ProjectBrandingTheme) GetForegroundOnAccentColor() string {
-	if o == nil || o.ForegroundOnAccentColor == nil {
+	if o == nil || IsNil(o.ForegroundOnAccentColor) {
 		var ret string
 		return ret
 	}
@@ -665,7 +737,7 @@ func (o *ProjectBrandingTheme) GetForegroundOnAccentColor() string {
 // GetForegroundOnAccentColorOk returns a tuple with the ForegroundOnAccentColor field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ProjectBrandingTheme) GetForegroundOnAccentColorOk() (*string, bool) {
-	if o == nil || o.ForegroundOnAccentColor == nil {
+	if o == nil || IsNil(o.ForegroundOnAccentColor) {
 		return nil, false
 	}
 	return o.ForegroundOnAccentColor, true
@@ -673,7 +745,7 @@ func (o *ProjectBrandingTheme) GetForegroundOnAccentColorOk() (*string, bool) {
 
 // HasForegroundOnAccentColor returns a boolean if a field has been set.
 func (o *ProjectBrandingTheme) HasForegroundOnAccentColor() bool {
-	if o != nil && o.ForegroundOnAccentColor != nil {
+	if o != nil && !IsNil(o.ForegroundOnAccentColor) {
 		return true
 	}
 
@@ -687,7 +759,7 @@ func (o *ProjectBrandingTheme) SetForegroundOnAccentColor(v string) {
 
 // GetForegroundOnDarkColor returns the ForegroundOnDarkColor field value if set, zero value otherwise.
 func (o *ProjectBrandingTheme) GetForegroundOnDarkColor() string {
-	if o == nil || o.ForegroundOnDarkColor == nil {
+	if o == nil || IsNil(o.ForegroundOnDarkColor) {
 		var ret string
 		return ret
 	}
@@ -697,7 +769,7 @@ func (o *ProjectBrandingTheme) GetForegroundOnDarkColor() string {
 // GetForegroundOnDarkColorOk returns a tuple with the ForegroundOnDarkColor field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ProjectBrandingTheme) GetForegroundOnDarkColorOk() (*string, bool) {
-	if o == nil || o.ForegroundOnDarkColor == nil {
+	if o == nil || IsNil(o.ForegroundOnDarkColor) {
 		return nil, false
 	}
 	return o.ForegroundOnDarkColor, true
@@ -705,7 +777,7 @@ func (o *ProjectBrandingTheme) GetForegroundOnDarkColorOk() (*string, bool) {
 
 // HasForegroundOnDarkColor returns a boolean if a field has been set.
 func (o *ProjectBrandingTheme) HasForegroundOnDarkColor() bool {
-	if o != nil && o.ForegroundOnDarkColor != nil {
+	if o != nil && !IsNil(o.ForegroundOnDarkColor) {
 		return true
 	}
 
@@ -719,7 +791,7 @@ func (o *ProjectBrandingTheme) SetForegroundOnDarkColor(v string) {
 
 // GetForegroundOnDisabledColor returns the ForegroundOnDisabledColor field value if set, zero value otherwise.
 func (o *ProjectBrandingTheme) GetForegroundOnDisabledColor() string {
-	if o == nil || o.ForegroundOnDisabledColor == nil {
+	if o == nil || IsNil(o.ForegroundOnDisabledColor) {
 		var ret string
 		return ret
 	}
@@ -729,7 +801,7 @@ func (o *ProjectBrandingTheme) GetForegroundOnDisabledColor() string {
 // GetForegroundOnDisabledColorOk returns a tuple with the ForegroundOnDisabledColor field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ProjectBrandingTheme) GetForegroundOnDisabledColorOk() (*string, bool) {
-	if o == nil || o.ForegroundOnDisabledColor == nil {
+	if o == nil || IsNil(o.ForegroundOnDisabledColor) {
 		return nil, false
 	}
 	return o.ForegroundOnDisabledColor, true
@@ -737,7 +809,7 @@ func (o *ProjectBrandingTheme) GetForegroundOnDisabledColorOk() (*string, bool) 
 
 // HasForegroundOnDisabledColor returns a boolean if a field has been set.
 func (o *ProjectBrandingTheme) HasForegroundOnDisabledColor() bool {
-	if o != nil && o.ForegroundOnDisabledColor != nil {
+	if o != nil && !IsNil(o.ForegroundOnDisabledColor) {
 		return true
 	}
 
@@ -751,7 +823,7 @@ func (o *ProjectBrandingTheme) SetForegroundOnDisabledColor(v string) {
 
 // GetForegroundSubtleColor returns the ForegroundSubtleColor field value if set, zero value otherwise.
 func (o *ProjectBrandingTheme) GetForegroundSubtleColor() string {
-	if o == nil || o.ForegroundSubtleColor == nil {
+	if o == nil || IsNil(o.ForegroundSubtleColor) {
 		var ret string
 		return ret
 	}
@@ -761,7 +833,7 @@ func (o *ProjectBrandingTheme) GetForegroundSubtleColor() string {
 // GetForegroundSubtleColorOk returns a tuple with the ForegroundSubtleColor field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ProjectBrandingTheme) GetForegroundSubtleColorOk() (*string, bool) {
-	if o == nil || o.ForegroundSubtleColor == nil {
+	if o == nil || IsNil(o.ForegroundSubtleColor) {
 		return nil, false
 	}
 	return o.ForegroundSubtleColor, true
@@ -769,7 +841,7 @@ func (o *ProjectBrandingTheme) GetForegroundSubtleColorOk() (*string, bool) {
 
 // HasForegroundSubtleColor returns a boolean if a field has been set.
 func (o *ProjectBrandingTheme) HasForegroundSubtleColor() bool {
-	if o != nil && o.ForegroundSubtleColor != nil {
+	if o != nil && !IsNil(o.ForegroundSubtleColor) {
 		return true
 	}
 
@@ -807,7 +879,7 @@ func (o *ProjectBrandingTheme) SetId(v string) {
 
 // GetInputBackgroundColor returns the InputBackgroundColor field value if set, zero value otherwise.
 func (o *ProjectBrandingTheme) GetInputBackgroundColor() string {
-	if o == nil || o.InputBackgroundColor == nil {
+	if o == nil || IsNil(o.InputBackgroundColor) {
 		var ret string
 		return ret
 	}
@@ -817,7 +889,7 @@ func (o *ProjectBrandingTheme) GetInputBackgroundColor() string {
 // GetInputBackgroundColorOk returns a tuple with the InputBackgroundColor field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ProjectBrandingTheme) GetInputBackgroundColorOk() (*string, bool) {
-	if o == nil || o.InputBackgroundColor == nil {
+	if o == nil || IsNil(o.InputBackgroundColor) {
 		return nil, false
 	}
 	return o.InputBackgroundColor, true
@@ -825,7 +897,7 @@ func (o *ProjectBrandingTheme) GetInputBackgroundColorOk() (*string, bool) {
 
 // HasInputBackgroundColor returns a boolean if a field has been set.
 func (o *ProjectBrandingTheme) HasInputBackgroundColor() bool {
-	if o != nil && o.InputBackgroundColor != nil {
+	if o != nil && !IsNil(o.InputBackgroundColor) {
 		return true
 	}
 
@@ -839,7 +911,7 @@ func (o *ProjectBrandingTheme) SetInputBackgroundColor(v string) {
 
 // GetInputDisabledColor returns the InputDisabledColor field value if set, zero value otherwise.
 func (o *ProjectBrandingTheme) GetInputDisabledColor() string {
-	if o == nil || o.InputDisabledColor == nil {
+	if o == nil || IsNil(o.InputDisabledColor) {
 		var ret string
 		return ret
 	}
@@ -849,7 +921,7 @@ func (o *ProjectBrandingTheme) GetInputDisabledColor() string {
 // GetInputDisabledColorOk returns a tuple with the InputDisabledColor field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ProjectBrandingTheme) GetInputDisabledColorOk() (*string, bool) {
-	if o == nil || o.InputDisabledColor == nil {
+	if o == nil || IsNil(o.InputDisabledColor) {
 		return nil, false
 	}
 	return o.InputDisabledColor, true
@@ -857,7 +929,7 @@ func (o *ProjectBrandingTheme) GetInputDisabledColorOk() (*string, bool) {
 
 // HasInputDisabledColor returns a boolean if a field has been set.
 func (o *ProjectBrandingTheme) HasInputDisabledColor() bool {
-	if o != nil && o.InputDisabledColor != nil {
+	if o != nil && !IsNil(o.InputDisabledColor) {
 		return true
 	}
 
@@ -871,7 +943,7 @@ func (o *ProjectBrandingTheme) SetInputDisabledColor(v string) {
 
 // GetInputPlaceholderColor returns the InputPlaceholderColor field value if set, zero value otherwise.
 func (o *ProjectBrandingTheme) GetInputPlaceholderColor() string {
-	if o == nil || o.InputPlaceholderColor == nil {
+	if o == nil || IsNil(o.InputPlaceholderColor) {
 		var ret string
 		return ret
 	}
@@ -881,7 +953,7 @@ func (o *ProjectBrandingTheme) GetInputPlaceholderColor() string {
 // GetInputPlaceholderColorOk returns a tuple with the InputPlaceholderColor field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ProjectBrandingTheme) GetInputPlaceholderColorOk() (*string, bool) {
-	if o == nil || o.InputPlaceholderColor == nil {
+	if o == nil || IsNil(o.InputPlaceholderColor) {
 		return nil, false
 	}
 	return o.InputPlaceholderColor, true
@@ -889,7 +961,7 @@ func (o *ProjectBrandingTheme) GetInputPlaceholderColorOk() (*string, bool) {
 
 // HasInputPlaceholderColor returns a boolean if a field has been set.
 func (o *ProjectBrandingTheme) HasInputPlaceholderColor() bool {
-	if o != nil && o.InputPlaceholderColor != nil {
+	if o != nil && !IsNil(o.InputPlaceholderColor) {
 		return true
 	}
 
@@ -903,7 +975,7 @@ func (o *ProjectBrandingTheme) SetInputPlaceholderColor(v string) {
 
 // GetInputTextColor returns the InputTextColor field value if set, zero value otherwise.
 func (o *ProjectBrandingTheme) GetInputTextColor() string {
-	if o == nil || o.InputTextColor == nil {
+	if o == nil || IsNil(o.InputTextColor) {
 		var ret string
 		return ret
 	}
@@ -913,7 +985,7 @@ func (o *ProjectBrandingTheme) GetInputTextColor() string {
 // GetInputTextColorOk returns a tuple with the InputTextColor field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ProjectBrandingTheme) GetInputTextColorOk() (*string, bool) {
-	if o == nil || o.InputTextColor == nil {
+	if o == nil || IsNil(o.InputTextColor) {
 		return nil, false
 	}
 	return o.InputTextColor, true
@@ -921,7 +993,7 @@ func (o *ProjectBrandingTheme) GetInputTextColorOk() (*string, bool) {
 
 // HasInputTextColor returns a boolean if a field has been set.
 func (o *ProjectBrandingTheme) HasInputTextColor() bool {
-	if o != nil && o.InputTextColor != nil {
+	if o != nil && !IsNil(o.InputTextColor) {
 		return true
 	}
 
@@ -935,7 +1007,7 @@ func (o *ProjectBrandingTheme) SetInputTextColor(v string) {
 
 // GetLogoType returns the LogoType field value if set, zero value otherwise.
 func (o *ProjectBrandingTheme) GetLogoType() string {
-	if o == nil || o.LogoType == nil {
+	if o == nil || IsNil(o.LogoType) {
 		var ret string
 		return ret
 	}
@@ -945,7 +1017,7 @@ func (o *ProjectBrandingTheme) GetLogoType() string {
 // GetLogoTypeOk returns a tuple with the LogoType field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ProjectBrandingTheme) GetLogoTypeOk() (*string, bool) {
-	if o == nil || o.LogoType == nil {
+	if o == nil || IsNil(o.LogoType) {
 		return nil, false
 	}
 	return o.LogoType, true
@@ -953,7 +1025,7 @@ func (o *ProjectBrandingTheme) GetLogoTypeOk() (*string, bool) {
 
 // HasLogoType returns a boolean if a field has been set.
 func (o *ProjectBrandingTheme) HasLogoType() bool {
-	if o != nil && o.LogoType != nil {
+	if o != nil && !IsNil(o.LogoType) {
 		return true
 	}
 
@@ -967,7 +1039,7 @@ func (o *ProjectBrandingTheme) SetLogoType(v string) {
 
 // GetLogoUrl returns the LogoUrl field value if set, zero value otherwise.
 func (o *ProjectBrandingTheme) GetLogoUrl() string {
-	if o == nil || o.LogoUrl == nil {
+	if o == nil || IsNil(o.LogoUrl) {
 		var ret string
 		return ret
 	}
@@ -977,7 +1049,7 @@ func (o *ProjectBrandingTheme) GetLogoUrl() string {
 // GetLogoUrlOk returns a tuple with the LogoUrl field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ProjectBrandingTheme) GetLogoUrlOk() (*string, bool) {
-	if o == nil || o.LogoUrl == nil {
+	if o == nil || IsNil(o.LogoUrl) {
 		return nil, false
 	}
 	return o.LogoUrl, true
@@ -985,7 +1057,7 @@ func (o *ProjectBrandingTheme) GetLogoUrlOk() (*string, bool) {
 
 // HasLogoUrl returns a boolean if a field has been set.
 func (o *ProjectBrandingTheme) HasLogoUrl() bool {
-	if o != nil && o.LogoUrl != nil {
+	if o != nil && !IsNil(o.LogoUrl) {
 		return true
 	}
 
@@ -1023,7 +1095,7 @@ func (o *ProjectBrandingTheme) SetName(v string) {
 
 // GetPrimaryColor returns the PrimaryColor field value if set, zero value otherwise.
 func (o *ProjectBrandingTheme) GetPrimaryColor() string {
-	if o == nil || o.PrimaryColor == nil {
+	if o == nil || IsNil(o.PrimaryColor) {
 		var ret string
 		return ret
 	}
@@ -1033,7 +1105,7 @@ func (o *ProjectBrandingTheme) GetPrimaryColor() string {
 // GetPrimaryColorOk returns a tuple with the PrimaryColor field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ProjectBrandingTheme) GetPrimaryColorOk() (*string, bool) {
-	if o == nil || o.PrimaryColor == nil {
+	if o == nil || IsNil(o.PrimaryColor) {
 		return nil, false
 	}
 	return o.PrimaryColor, true
@@ -1041,7 +1113,7 @@ func (o *ProjectBrandingTheme) GetPrimaryColorOk() (*string, bool) {
 
 // HasPrimaryColor returns a boolean if a field has been set.
 func (o *ProjectBrandingTheme) HasPrimaryColor() bool {
-	if o != nil && o.PrimaryColor != nil {
+	if o != nil && !IsNil(o.PrimaryColor) {
 		return true
 	}
 
@@ -1079,7 +1151,7 @@ func (o *ProjectBrandingTheme) SetProjectBrandingId(v string) {
 
 // GetSecondaryColor returns the SecondaryColor field value if set, zero value otherwise.
 func (o *ProjectBrandingTheme) GetSecondaryColor() string {
-	if o == nil || o.SecondaryColor == nil {
+	if o == nil || IsNil(o.SecondaryColor) {
 		var ret string
 		return ret
 	}
@@ -1089,7 +1161,7 @@ func (o *ProjectBrandingTheme) GetSecondaryColor() string {
 // GetSecondaryColorOk returns a tuple with the SecondaryColor field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ProjectBrandingTheme) GetSecondaryColorOk() (*string, bool) {
-	if o == nil || o.SecondaryColor == nil {
+	if o == nil || IsNil(o.SecondaryColor) {
 		return nil, false
 	}
 	return o.SecondaryColor, true
@@ -1097,7 +1169,7 @@ func (o *ProjectBrandingTheme) GetSecondaryColorOk() (*string, bool) {
 
 // HasSecondaryColor returns a boolean if a field has been set.
 func (o *ProjectBrandingTheme) HasSecondaryColor() bool {
-	if o != nil && o.SecondaryColor != nil {
+	if o != nil && !IsNil(o.SecondaryColor) {
 		return true
 	}
 
@@ -1111,7 +1183,7 @@ func (o *ProjectBrandingTheme) SetSecondaryColor(v string) {
 
 // GetSuccessEmphasisColor returns the SuccessEmphasisColor field value if set, zero value otherwise.
 func (o *ProjectBrandingTheme) GetSuccessEmphasisColor() string {
-	if o == nil || o.SuccessEmphasisColor == nil {
+	if o == nil || IsNil(o.SuccessEmphasisColor) {
 		var ret string
 		return ret
 	}
@@ -1121,7 +1193,7 @@ func (o *ProjectBrandingTheme) GetSuccessEmphasisColor() string {
 // GetSuccessEmphasisColorOk returns a tuple with the SuccessEmphasisColor field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ProjectBrandingTheme) GetSuccessEmphasisColorOk() (*string, bool) {
-	if o == nil || o.SuccessEmphasisColor == nil {
+	if o == nil || IsNil(o.SuccessEmphasisColor) {
 		return nil, false
 	}
 	return o.SuccessEmphasisColor, true
@@ -1129,7 +1201,7 @@ func (o *ProjectBrandingTheme) GetSuccessEmphasisColorOk() (*string, bool) {
 
 // HasSuccessEmphasisColor returns a boolean if a field has been set.
 func (o *ProjectBrandingTheme) HasSuccessEmphasisColor() bool {
-	if o != nil && o.SuccessEmphasisColor != nil {
+	if o != nil && !IsNil(o.SuccessEmphasisColor) {
 		return true
 	}
 
@@ -1143,7 +1215,7 @@ func (o *ProjectBrandingTheme) SetSuccessEmphasisColor(v string) {
 
 // GetTextDefaultColor returns the TextDefaultColor field value if set, zero value otherwise.
 func (o *ProjectBrandingTheme) GetTextDefaultColor() string {
-	if o == nil || o.TextDefaultColor == nil {
+	if o == nil || IsNil(o.TextDefaultColor) {
 		var ret string
 		return ret
 	}
@@ -1153,7 +1225,7 @@ func (o *ProjectBrandingTheme) GetTextDefaultColor() string {
 // GetTextDefaultColorOk returns a tuple with the TextDefaultColor field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ProjectBrandingTheme) GetTextDefaultColorOk() (*string, bool) {
-	if o == nil || o.TextDefaultColor == nil {
+	if o == nil || IsNil(o.TextDefaultColor) {
 		return nil, false
 	}
 	return o.TextDefaultColor, true
@@ -1161,7 +1233,7 @@ func (o *ProjectBrandingTheme) GetTextDefaultColorOk() (*string, bool) {
 
 // HasTextDefaultColor returns a boolean if a field has been set.
 func (o *ProjectBrandingTheme) HasTextDefaultColor() bool {
-	if o != nil && o.TextDefaultColor != nil {
+	if o != nil && !IsNil(o.TextDefaultColor) {
 		return true
 	}
 
@@ -1175,7 +1247,7 @@ func (o *ProjectBrandingTheme) SetTextDefaultColor(v string) {
 
 // GetTextDisabledColor returns the TextDisabledColor field value if set, zero value otherwise.
 func (o *ProjectBrandingTheme) GetTextDisabledColor() string {
-	if o == nil || o.TextDisabledColor == nil {
+	if o == nil || IsNil(o.TextDisabledColor) {
 		var ret string
 		return ret
 	}
@@ -1185,7 +1257,7 @@ func (o *ProjectBrandingTheme) GetTextDisabledColor() string {
 // GetTextDisabledColorOk returns a tuple with the TextDisabledColor field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *ProjectBrandingTheme) GetTextDisabledColorOk() (*string, bool) {
-	if o == nil || o.TextDisabledColor == nil {
+	if o == nil || IsNil(o.TextDisabledColor) {
 		return nil, false
 	}
 	return o.TextDisabledColor, true
@@ -1193,7 +1265,7 @@ func (o *ProjectBrandingTheme) GetTextDisabledColorOk() (*string, bool) {
 
 // HasTextDisabledColor returns a boolean if a field has been set.
 func (o *ProjectBrandingTheme) HasTextDisabledColor() bool {
-	if o != nil && o.TextDisabledColor != nil {
+	if o != nil && !IsNil(o.TextDisabledColor) {
 		return true
 	}
 
@@ -1230,129 +1302,162 @@ func (o *ProjectBrandingTheme) SetUpdatedAt(v time.Time) {
 }
 
 func (o ProjectBrandingTheme) MarshalJSON() ([]byte, error) {
+	toSerialize,err := o.ToMap()
+	if err != nil {
+		return []byte{}, err
+	}
+	return json.Marshal(toSerialize)
+}
+
+func (o ProjectBrandingTheme) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
-	if o.AccentDefaultColor != nil {
+	if !IsNil(o.AccentDefaultColor) {
 		toSerialize["accent_default_color"] = o.AccentDefaultColor
 	}
-	if o.AccentDisabledColor != nil {
+	if !IsNil(o.AccentDisabledColor) {
 		toSerialize["accent_disabled_color"] = o.AccentDisabledColor
 	}
-	if o.AccentEmphasisColor != nil {
+	if !IsNil(o.AccentEmphasisColor) {
 		toSerialize["accent_emphasis_color"] = o.AccentEmphasisColor
 	}
-	if o.AccentMutedColor != nil {
+	if !IsNil(o.AccentMutedColor) {
 		toSerialize["accent_muted_color"] = o.AccentMutedColor
 	}
-	if o.AccentSubtleColor != nil {
+	if !IsNil(o.AccentSubtleColor) {
 		toSerialize["accent_subtle_color"] = o.AccentSubtleColor
 	}
-	if o.BackgroundCanvasColor != nil {
+	if !IsNil(o.BackgroundCanvasColor) {
 		toSerialize["background_canvas_color"] = o.BackgroundCanvasColor
 	}
-	if o.BackgroundSubtleColor != nil {
+	if !IsNil(o.BackgroundSubtleColor) {
 		toSerialize["background_subtle_color"] = o.BackgroundSubtleColor
 	}
-	if o.BackgroundSurfaceColor != nil {
+	if !IsNil(o.BackgroundSurfaceColor) {
 		toSerialize["background_surface_color"] = o.BackgroundSurfaceColor
 	}
-	if o.BorderDefaultColor != nil {
+	if !IsNil(o.BorderDefaultColor) {
 		toSerialize["border_default_color"] = o.BorderDefaultColor
 	}
-	if true {
-		toSerialize["created_at"] = o.CreatedAt
-	}
-	if o.ErrorDefaultColor != nil {
+	toSerialize["created_at"] = o.CreatedAt
+	if !IsNil(o.ErrorDefaultColor) {
 		toSerialize["error_default_color"] = o.ErrorDefaultColor
 	}
-	if o.ErrorEmphasisColor != nil {
+	if !IsNil(o.ErrorEmphasisColor) {
 		toSerialize["error_emphasis_color"] = o.ErrorEmphasisColor
 	}
-	if o.ErrorMutedColor != nil {
+	if !IsNil(o.ErrorMutedColor) {
 		toSerialize["error_muted_color"] = o.ErrorMutedColor
 	}
-	if o.ErrorSubtleColor != nil {
+	if !IsNil(o.ErrorSubtleColor) {
 		toSerialize["error_subtle_color"] = o.ErrorSubtleColor
 	}
-	if o.ForegroundDefaultColor != nil {
+	if !IsNil(o.FaviconType) {
+		toSerialize["favicon_type"] = o.FaviconType
+	}
+	if !IsNil(o.FaviconUrl) {
+		toSerialize["favicon_url"] = o.FaviconUrl
+	}
+	if !IsNil(o.ForegroundDefaultColor) {
 		toSerialize["foreground_default_color"] = o.ForegroundDefaultColor
 	}
-	if o.ForegroundDisabledColor != nil {
+	if !IsNil(o.ForegroundDisabledColor) {
 		toSerialize["foreground_disabled_color"] = o.ForegroundDisabledColor
 	}
-	if o.ForegroundMutedColor != nil {
+	if !IsNil(o.ForegroundMutedColor) {
 		toSerialize["foreground_muted_color"] = o.ForegroundMutedColor
 	}
-	if o.ForegroundOnAccentColor != nil {
+	if !IsNil(o.ForegroundOnAccentColor) {
 		toSerialize["foreground_on_accent_color"] = o.ForegroundOnAccentColor
 	}
-	if o.ForegroundOnDarkColor != nil {
+	if !IsNil(o.ForegroundOnDarkColor) {
 		toSerialize["foreground_on_dark_color"] = o.ForegroundOnDarkColor
 	}
-	if o.ForegroundOnDisabledColor != nil {
+	if !IsNil(o.ForegroundOnDisabledColor) {
 		toSerialize["foreground_on_disabled_color"] = o.ForegroundOnDisabledColor
 	}
-	if o.ForegroundSubtleColor != nil {
+	if !IsNil(o.ForegroundSubtleColor) {
 		toSerialize["foreground_subtle_color"] = o.ForegroundSubtleColor
 	}
-	if true {
-		toSerialize["id"] = o.Id
-	}
-	if o.InputBackgroundColor != nil {
+	toSerialize["id"] = o.Id
+	if !IsNil(o.InputBackgroundColor) {
 		toSerialize["input_background_color"] = o.InputBackgroundColor
 	}
-	if o.InputDisabledColor != nil {
+	if !IsNil(o.InputDisabledColor) {
 		toSerialize["input_disabled_color"] = o.InputDisabledColor
 	}
-	if o.InputPlaceholderColor != nil {
+	if !IsNil(o.InputPlaceholderColor) {
 		toSerialize["input_placeholder_color"] = o.InputPlaceholderColor
 	}
-	if o.InputTextColor != nil {
+	if !IsNil(o.InputTextColor) {
 		toSerialize["input_text_color"] = o.InputTextColor
 	}
-	if o.LogoType != nil {
+	if !IsNil(o.LogoType) {
 		toSerialize["logo_type"] = o.LogoType
 	}
-	if o.LogoUrl != nil {
+	if !IsNil(o.LogoUrl) {
 		toSerialize["logo_url"] = o.LogoUrl
 	}
-	if true {
-		toSerialize["name"] = o.Name
-	}
-	if o.PrimaryColor != nil {
+	toSerialize["name"] = o.Name
+	if !IsNil(o.PrimaryColor) {
 		toSerialize["primary_color"] = o.PrimaryColor
 	}
-	if true {
-		toSerialize["project_branding_id"] = o.ProjectBrandingId
-	}
-	if o.SecondaryColor != nil {
+	toSerialize["project_branding_id"] = o.ProjectBrandingId
+	if !IsNil(o.SecondaryColor) {
 		toSerialize["secondary_color"] = o.SecondaryColor
 	}
-	if o.SuccessEmphasisColor != nil {
+	if !IsNil(o.SuccessEmphasisColor) {
 		toSerialize["success_emphasis_color"] = o.SuccessEmphasisColor
 	}
-	if o.TextDefaultColor != nil {
+	if !IsNil(o.TextDefaultColor) {
 		toSerialize["text_default_color"] = o.TextDefaultColor
 	}
-	if o.TextDisabledColor != nil {
+	if !IsNil(o.TextDisabledColor) {
 		toSerialize["text_disabled_color"] = o.TextDisabledColor
 	}
-	if true {
-		toSerialize["updated_at"] = o.UpdatedAt
-	}
+	toSerialize["updated_at"] = o.UpdatedAt
 
 	for key, value := range o.AdditionalProperties {
 		toSerialize[key] = value
 	}
 
-	return json.Marshal(toSerialize)
+	return toSerialize, nil
 }
 
 func (o *ProjectBrandingTheme) UnmarshalJSON(bytes []byte) (err error) {
+    // This validates that all required properties are included in the JSON object
+	// by unmarshalling the object into a generic map with string keys and checking
+	// that every required field exists as a key in the generic map.
+	requiredProperties := []string{
+		"created_at",
+		"id",
+		"name",
+		"project_branding_id",
+		"updated_at",
+	}
+
+	allProperties := make(map[string]interface{})
+
+	err = json.Unmarshal(bytes, &allProperties)
+
+	if err != nil {
+		return err;
+	}
+
+	for _, requiredProperty := range(requiredProperties) {
+		if _, exists := allProperties[requiredProperty]; !exists {
+			return fmt.Errorf("no value given for required property %v", requiredProperty)
+		}
+	}
+
 	varProjectBrandingTheme := _ProjectBrandingTheme{}
 
-	if err = json.Unmarshal(bytes, &varProjectBrandingTheme); err == nil {
-		*o = ProjectBrandingTheme(varProjectBrandingTheme)
+	err = json.Unmarshal(bytes, &varProjectBrandingTheme)
+
+	if err != nil {
+		return err
 	}
+
+	*o = ProjectBrandingTheme(varProjectBrandingTheme)
 
 	additionalProperties := make(map[string]interface{})
 
@@ -1371,6 +1476,8 @@ func (o *ProjectBrandingTheme) UnmarshalJSON(bytes []byte) (err error) {
 		delete(additionalProperties, "error_emphasis_color")
 		delete(additionalProperties, "error_muted_color")
 		delete(additionalProperties, "error_subtle_color")
+		delete(additionalProperties, "favicon_type")
+		delete(additionalProperties, "favicon_url")
 		delete(additionalProperties, "foreground_default_color")
 		delete(additionalProperties, "foreground_disabled_color")
 		delete(additionalProperties, "foreground_muted_color")

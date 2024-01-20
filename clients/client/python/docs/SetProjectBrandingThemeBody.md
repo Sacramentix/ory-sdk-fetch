@@ -1,10 +1,11 @@
 # SetProjectBrandingThemeBody
 
-Set Project Branding Theme Request Parameters
 
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
+**favicon_type** | **str** | Favicon Type | [optional] 
+**favicon_url** | **str** | Favicon URL | [optional] 
 **logo_type** | **str** | Logo type | [optional] 
 **logo_url** | **str** | Logo URL | [optional] 
 **name** | **str** | Branding name | [optional] 

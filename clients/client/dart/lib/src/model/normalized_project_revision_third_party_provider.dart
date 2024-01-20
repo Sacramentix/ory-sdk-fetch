@@ -13,6 +13,7 @@ part 'normalized_project_revision_third_party_provider.g.dart';
 /// NormalizedProjectRevisionThirdPartyProvider
 ///
 /// Properties:
+/// * [additionalIdTokenAudiences] 
 /// * [applePrivateKey] 
 /// * [applePrivateKeyId] - Apple Private Key Identifier  Sign In with Apple Private Key Identifier needed for generating a JWT token for client secret
 /// * [appleTeamId] - Apple Developer Team ID  Apple Developer Team ID needed for generating a JWT token for client secret
@@ -24,7 +25,8 @@ part 'normalized_project_revision_third_party_provider.g.dart';
 /// * [id] 
 /// * [issuerUrl] - IssuerURL is the OpenID Connect Server URL. You can leave this empty if `provider` is not set to `generic`. If set, neither `auth_url` nor `token_url` are required.
 /// * [label] - Label represents an optional label which can be used in the UI generation.
-/// * [mapperUrl] - Mapper specifies the JSONNet code snippet which uses the OpenID Connect Provider's data (e.g. GitHub or Google profile information) to hydrate the identity's data.  It can be either a URL (file://, http(s)://, base64://) or an inline JSONNet code snippet.
+/// * [mapperUrl] - Mapper specifies the JSONNet code snippet which uses the OpenID Connect Provider's data (e.g. GitHub or Google profile information) to hydrate the identity's data.
+/// * [organizationId] 
 /// * [projectRevisionId] - The Revision's ID this schema belongs to
 /// * [provider] - Provider is either \"generic\" for a generic OAuth 2.0 / OpenID Connect Provider or one of: generic google github gitlab microsoft discord slack facebook vk yandex apple
 /// * [providerId] - ID is the provider's ID
@@ -36,6 +38,9 @@ part 'normalized_project_revision_third_party_provider.g.dart';
 /// * [updatedAt] - Last Time Project's Revision was Updated
 @BuiltValue()
 abstract class NormalizedProjectRevisionThirdPartyProvider implements Built<NormalizedProjectRevisionThirdPartyProvider, NormalizedProjectRevisionThirdPartyProviderBuilder> {
+  @BuiltValueField(wireName: r'additional_id_token_audiences')
+  BuiltList<String>? get additionalIdTokenAudiences;
+
   @BuiltValueField(wireName: r'apple_private_key')
   String? get applePrivateKey;
 
@@ -77,9 +82,12 @@ abstract class NormalizedProjectRevisionThirdPartyProvider implements Built<Norm
   @BuiltValueField(wireName: r'label')
   String? get label;
 
-  /// Mapper specifies the JSONNet code snippet which uses the OpenID Connect Provider's data (e.g. GitHub or Google profile information) to hydrate the identity's data.  It can be either a URL (file://, http(s)://, base64://) or an inline JSONNet code snippet.
+  /// Mapper specifies the JSONNet code snippet which uses the OpenID Connect Provider's data (e.g. GitHub or Google profile information) to hydrate the identity's data.
   @BuiltValueField(wireName: r'mapper_url')
   String? get mapperUrl;
+
+  @BuiltValueField(wireName: r'organization_id')
+  String? get organizationId;
 
   /// The Revision's ID this schema belongs to
   @BuiltValueField(wireName: r'project_revision_id')
@@ -138,6 +146,13 @@ class _$NormalizedProjectRevisionThirdPartyProviderSerializer implements Primiti
     NormalizedProjectRevisionThirdPartyProvider object, {
     FullType specifiedType = FullType.unspecified,
   }) sync* {
+    if (object.additionalIdTokenAudiences != null) {
+      yield r'additional_id_token_audiences';
+      yield serializers.serialize(
+        object.additionalIdTokenAudiences,
+        specifiedType: const FullType(BuiltList, [FullType(String)]),
+      );
+    }
     if (object.applePrivateKey != null) {
       yield r'apple_private_key';
       yield serializers.serialize(
@@ -220,6 +235,13 @@ class _$NormalizedProjectRevisionThirdPartyProviderSerializer implements Primiti
       yield serializers.serialize(
         object.mapperUrl,
         specifiedType: const FullType(String),
+      );
+    }
+    if (object.organizationId != null) {
+      yield r'organization_id';
+      yield serializers.serialize(
+        object.organizationId,
+        specifiedType: const FullType.nullable(String),
       );
     }
     if (object.projectRevisionId != null) {
@@ -308,6 +330,13 @@ class _$NormalizedProjectRevisionThirdPartyProviderSerializer implements Primiti
       final key = serializedList[i] as String;
       final value = serializedList[i + 1];
       switch (key) {
+        case r'additional_id_token_audiences':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(BuiltList, [FullType(String)]),
+          ) as BuiltList<String>;
+          result.additionalIdTokenAudiences.replace(valueDes);
+          break;
         case r'apple_private_key':
           final valueDes = serializers.deserialize(
             value,
@@ -393,6 +422,14 @@ class _$NormalizedProjectRevisionThirdPartyProviderSerializer implements Primiti
             specifiedType: const FullType(String),
           ) as String;
           result.mapperUrl = valueDes;
+          break;
+        case r'organization_id':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType.nullable(String),
+          ) as String?;
+          if (valueDes == null) continue;
+          result.organizationId = valueDes;
           break;
         case r'project_revision_id':
           final valueDes = serializers.deserialize(

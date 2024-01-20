@@ -36,6 +36,7 @@ void main() {
       // TODO
     });
 
+    // Ory OAuth 2.0 Login Challenge.  This value is set using the `login_challenge` query parameter of the registration and login endpoints. If set will cooperate with Ory OAuth2 and OpenID to act as an OAuth2 server / OpenID Provider.
     // String oauth2LoginChallenge
     test('to test the property `oauth2LoginChallenge`', () async {
       // TODO
@@ -43,6 +44,11 @@ void main() {
 
     // OAuth2LoginRequest oauth2LoginRequest
     test('to test the property `oauth2LoginRequest`', () async {
+      // TODO
+    });
+
+    // String organizationId
+    test('to test the property `organizationId`', () async {
       // TODO
     });
 
@@ -72,6 +78,12 @@ void main() {
     // SessionTokenExchangeCode holds the secret code that the client can use to retrieve a session token after the login flow has been completed. This is only set if the client has requested a session token exchange code, and if the flow is of type \"api\", and only on creating the login flow.
     // String sessionTokenExchangeCode
     test('to test the property `sessionTokenExchangeCode`', () async {
+      // TODO
+    });
+
+    // State represents the state of this request:  choose_method: ask the user to choose a method to sign in with sent_email: the email has been sent to the user passed_challenge: the request was successful and the login challenge was passed.
+    // JsonObject state
+    test('to test the property `state`', () async {
       // TODO
     });
 

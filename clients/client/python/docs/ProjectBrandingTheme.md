@@ -1,15 +1,14 @@
 # ProjectBrandingTheme
 
-The Project Branding Theme
 
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**created_at** | **datetime** | The Customiation Creation Date | [readonly] 
+**created_at** | **datetime** | The Customization Creation Date. | [readonly] 
 **id** | **str** | The customization theme ID. | [readonly] 
 **name** | **str** | The customization theme name. | 
-**project_branding_id** | **str** | The ProjectBranding ID this customization is associated with | 
-**updated_at** | **datetime** | Last Time Branding was Updated | [readonly] 
+**project_branding_id** | **str** | The ProjectBranding ID this customization is associated with. | 
+**updated_at** | **datetime** | Last Time Branding was Updated. | [readonly] 
 **accent_default_color** | **str** | AccentDefaultColor is a hex color code used by the Ory Account Experience theme. | [optional] 
 **accent_disabled_color** | **str** | AccentDisabledColor is a hex color code used by the Ory Account Experience theme. | [optional] 
 **accent_emphasis_color** | **str** | AccentEmphasisColor is a hex color code used by the Ory Account Experience theme. | [optional] 
@@ -23,6 +22,8 @@ Name | Type | Description | Notes
 **error_emphasis_color** | **str** | ErrorEmphasisColor is a hex color code used by the Ory Account Experience theme. | [optional] 
 **error_muted_color** | **str** | ErrorMutedColor is a hex color code used by the Ory Account Experience theme. | [optional] 
 **error_subtle_color** | **str** | ErrorSubtleColor is a hex color code used by the Ory Account Experience theme. | [optional] 
+**favicon_type** | **str** | Favicon Type The Favicon mime type. | [optional] 
+**favicon_url** | **str** | Favicon URL Favicon can be an https:// or base64:// URL. If the URL is not allowed, the favicon will be stored inside the Ory Network storage bucket. | [optional] 
 **foreground_default_color** | **str** | ForegroundDefaultColor is a hex color code used by the Ory Account Experience theme. | [optional] 
 **foreground_disabled_color** | **str** | ForegroundDisabledColor is a hex color code used by the Ory Account Experience theme. | [optional] 
 **foreground_muted_color** | **str** | ForegroundMutedColor is a hex color code used by the Ory Account Experience theme. | [optional] 

@@ -11,7 +11,9 @@ Name | Type | Description | Notes
 **Slug** | Pointer to **string** | The project&#39;s slug | [optional] [readonly] 
 **State** | **string** | The state of the project. running Running halted Halted deleted Deleted | 
 **SubscriptionId** | Pointer to **NullableString** |  | [optional] 
+**SubscriptionPlan** | Pointer to **NullableString** |  | [optional] 
 **UpdatedAt** | **time.Time** | Last Time Project was Updated | 
+**WorkspaceId** | Pointer to **NullableString** |  | [optional] 
 
 ## Methods
 
@@ -192,6 +194,41 @@ HasSubscriptionId returns a boolean if a field has been set.
 `func (o *ProjectMetadata) UnsetSubscriptionId()`
 
 UnsetSubscriptionId ensures that no value is present for SubscriptionId, not even an explicit nil
+### GetSubscriptionPlan
+
+`func (o *ProjectMetadata) GetSubscriptionPlan() string`
+
+GetSubscriptionPlan returns the SubscriptionPlan field if non-nil, zero value otherwise.
+
+### GetSubscriptionPlanOk
+
+`func (o *ProjectMetadata) GetSubscriptionPlanOk() (*string, bool)`
+
+GetSubscriptionPlanOk returns a tuple with the SubscriptionPlan field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetSubscriptionPlan
+
+`func (o *ProjectMetadata) SetSubscriptionPlan(v string)`
+
+SetSubscriptionPlan sets SubscriptionPlan field to given value.
+
+### HasSubscriptionPlan
+
+`func (o *ProjectMetadata) HasSubscriptionPlan() bool`
+
+HasSubscriptionPlan returns a boolean if a field has been set.
+
+### SetSubscriptionPlanNil
+
+`func (o *ProjectMetadata) SetSubscriptionPlanNil(b bool)`
+
+ SetSubscriptionPlanNil sets the value for SubscriptionPlan to be an explicit nil
+
+### UnsetSubscriptionPlan
+`func (o *ProjectMetadata) UnsetSubscriptionPlan()`
+
+UnsetSubscriptionPlan ensures that no value is present for SubscriptionPlan, not even an explicit nil
 ### GetUpdatedAt
 
 `func (o *ProjectMetadata) GetUpdatedAt() time.Time`
@@ -212,6 +249,41 @@ and a boolean to check if the value has been set.
 SetUpdatedAt sets UpdatedAt field to given value.
 
 
+### GetWorkspaceId
+
+`func (o *ProjectMetadata) GetWorkspaceId() string`
+
+GetWorkspaceId returns the WorkspaceId field if non-nil, zero value otherwise.
+
+### GetWorkspaceIdOk
+
+`func (o *ProjectMetadata) GetWorkspaceIdOk() (*string, bool)`
+
+GetWorkspaceIdOk returns a tuple with the WorkspaceId field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetWorkspaceId
+
+`func (o *ProjectMetadata) SetWorkspaceId(v string)`
+
+SetWorkspaceId sets WorkspaceId field to given value.
+
+### HasWorkspaceId
+
+`func (o *ProjectMetadata) HasWorkspaceId() bool`
+
+HasWorkspaceId returns a boolean if a field has been set.
+
+### SetWorkspaceIdNil
+
+`func (o *ProjectMetadata) SetWorkspaceIdNil(b bool)`
+
+ SetWorkspaceIdNil sets the value for WorkspaceId to be an explicit nil
+
+### UnsetWorkspaceId
+`func (o *ProjectMetadata) UnsetWorkspaceId()`
+
+UnsetWorkspaceId ensures that no value is present for WorkspaceId, not even an explicit nil
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

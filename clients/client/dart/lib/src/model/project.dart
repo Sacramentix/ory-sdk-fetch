@@ -3,6 +3,7 @@
 //
 
 // ignore_for_file: unused_element
+import 'package:ory_client/src/model/project_cors.dart';
 import 'package:built_collection/built_collection.dart';
 import 'package:ory_client/src/model/project_services.dart';
 import 'package:built_value/built_value.dart';
@@ -13,14 +14,23 @@ part 'project.g.dart';
 /// Project
 ///
 /// Properties:
+/// * [corsAdmin] 
+/// * [corsPublic] 
 /// * [id] - The project's ID.
 /// * [name] - The name of the project.
 /// * [revisionId] - The configuration revision ID.
 /// * [services] 
 /// * [slug] - The project's slug
 /// * [state] - The state of the project. running Running halted Halted deleted Deleted
+/// * [workspaceId] 
 @BuiltValue()
 abstract class Project implements Built<Project, ProjectBuilder> {
+  @BuiltValueField(wireName: r'cors_admin')
+  ProjectCors? get corsAdmin;
+
+  @BuiltValueField(wireName: r'cors_public')
+  ProjectCors? get corsPublic;
+
   /// The project's ID.
   @BuiltValueField(wireName: r'id')
   String get id;
@@ -45,6 +55,9 @@ abstract class Project implements Built<Project, ProjectBuilder> {
   ProjectStateEnum get state;
   // enum stateEnum {  running,  halted,  deleted,  };
 
+  @BuiltValueField(wireName: r'workspace_id')
+  String? get workspaceId;
+
   Project._();
 
   factory Project([void updates(ProjectBuilder b)]) = _$Project;
@@ -68,6 +81,20 @@ class _$ProjectSerializer implements PrimitiveSerializer<Project> {
     Project object, {
     FullType specifiedType = FullType.unspecified,
   }) sync* {
+    if (object.corsAdmin != null) {
+      yield r'cors_admin';
+      yield serializers.serialize(
+        object.corsAdmin,
+        specifiedType: const FullType(ProjectCors),
+      );
+    }
+    if (object.corsPublic != null) {
+      yield r'cors_public';
+      yield serializers.serialize(
+        object.corsPublic,
+        specifiedType: const FullType(ProjectCors),
+      );
+    }
     yield r'id';
     yield serializers.serialize(
       object.id,
@@ -98,6 +125,13 @@ class _$ProjectSerializer implements PrimitiveSerializer<Project> {
       object.state,
       specifiedType: const FullType(ProjectStateEnum),
     );
+    if (object.workspaceId != null) {
+      yield r'workspace_id';
+      yield serializers.serialize(
+        object.workspaceId,
+        specifiedType: const FullType.nullable(String),
+      );
+    }
   }
 
   @override
@@ -121,6 +155,20 @@ class _$ProjectSerializer implements PrimitiveSerializer<Project> {
       final key = serializedList[i] as String;
       final value = serializedList[i + 1];
       switch (key) {
+        case r'cors_admin':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(ProjectCors),
+          ) as ProjectCors;
+          result.corsAdmin.replace(valueDes);
+          break;
+        case r'cors_public':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(ProjectCors),
+          ) as ProjectCors;
+          result.corsPublic.replace(valueDes);
+          break;
         case r'id':
           final valueDes = serializers.deserialize(
             value,
@@ -162,6 +210,14 @@ class _$ProjectSerializer implements PrimitiveSerializer<Project> {
             specifiedType: const FullType(ProjectStateEnum),
           ) as ProjectStateEnum;
           result.state = valueDes;
+          break;
+        case r'workspace_id':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType.nullable(String),
+          ) as String?;
+          if (valueDes == null) continue;
+          result.workspaceId = valueDes;
           break;
         default:
           unhandled.add(key);
